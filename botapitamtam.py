@@ -2,7 +2,10 @@ import requests
 import json
 
 class BotHandler:
-
+    """
+    обработчик
+    """
+    
     def __init__(self, token):
         self.token = token
         self.url = 'https://botapi.tamtam.chat/'
