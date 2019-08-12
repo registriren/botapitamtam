@@ -3,7 +3,7 @@ import json
 
 class BotHandler:
     """
-    обработчик
+    обработчик комманд
     """
     
     def __init__(self, token):
