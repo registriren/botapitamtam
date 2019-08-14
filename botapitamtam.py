@@ -103,6 +103,8 @@ class BotHandler:
                 user_id = None
             elif 'chat_id' in upd.keys():
                 user_id = upd['user']['user_id']
+            elif 'callback' in upd.keys():
+                user_id = upd['callback']['user']['user_id']
             else:
                 user_id = upd['message']['recipient']['user_id']
         return user_id
