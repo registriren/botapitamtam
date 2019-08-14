@@ -90,11 +90,11 @@ class BotHandler:
     def get_user_id(self, update):
         """
         Получения идентификатора пользователя, инициировавшего событие
-        API = subscriptions/Get updates/[updates][0][chat_id]
-           или = subscriptions/Get updates/[updates][0][message][recipient][chat_id]
+        API = subscriptions/Get updates/[updates][0][user][user_id]
+           или = subscriptions/Get updates/[updates][0][message][recipient][user_id]
         :param update = результат работы метода get_update
-        :return: возвращает, если это возможно, значение поля 'chat_id' не зависимо от события, произошедшего с ботом
-                 если событие - "удаление сообщения", то chat_id = None
+        :return: возвращает, если это возможно, значение поля 'user_id' не зависимо от события, произошедшего с ботом
+                 если событие - "удаление сообщения", то user_id = None
         """
         user_id = None
         if update != None:
