@@ -19,15 +19,18 @@ class BotHandler:
         """
         method = 'updates'
         params = {
-            "timeout": 90,
+            "timeout": 45,
             "limit": 100,
             "marker": None,
             "types": None,
             "access_token": self.token
         }
-        response = requests.get(self.url + method, params)
-        update = response.json()
-        if len(update['updates']) == 0:
+        try:
+            response = requests.get(self.url + method, params)
+            update = response.json()
+            if len(update['updates']) == 0:
+                update = None
+        except ConnectionError:
             update = None
         return update
 
