@@ -108,7 +108,7 @@ class BotHandler:
             else:
                 upd = upd['message']
                 if 'sender' in upd.keys():
-                    user_id = upd['sender']['user_id]
+                    user_id = upd['sender']['user_id']
                 else:
                     user_id = upd['recipient']['user_id']
         return user_id
