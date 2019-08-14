@@ -106,7 +106,11 @@ class BotHandler:
             elif 'callback' in upd.keys():
                 user_id = upd['callback']['user']['user_id']
             else:
-                user_id = upd['message']['recipient']['user_id']
+                upd = upd['message']
+                if 'sender' in upd.keys():
+                    user_id = upd['sender']['user_id]
+                else:
+                    user_id = upd['recipient']['user_id']
         return user_id
 
     def get_payload(self, update):
