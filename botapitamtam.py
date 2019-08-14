@@ -31,6 +31,19 @@ class BotHandler:
             update = None
         return update
 
+    def get_members(self, chat_id):
+        method = 'chats/{}'.format(chat_id) + '/members'
+        params = {
+            "access_token": self.token
+        }
+        response = requests.get(self.url + method, params)
+        #members = (self.url + method, params)
+        members = response.json()
+        #if len(members['members']) == 0:
+        #    members = None
+        return members
+
+
     def get_update_type(self, update):
         """
         Метод получения типа события произошедшего с ботом
@@ -91,7 +104,7 @@ class BotHandler:
         """
         Получения идентификатора пользователя, инициировавшего событие
         API = subscriptions/Get updates/[updates][0][user][user_id]
-           или = subscriptions/Get updates/[updates][0][message][recipient][user_id]
+           или = subscriptions/Get updates/[updates][0][message][sender][user_id]
         :param update = результат работы метода get_update
         :return: возвращает, если это возможно, значение поля 'user_id' не зависимо от события, произошедшего с ботом
                  если событие - "удаление сообщения", то user_id = None
@@ -112,6 +125,32 @@ class BotHandler:
                 else:
                     user_id = upd['recipient']['user_id']
         return user_id
+
+    def get_name(self, update):
+        """
+        Получение имени пользователя, инициировавшего событие
+        API = subscriptions/Get updates/[updates][0][user][user_id]
+           или = subscriptions/Get updates/[updates][0][message][sender][user_id]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'name' не зависимо от события, произошедшего с ботом
+                 если событие - "удаление сообщения", то name = None
+        """
+        name = None
+        if update != None:
+            upd = update['updates'][0]
+            if 'message_id' in upd.keys():
+                name = None
+            elif 'chat_id' in upd.keys():
+                name = upd['user']['name']
+            elif 'callback' in upd.keys():
+                name = upd['callback']['user']['name']
+            else:
+                upd = upd['message']
+                if 'sender' in upd.keys():
+                    name = upd['sender']['name']
+                else:
+                    name = None
+        return name
 
     def get_payload(self, update):
         """
