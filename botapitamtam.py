@@ -86,6 +86,26 @@ class BotHandler:
                 upd = upd.get('message')
                 chat_id = upd.get('recipient').get('chat_id')
         return chat_id
+    
+    def get_user_id(self, update):
+        """
+        Получения идентификатора пользователя, инициировавшего событие
+        API = subscriptions/Get updates/[updates][0][chat_id]
+           или = subscriptions/Get updates/[updates][0][message][recipient][chat_id]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'chat_id' не зависимо от события, произошедшего с ботом
+                 если событие - "удаление сообщения", то chat_id = None
+        """
+        user_id = None
+        if update != None:
+            upd = update['updates'][0]
+            if 'message_id' in upd.keys():
+                user_id = None
+            elif 'chat_id' in upd.keys():
+                user_id = upd['user']['user_id']
+            else:
+                user_id = upd['message']['recipient']['user_id']
+        return user_id
 
     def get_payload(self, update):
         """
