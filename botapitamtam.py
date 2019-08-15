@@ -103,6 +103,24 @@ class BotHandler:
                 chat_id = upd.get('recipient').get('chat_id')
         return chat_id
     
+    def get_link_chat_id(self, update):
+        """
+        Получения идентификатора чата пересланного сообщения
+        API = subscriptions/Get updates/[updates][0][message][link][chat_id]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'chat_id' пересланного боту сообщения (от кого)
+        """
+        chat_id = None
+        if update != None:
+            upd = update['updates'][0]
+            if 'message' in upd.keys():
+                upd = upd['message']
+                if 'link' in upd.keys():
+                    upd = upd['link']
+                    if 'chat_id' in upd.keys():
+                        chat_id = upd['chat_id']
+        return chat_id
+    
     def get_user_id(self, update):
         """
         Получения идентификатора пользователя, инициировавшего событие
