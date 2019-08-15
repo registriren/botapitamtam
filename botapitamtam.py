@@ -145,8 +145,6 @@ class BotHandler:
                     upd = upd['link']
                     if 'sender' in upd.keys()
                         user_id = upd['user_id']
-            else:
-                user_id = None
         return user_id
 
     def get_name(self, update):
