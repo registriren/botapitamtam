@@ -173,7 +173,7 @@ class BotHandler:
                     name = None
         return name
 
-     def get_link_name(self, update):
+    def get_link_name(self, update):
         """
         Получение имени пользователя пересланного сообщения
         API = subscriptions/Get updates/[updates][0][message][link][sender][name]
