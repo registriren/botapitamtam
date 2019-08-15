@@ -133,10 +133,9 @@ class BotHandler:
         """
         Получения идентификатора пользователя пересланного сообщения
         API = subscriptions/Get updates/[updates][0][user][user_id]
-           или = subscriptions/Get updates/[updates][0][message][sender][user_id]
+           или = subscriptions/Get updates/[updates][0][message][link][sender][user_id]
         :param update = результат работы метода get_update
-        :return: возвращает, если это возможно, значение поля 'user_id' не зависимо от события, произошедшего с ботом
-                 если событие - "удаление сообщения", то user_id = None
+        :return: возвращает, если это возможно, значение поля 'user_id' пересланного боту сообщения (от кого)
         """
         user_id = None
         if update != None:
