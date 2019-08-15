@@ -132,8 +132,7 @@ class BotHandler:
     def get_link_user_id(self, update):
         """
         Получения идентификатора пользователя пересланного сообщения
-        API = subscriptions/Get updates/[updates][0][user][user_id]
-           или = subscriptions/Get updates/[updates][0][message][link][sender][user_id]
+        API = subscriptions/Get updates/[updates][0][message][link][sender][user_id]
         :param update = результат работы метода get_update
         :return: возвращает, если это возможно, значение поля 'user_id' пересланного боту сообщения (от кого)
         """
