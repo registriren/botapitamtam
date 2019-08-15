@@ -128,6 +128,28 @@ class BotHandler:
                 else:
                     user_id = upd['recipient']['user_id']
         return user_id
+    
+    def get_link_user_id(self, update):
+        """
+        Получения идентификатора пользователя пересланного сообщения
+        API = subscriptions/Get updates/[updates][0][user][user_id]
+           или = subscriptions/Get updates/[updates][0][message][sender][user_id]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'user_id' не зависимо от события, произошедшего с ботом
+                 если событие - "удаление сообщения", то user_id = None
+        """
+        user_id = None
+        if update != None:
+            upd = update['updates'][0]
+            if 'message' in upd.keys():
+                upd = upd['message']
+                if 'link' in upd.keys()
+                    upd = upd['link']
+                    if 'sender' in upd.keys()
+                        user_id = upd['user_id']
+            else:
+                user_id = None
+        return user_id
 
     def get_name(self, update):
         """
