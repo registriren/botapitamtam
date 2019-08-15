@@ -173,6 +173,24 @@ class BotHandler:
                     name = None
         return name
 
+     def get_link_name(self, update):
+        """
+        Получение имени пользователя пересланного сообщения
+        API = subscriptions/Get updates/[updates][0][message][link][sender][name]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'name' пересланного боту сообщения (от кого)
+        """
+        name = None
+        if update != None:
+            upd = update['updates'][0]
+            if 'message' in upd.keys():
+                upd = upd['message']
+                if 'link' in upd.keys():
+                    upd = upd['link']
+                    if 'sender' in upd.keys():
+                        name = upd['sender']['name']
+        return name
+    
     def get_payload(self, update):
         """
         API = subscriptions/Get updates/[updates][0][callback][payload]
