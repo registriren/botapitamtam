@@ -10,7 +10,7 @@ class BotHandler:
         self.token = token
         self.url = 'https://botapi.tamtam.chat/'
 
-    def get_updates(self):
+    def get_updates(self, marker=None):
         """
         Основная функция опроса состояния (событий) бота методом long polling
         This method is used to get updates from bot via get request. It is based on long polling.
@@ -21,7 +21,7 @@ class BotHandler:
         params = {
             "timeout": 45,
             "limit": 100,
-            "marker": None,
+            "marker": marker,
             "types": None,
             "access_token": self.token
         }
@@ -33,6 +33,19 @@ class BotHandler:
         except ConnectionError:
             update = None
         return update
+
+    def get_marker(self, update):
+        """
+        Метод получения маркера события
+        API = subscriptions/Get updates/[marker]
+        :param update = результат работы метода get_update
+        :return: возвращает значение поля 'marker', при неудаче = None
+        """
+        marker = None
+        if update != None:
+            marker = update['marker']
+        return marker
+
 
     def get_members(self, chat_id):
         method = 'chats/{}'.format(chat_id) + '/members'
