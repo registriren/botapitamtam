@@ -98,11 +98,11 @@ class BotHandler:
     def get_url(self, update):
         """
         Получение ссылки отправленного или пересланного боту файла
-        API = subscriptions/Get updates/[updates][0][message][link][message][text] (type = 'forward')
-           или = subscriptions/Get updates/[updates][0][message][body][text]
+        API = subscriptions/Get updates/[updates][0][message][link][message][attachment][url]
+           или = subscriptions/Get updates/[updates][0][message][body][attachment][url]
         :param update = результат работы метода get_update
-        :return: возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения
-                 из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
+        :return: возвращает, если это возможно, значение поля 'url' созданного или пересланного файла
+                 из 'body' или 'link' соответственно, при неудаче 'url' = None
         """
         url = None
         if update != None:
@@ -111,7 +111,7 @@ class BotHandler:
             if type == 'message_created':
                 upd1 = upd.get('message').get('body')
                 if 'attachments' in upd1.keys():
-                    upd1 = upd1.get('attachments')
+                    upd1 = upd1['attachments'][0]
                     if 'payload' in upd1.keys():
                         upd1 = upd1.get('payload')
                         if 'url' in upd1.keys():
