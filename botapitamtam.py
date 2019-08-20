@@ -95,6 +95,39 @@ class BotHandler:
 
         return text
 
+    def get_url(self, update):
+        """
+        Получение ссылки отправленного или пересланного боту файла
+        API = subscriptions/Get updates/[updates][0][message][link][message][text] (type = 'forward')
+           или = subscriptions/Get updates/[updates][0][message][body][text]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения
+                 из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
+        """
+        url = None
+        if update != None:
+            upd = update['updates'][0]
+            type = self.get_update_type(update)
+            if type == 'message_created':
+                upd1 = upd.get('message').get('body')
+                if 'attachments' in upd1.keys():
+                    upd1 = upd1.get('attachments')
+                    if 'payload' in upd1.keys():
+                        upd1 = upd1.get('payload')
+                        if 'url' in upd1.keys():
+                            url = upd1.get('url')
+                else:
+                    upd1 = upd.get('message')
+                    if 'link' in upd1.keys():
+                        upd1 = upd1.get('link').get('message')
+                        if 'attachments' in upd1.keys():
+                            upd1 = upd1.get('attachments')
+                            if 'payload' in upd1.keys():
+                                upd1 = upd1.get('payload')
+                                if 'url' in upd1.keys():
+                                    url = upd1.get('url')
+        return url
+
     def get_chat_id(self, update):
         """
         Получения идентификатора чата, в котором произошло событие
