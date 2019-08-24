@@ -121,7 +121,7 @@ class BotHandler:
                     if 'link' in upd1.keys():
                         upd1 = upd1.get('link').get('message')
                         if 'attachments' in upd1.keys():
-                            upd1 = upd1.get('attachments')
+                            upd1 = upd1.get['attachments'][0]
                             if 'payload' in upd1.keys():
                                 upd1 = upd1.get('payload')
                                 if 'url' in upd1.keys():
