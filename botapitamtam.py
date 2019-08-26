@@ -119,13 +119,15 @@ class BotHandler:
                 else:
                     upd1 = upd.get('message')
                     if 'link' in upd1.keys():
-                        upd1 = upd1.get('link').get('message')
-                        if 'attachments' in upd1.keys():
-                            upd1 = upd1['attachments'][0]
-                            if 'payload' in upd1.keys():
-                                upd1 = upd1.get('payload')
-                                if 'url' in upd1.keys():
-                                    url = upd1.get('url')
+                        upd1 = upd1.get('link')
+                        if 'message' in upd1.keys():
+                            upd1 = upd1.get('message')
+                            if 'attachments' in upd1.keys():
+                                upd1 = upd1['attachments'][0]
+                                if 'payload' in upd1.keys():
+                                    upd1 = upd1.get('payload')
+                                    if 'url' in upd1.keys():
+                                        url = upd1.get('url')
         return url
 
     def get_chat_id(self, update):
