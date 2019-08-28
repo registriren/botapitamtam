@@ -273,21 +273,22 @@ class BotHandler:
                     payload = upd.get('payload')
         return payload
 
-    def get_buttons_text(self, update):
+    def get_message_id(self, update):
         """
-        API = subscriptions/Get updates/[updates][0][callback][text]
-        :param update: результат работы метода get_update
-        :return: возвращает результат нажатия кнопки или None
+        Получение message_id отправленного или пересланного боту
+        API = subscriptions/Get updates/[updates][0][message][link][message][mid] (type = 'forward')
+           или = subscriptions/Get updates/[updates][0][message][body][mid]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения
+                 из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
         """
-        payload = None
+        mid = None
         if update != None:
             upd = update['updates'][0]
             type = self.get_update_type(update)
-            if type == 'message_callback':
-                upd = upd.get('callback')
-                if 'payload' in upd.keys():
-                    payload = upd.get('payload')
-        return payload
+            if type == 'message_created' or type == 'message_callback':
+                mid = upd.get('message').get('body').get('mid')
+        return mid
 
 
     def send_message(self, text, chat_id):
