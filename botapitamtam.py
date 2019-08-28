@@ -273,6 +273,23 @@ class BotHandler:
                     payload = upd.get('payload')
         return payload
 
+    def get_buttons_text(self, update):
+        """
+        API = subscriptions/Get updates/[updates][0][callback][text]
+        :param update: результат работы метода get_update
+        :return: возвращает результат нажатия кнопки или None
+        """
+        payload = None
+        if update != None:
+            upd = update['updates'][0]
+            type = self.get_update_type(update)
+            if type == 'message_callback':
+                upd = upd.get('callback')
+                if 'payload' in upd.keys():
+                    payload = upd.get('payload')
+        return payload
+
+
     def send_message(self, text, chat_id):
         """
         Send message to specific chat_id by post request
