@@ -318,7 +318,7 @@ class BotHandler:
         params = {"message_id": message_id}
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
-            print("Error sending message: {}".format(response.status_code))
+            print("Error delete message: {}".format(response.status_code))
 
 
     def send_buttons(self, text, buttons, chat_id):
