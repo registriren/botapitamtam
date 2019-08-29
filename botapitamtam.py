@@ -313,11 +313,16 @@ class BotHandler:
         API = messages/Delete message/{message_id}
         :param message_id: идентификатор сообщения
         """
-        method = 'messages?access_token='
-        url = ''.join([self.url, method, self.token])
+        #method = 'messages?access_token='
+        #url = ''.join([self.url, method, self.token])
         params = {"message_id": message_id}
-        response = requests.post(url, data=json.dumps(params))
-
+        method = 'messages'
+        params = {
+            "message_id": message_id,
+            "access_token": self.token
+        }
+        response = requests.delete(self.url + method, params=params)
+        #response = requests.delete(url, message_id=message_id)
         if response.status_code != 200:
             print("Error delete message: {}".format(response.status_code))
 
