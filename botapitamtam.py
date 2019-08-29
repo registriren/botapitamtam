@@ -317,6 +317,7 @@ class BotHandler:
         url = ''.join([self.url, method, self.token])
         params = {"message_id": message_id}
         response = requests.post(url, data=json.dumps(params))
+
         if response.status_code != 200:
             print("Error delete message: {}".format(response.status_code))
 
