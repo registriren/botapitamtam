@@ -290,7 +290,6 @@ class BotHandler:
                 mid = upd.get('message').get('body').get('mid')
         return mid
 
-
     def send_message(self, text, chat_id):
         """
         Send message to specific chat_id by post request
@@ -306,6 +305,21 @@ class BotHandler:
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
             print("Error sending message: {}".format(response.status_code))
+
+    def delete_message(self, message_id):
+        """
+        Delete message to specific chat_id by post request
+        Удаляет сообщение в соответствии с message_id
+        API = messages/Delete message/{message_id}
+        :param message_id: идентификатор сообщения
+        """
+        method = 'messages?access_token='
+        url = ''.join([self.url, method, self.token])
+        params = {"message_id": message_id}
+        response = requests.post(url, data=json.dumps(params))
+        if response.status_code != 200:
+            print("Error sending message: {}".format(response.status_code))
+
 
     def send_buttons(self, text, buttons, chat_id):
         """
