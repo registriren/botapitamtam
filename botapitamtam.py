@@ -363,7 +363,7 @@ class BotHandler:
             mid = None
         else:
             update = response.json()
-            mid = self.get_message_id(update)
+            mid = update.get('message').get('body').get('mid')
         return mid
             
 
