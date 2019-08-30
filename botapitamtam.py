@@ -360,6 +360,12 @@ class BotHandler:
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
             print("Error sending message: {}".format(response.status_code))
+            mid = None
+        else:
+            update = response.json()
+            mid = self.get_message_id(update)
+        return mid
+            
 
 
 
