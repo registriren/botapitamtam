@@ -373,14 +373,13 @@ class BotHandler:
             mid = update.get('message').get('body').get('mid')
         return mid
 
-    def send_forward_reply_message(self, text, type, mid, chat_id):
+    def send_forward_message(self, text, mid, chat_id):
         """
-        Send forward or reply message specific chat_id by post request
-        Пересылает или формирует ответ на сообщение в указанный чат
-        :param text: Текст выводимый над блоком кнопок
-        :param chat_id: integer, chat id of user / чат куда отправится сообщение
-        :param type: 'forward' or 'reply'
+        Send forward message specific chat_id by post request
+        Пересылает сообщение в указанный чат
+        :param text: текст к пересылаемому сообщению
         :param mid: message_id пересылаемого сообщения
+        :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на post message в соответствии с API
         """
         method = 'messages?access_token='
@@ -388,7 +387,7 @@ class BotHandler:
         params = {
             "text": text,
             "link":  {
-                       "type": type,
+                       "type": "forward",
                        "mid": mid
                       }
                  }
@@ -400,7 +399,32 @@ class BotHandler:
             update = response.json()
         return update
 
-            
+    def send_reply_message(self, text, mid, chat_id):
+        """
+        Send reply message specific chat_id by post request
+        Формирует ответ на сообщение в указанный чат
+        :param text: текст ответа на сообщение
+        :param mid: message_id сообщения на которое формируется ответ
+        :param chat_id: integer, chat id of user / чат куда отправится сообщение
+        :return update: response | ответ на post message в соответствии с API
+        """
+        method = 'messages?access_token='
+        url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
+        params = {
+            "text": text,
+            "link":  {
+                       "type": "reply",
+                       "mid": mid
+                      }
+                 }
+        response = requests.post(url, data=json.dumps(params))
+        if response.status_code != 200:
+            print("Error sending message: {}".format(response.status_code))
+            update = None
+        else:
+            update = response.json()
+        return update
+
 
 
 
