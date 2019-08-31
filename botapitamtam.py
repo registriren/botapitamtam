@@ -377,7 +377,7 @@ class BotHandler:
         """
         Send forward message specific chat_id by post request
         Пересылает сообщение в указанный чат
-        :param text: текст к пересылаемому сообщению
+        :param text: текст к пересылаемому сообщению или None
         :param mid: message_id пересылаемого сообщения
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на post message в соответствии с API
@@ -403,7 +403,7 @@ class BotHandler:
         """
         Send reply message specific chat_id by post request
         Формирует ответ на сообщение в указанный чат
-        :param text: текст ответа на сообщение
+        :param text: текст ответа на сообщение (обязательный параметр)
         :param mid: message_id сообщения на которое формируется ответ
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на post message в соответствии с API
