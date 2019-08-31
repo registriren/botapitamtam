@@ -330,13 +330,22 @@ class BotHandler:
         Отправляет кнопки (количество и функционал определяются параметром buttons) в соответствующий чат
         :param text: Текст выводимый над блоком кнопок
         :param chat_id: integer, chat id of user / чат где будут созданы кнопки
-        :param buttons = [{"type": 'callback',
-                           "text": 'key1_text',
+        :param buttons = [
+                          [{"type": 'callback',
+                           "text": 'line1_key1_text',
                            "payload": 'payload1'},
                           {"type": 'link',
-                           "text": 'API TamTam',
+                           "text": 'line1_key2_API TamTam',
+                           "url": 'https://dev.tamtam.chat',
+                           "intent": 'positive'}],
+                           [{"type": 'callback',
+                           "text": 'line2_key1_text',
+                           "payload": 'payload1'},
+                          {"type": 'link',
+                           "text": 'line2_key2_API TamTam',
                            "url": 'https://dev.tamtam.chat',
                            "intent": 'positive'}]
+                         ]
                            :param type: реакция на нажатие кнопки
                            :param text: подпись кнопки
                            :param payload: результат нажатия кнопки
@@ -350,9 +359,7 @@ class BotHandler:
                     {
                         "type": "inline_keyboard",
                         "payload": {
-                            "buttons": [
-                                        buttons
-                                       ]
+                            "buttons": buttons
                                     }
                     }
                                 ]
