@@ -376,7 +376,7 @@ class BotHandler:
     def send_forward_reply_message(self, text, type, mid, chat_id):
         """
         Send forward or reply message specific chat_id by post request
-        Пересылает  (количество, рядность и функционал определяются параметром buttons) в соответствующий чат
+        Пересылает или формирует ответ на сообщение в указанный чат
         :param text: Текст выводимый над блоком кнопок
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :param type: 'forward' or 'reply'
@@ -387,12 +387,10 @@ class BotHandler:
         url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
         params = {
             "text": text,
-            "link": [
-                      {
+            "link":  {
                        "type": type,
                        "mid": mid
                       }
-                    ]
                  }
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
