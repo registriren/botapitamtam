@@ -327,7 +327,7 @@ class BotHandler:
     def send_buttons(self, text, buttons, chat_id):
         """
         Send buttons to specific chat_id by post request
-        Отправляет кнопки (количество и функционал определяются параметром buttons) в соответствующий чат
+        Отправляет кнопки (количество, рядность и функционал определяются параметром buttons) в соответствующий чат
         :param text: Текст выводимый над блоком кнопок
         :param chat_id: integer, chat id of user / чат где будут созданы кнопки
         :param buttons = [
@@ -372,6 +372,36 @@ class BotHandler:
             update = response.json()
             mid = update.get('message').get('body').get('mid')
         return mid
+
+    def send_forward_reply_message(self, text, type, mid, chat_id):
+        """
+        Send forward or reply message specific chat_id by post request
+        Пересылает  (количество, рядность и функционал определяются параметром buttons) в соответствующий чат
+        :param text: Текст выводимый над блоком кнопок
+        :param chat_id: integer, chat id of user / чат куда отправится сообщение
+        :param type: 'forward' or 'reply'
+        :param mid: message_id пересылаемого сообщения
+        :return update: response | ответ на post message в соответствии с API
+        """
+        method = 'messages?access_token='
+        url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
+        params = {
+            "text": text,
+            "link": [
+                      {
+                       "type": type,
+                       "mid": mid
+                      }
+                    ]
+                 }
+        response = requests.post(url, data=json.dumps(params))
+        if response.status_code != 200:
+            print("Error sending message: {}".format(response.status_code))
+            update = None
+        else:
+            update = response.json()
+        return update
+
             
 
 
