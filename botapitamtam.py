@@ -259,6 +259,7 @@ class BotHandler:
     
     def get_payload(self, update):
         """
+        Метод получения значения нажатой кнопки, заданного в send_buttons
         API = subscriptions/Get updates/[updates][0][callback][payload]
         :param update: результат работы метода get_update
         :return: возвращает результат нажатия кнопки или None
@@ -290,6 +291,36 @@ class BotHandler:
                 mid = upd.get('message').get('body').get('mid')
         return mid
 
+    def send_typing_on(self, chat_id):
+        """
+        Отправка уведомления от бота в чат - 'печатает...'
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "typing_on"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
+    def send_typing_off(self, chat_id):
+        """
+        Остановка отправки уведомления от бота в чат - 'печатает...'
+        :param chat_id: чат где необходимо остановить отправку... как это работает???
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "typing_off"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
+    def send_mark_seen(self, chat_id):
+        """
+        Отправка в чат маркера о прочтении ботом сообщения
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "mark_seen"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
     def send_message(self, text, chat_id):
         """
         Send message to specific chat_id by post request
@@ -297,14 +328,20 @@ class BotHandler:
         API = messages/Send message/{text}
         :param text: text of message / текст сообщения
         :param chat_id: integer, chat id of user / чат куда поступит сообщение
-        :return
+        :return mid: message_id отправленного сообщения
         """
+        self.send_typing_on(chat_id)
         method = 'messages?access_token='
         url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
         params = {"text": text}
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
             print("Error sending message: {}".format(response.status_code))
+            mid = None
+        else:
+            update = response.json()
+            mid = update.get('message').get('body').get('mid')
+        return mid
 
     def delete_message(self, message_id):
         """
@@ -322,7 +359,6 @@ class BotHandler:
         print(response)
         if response.status_code != 200:
             print("Error delete message: {}".format(response.status_code))
-
 
     def send_buttons(self, text, buttons, chat_id):
         """
@@ -351,6 +387,7 @@ class BotHandler:
                            :param payload: результат нажатия кнопки
                            :param intent: цвет кнопки
         """
+        self.send_typing_on(chat_id)
         method = 'messages?access_token='
         url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
         params = {
@@ -382,6 +419,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на post message в соответствии с API
         """
+        self.send_typing_on(chat_id)
         method = 'messages?access_token='
         url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
         params = {
@@ -408,6 +446,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на post message в соответствии с API
         """
+        self.send_typing_on(chat_id)
         method = 'messages?access_token='
         url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
         params = {
