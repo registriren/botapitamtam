@@ -32,6 +32,7 @@ class BotHandler:
                 update = None
         except ConnectionError:
             update = None
+        self.send_mark_seen(chat_id=self.get_chat_id(update))
         return update
 
     def get_marker(self, update):
@@ -356,7 +357,6 @@ class BotHandler:
             "access_token": self.token
         }
         response = requests.delete(self.url + method, params=params)
-        print(response)
         if response.status_code != 200:
             print("Error delete message: {}".format(response.status_code))
 
