@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 
 class BotHandler:
     """
@@ -28,11 +29,12 @@ class BotHandler:
         try:
             response = requests.get(self.url + method, params)
             update = response.json()
-            if len(update['updates']) == 0:
-                update = None
         except ConnectionError:
             update = None
-        self.send_mark_seen(chat_id=self.get_chat_id(update))
+        if len(update['updates']) != 0:
+            self.send_mark_seen(chat_id=self.get_chat_id(update))
+        else:
+            update = None
         return update
 
     def get_marker(self, update):
@@ -285,7 +287,7 @@ class BotHandler:
                  из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
         """
         mid = None
-        if update != None:
+        if update != None and 'updates' in update.keys():
             upd = update['updates'][0]
             type = self.get_update_type(update)
             if type == 'message_created' or type == 'message_callback':
@@ -295,6 +297,7 @@ class BotHandler:
     def send_typing_on(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'печатает...'
+        https://dev.tamtam.chat/#operation/sendAction
         :param chat_id: чат куда необходимо отправить уведомление
         :return:
         """
@@ -305,6 +308,7 @@ class BotHandler:
     def send_typing_off(self, chat_id):
         """
         Остановка отправки уведомления от бота в чат - 'печатает...'
+        https://dev.tamtam.chat/#operation/sendAction
         :param chat_id: чат где необходимо остановить отправку... как это работает???
         :return:
         """
@@ -315,11 +319,56 @@ class BotHandler:
     def send_mark_seen(self, chat_id):
         """
         Отправка в чат маркера о прочтении ботом сообщения
+        https://dev.tamtam.chat/#operation/sendAction
         :param chat_id: чат куда необходимо отправить уведомление
         :return:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "mark_seen"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
+    def send_sending_video(self, chat_id):
+        """
+        Отправка уведомления от бота в чат - 'отправка видео...'
+        https://dev.tamtam.chat/#operation/sendAction
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "sending_video"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
+    def send_sending_audio(self, chat_id):
+        """
+        Отправка уведомления от бота в чат - 'отправка аудио...'
+        https://dev.tamtam.chat/#operation/sendAction
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "sending_audio"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
+    def send_sending_photo(self, chat_id):
+        """
+        Отправка уведомления от бота в чат - 'отправка фото ...'
+        https://dev.tamtam.chat/#operation/sendAction
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "sending_photo"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
+    def send_sending_file(self, chat_id):
+        """
+        Отправка уведомления от бота в чат - 'отправка файла...' #не работает, но ошибку не вызывает
+        https://dev.tamtam.chat/#operation/sendAction
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "sending_file"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
     def send_message(self, text, chat_id):
@@ -408,6 +457,83 @@ class BotHandler:
         else:
             update = response.json()
             mid = update.get('message').get('body').get('mid')
+        return mid
+
+    def url_upload_type(self, type):
+        """
+        Вспомогательная функция получения URL для загрузки контента в ТамТам
+        :param type: тип контента ('audio', 'video', 'file', 'photo')
+        :return: URL на который будет отправляться контент
+        """
+        method = 'uploads'
+        params = (
+            ('access_token', self.token),
+            ('type', type),
+        )
+        response = requests.post(self.url + method, params=params)
+        print(response.url)
+        if response.status_code == 200:
+            update = response.json()
+            url = update.get('url')
+        else:
+            url = None
+        return url
+
+    def send_file(self, content, chat_id, text=None, content_name=None):
+        """
+        Метод отправки файла в указанный чат
+        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
+        :param chat_id: чат куда будет загружен файл
+        :param text: Сопровождающий текст к отправляемому файлу
+        ;:param content_name: Имя с которым будет загружен файл
+        :return:
+        """
+        mid = None
+        url = self.url_upload_type('file')
+        if url != None:
+            self.send_sending_file(chat_id)
+            if content_name == None:
+                content_name = content
+            content = open(content, 'rb')
+            response = requests.post(url, files={
+                'files': (content_name, content, 'multipart/form-data')})
+            if response.status_code == 200:
+                update = response.json()
+                token = update.get('token')
+                method = 'messages'
+                params = (
+                    ('access_token', self.token),
+                    ('chat_id', chat_id),
+                )
+                data = {
+                    "text": text,
+                    "attachments": [
+                        {
+                            "type": "file",
+                            "payload": {
+                                "token": token
+                            }
+                        }
+                    ]
+                }
+                flag = 'attachment.not.ready'
+                while flag == 'attachment.not.ready':
+                    response = requests.post(self.url + method, params=params, data=json.dumps(data))
+                    upd = response.json()
+                    if 'code' in upd.keys():
+                        flag = upd.get('code')
+                        time.sleep(5)
+                    else:
+                        flag = None
+                if response.status_code != 200:
+                    print("Error sending message: {}".format(response.status_code))
+                    mid = None
+                else:
+                    update = response.json()
+                    mid = update.get('message').get('body').get('mid')
+        else:
+            print("Error sending message")
+            mid = None
         return mid
 
     def send_forward_message(self, text, mid, chat_id):
