@@ -283,15 +283,17 @@ class BotHandler:
         API = subscriptions/Get updates/[updates][0][message][link][message][mid] (type = 'forward')
            или = subscriptions/Get updates/[updates][0][message][body][mid]
         :param update = результат работы метода get_update
-        :return: возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения
-                 из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
+        :return: возвращает, если это возможно, значение поля 'mid'
         """
         mid = None
-        if update != None and 'updates' in update.keys():
-            upd = update['updates'][0]
-            type = self.get_update_type(update)
-            if type == 'message_created' or type == 'message_callback':
-                mid = upd.get('message').get('body').get('mid')
+        if update != None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+                type = self.get_update_type(update)
+                if type == 'message_created' or type == 'message_callback':
+                    mid = upd.get('message').get('body').get('mid')
+            elif 'message' in update.keys():
+                mid = update.get('message').get('body').get('mid')
         return mid
 
     def send_typing_on(self, chat_id):
@@ -303,17 +305,6 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "typing_on"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
-
-    def send_typing_off(self, chat_id):
-        """
-        Остановка отправки уведомления от бота в чат - 'печатает...'
-        https://dev.tamtam.chat/#operation/sendAction
-        :param chat_id: чат где необходимо остановить отправку... как это работает???
-        :return:
-        """
-        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
-        params = {"action": "typing_off"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
     def send_mark_seen(self, chat_id):
@@ -378,7 +369,7 @@ class BotHandler:
         API = messages/Send message/{text}
         :param text: text of message / текст сообщения
         :param chat_id: integer, chat id of user / чат куда поступит сообщение
-        :return mid: message_id отправленного сообщения
+        :return update: результат POST запроса на отправку сообщения
         """
         self.send_typing_on(chat_id)
         method = 'messages?access_token='
@@ -387,11 +378,10 @@ class BotHandler:
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
             print("Error sending message: {}".format(response.status_code))
-            mid = None
+            update = None
         else:
             update = response.json()
-            mid = update.get('message').get('body').get('mid')
-        return mid
+        return update
 
     def delete_message(self, message_id):
         """
@@ -435,6 +425,7 @@ class BotHandler:
                            :param text: подпись кнопки
                            :param payload: результат нажатия кнопки
                            :param intent: цвет кнопки
+        :return update: результат POST запроса на отправку кнопок
         """
         self.send_typing_on(chat_id)
         method = 'messages?access_token='
@@ -453,11 +444,10 @@ class BotHandler:
         response = requests.post(url, data=json.dumps(params))
         if response.status_code != 200:
             print("Error sending message: {}".format(response.status_code))
-            mid = None
+            update = None
         else:
             update = response.json()
-            mid = update.get('message').get('body').get('mid')
-        return mid
+        return update
 
     def url_upload_type(self, type):
         """
@@ -471,7 +461,6 @@ class BotHandler:
             ('type', type),
         )
         response = requests.post(self.url + method, params=params)
-        print(response.url)
         if response.status_code == 200:
             update = response.json()
             url = update.get('url')
@@ -486,9 +475,9 @@ class BotHandler:
         :param chat_id: чат куда будет загружен файл
         :param text: Сопровождающий текст к отправляемому файлу
         ;:param content_name: Имя с которым будет загружен файл
-        :return:
+        :return: update: результат работы POST запроса отправки файла
         """
-        mid = None
+        update = None
         url = self.url_upload_type('file')
         if url != None:
             self.send_sending_file(chat_id)
@@ -520,21 +509,22 @@ class BotHandler:
                 while flag == 'attachment.not.ready':
                     response = requests.post(self.url + method, params=params, data=json.dumps(data))
                     upd = response.json()
+                    print(upd)
                     if 'code' in upd.keys():
                         flag = upd.get('code')
+                        print('ждем 5 сек...')
                         time.sleep(5)
                     else:
                         flag = None
                 if response.status_code != 200:
                     print("Error sending message: {}".format(response.status_code))
-                    mid = None
+                    update = None
                 else:
                     update = response.json()
-                    mid = update.get('message').get('body').get('mid')
         else:
             print("Error sending message")
-            mid = None
-        return mid
+            update = None
+        return update
 
     def send_forward_message(self, text, mid, chat_id):
         """
