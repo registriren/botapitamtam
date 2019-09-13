@@ -518,14 +518,8 @@ class BotHandler:
         :return: update: результат работы POST запроса отправки видео
         """
         self.send_sending_audio(chat_id)
-        attach = []
-        if isinstance(content, str):
-            token = self.token_upload_content('audio', content)
-            attach.append({"type": "audio", "payload": token})
-        else:
-            for cont in content:
-                token = self.token_upload_content('audio', cont)
-                attach.append({"type": "audio", "payload": token})
+        token = self.token_upload_content('audio', content)
+        attach = [{"type": "audio", "payload": token}]
         update = self.send_content(attach, chat_id, text)
         return update
 
