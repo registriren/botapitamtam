@@ -372,15 +372,7 @@ class BotHandler:
         :return update: результат POST запроса на отправку сообщения
         """
         self.send_typing_on(chat_id)
-        method = 'messages?access_token='
-        url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
-        params = {"text": text}
-        response = requests.post(url, data=json.dumps(params))
-        if response.status_code != 200:
-            print("Error sending message: {}".format(response.status_code))
-            update = None
-        else:
-            update = response.json()
+        update = self.send_content(None, chat_id, text)
         return update
 
     def delete_message(self, message_id):
@@ -428,29 +420,16 @@ class BotHandler:
         :return update: результат POST запроса на отправку кнопок
         """
         self.send_typing_on(chat_id)
-        method = 'messages?access_token='
-        url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
-        params = {
-                 "text": text,
-                 "attachments": [
-                    {
-                        "type": "inline_keyboard",
-                        "payload": {
-                            "buttons": buttons
-                                    }
-                    }
-                                ]
-                 }
-        response = requests.post(url, data=json.dumps(params))
-        if response.status_code != 200:
-            print("Error sending message: {}".format(response.status_code))
-            update = None
-        else:
-            update = response.json()
+        attach = [{"type": "inline_keyboard",
+                   "payload": {"buttons": buttons}
+                  }
+                 ]
+        update = self.send_content(attach, chat_id, text)
         return update
 
-    def url_upload_type(self, type):
+    def upload_url(self, type):
         """
+        https://dev.tamtam.chat/#operation/getUploadUrl
         Вспомогательная функция получения URL для загрузки контента в ТамТам
         :param type: тип контента ('audio', 'video', 'file', 'photo')
         :return: URL на который будет отправляться контент
@@ -470,117 +449,180 @@ class BotHandler:
 
     def send_file(self, content, chat_id, text=None, content_name=None):
         """
-        Метод отправки файла в указанный чат
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки файла в указанный чат (файлы загружаются только по одному)
         :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
         :param chat_id: чат куда будет загружен файл
         :param text: Сопровождающий текст к отправляемому файлу
         ;:param content_name: Имя с которым будет загружен файл
         :return: update: результат работы POST запроса отправки файла
         """
-        update = None
-        url = self.url_upload_type('file')
-        if url != None:
-            self.send_sending_file(chat_id)
-            if content_name == None:
-                content_name = content
-            content = open(content, 'rb')
-            response = requests.post(url, files={
-                'files': (content_name, content, 'multipart/form-data')})
-            if response.status_code == 200:
-                update = response.json()
-                token = update.get('token')
-                method = 'messages'
-                params = (
-                    ('access_token', self.token),
-                    ('chat_id', chat_id),
-                )
-                data = {
-                    "text": text,
-                    "attachments": [
-                        {
-                            "type": "file",
-                            "payload": {
-                                "token": token
-                            }
-                        }
-                    ]
-                }
-                flag = 'attachment.not.ready'
-                while flag == 'attachment.not.ready':
-                    response = requests.post(self.url + method, params=params, data=json.dumps(data))
-                    upd = response.json()
-                    print(upd)
-                    if 'code' in upd.keys():
-                        flag = upd.get('code')
-                        print('ждем 5 сек...')
-                        time.sleep(5)
-                    else:
-                        flag = None
-                if response.status_code != 200:
-                    print("Error sending message: {}".format(response.status_code))
-                    update = None
-                else:
-                    update = response.json()
+        self.send_sending_file(chat_id)
+        token = self.token_upload_content('file', content, content_name)
+        attach = [{"type": "file", "payload": token}]
+        update = self.send_content(attach, chat_id, text)
+        return update
+
+    def send_photo(self, content, chat_id, text=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки фoто (нескольких фото) в указанный чат
+        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
+        :param chat_id: чат куда будет загружен файл
+        :param text: Сопровождающий текст к отправляемому файлу
+        ;:param content_name: Имя с которым будет загружен файл
+        :return: update: результат работы POST запроса отправки файла
+        """
+        self.send_sending_photo(chat_id)
+        attach = []
+        if isinstance(content, str):
+            token = self.token_upload_content('photo', content)
+            attach.append({"type": "image", "payload": token})
         else:
-            print("Error sending message")
-            update = None
+            for cont in content:
+                token = self.token_upload_content('photo', cont)
+                attach.append({"type": "image", "payload": token})
+        update = self.send_content(attach, chat_id, text)
+        return update
+
+    def send_video(self, content, chat_id, text=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки видео (нескольких видео) в указанный чат
+        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
+                        иди список файлов ['movie.mp4', 'movie2.mkv']
+        :param chat_id: чат куда будут загружены видео
+        :param text: Сопровождающий текст к отправляемому(мым) видео
+        :return: update: результат работы POST запроса отправки видео
+        """
+        self.send_sending_video(chat_id)
+        attach = []
+        if isinstance(content, str):
+            token = self.token_upload_content('video', content)
+            attach.append({"type": "video", "payload": token})
+        else:
+            for cont in content:
+                token = self.token_upload_content('video', cont)
+                attach.append({"type": "video", "payload": token})
+        update = self.send_content(attach, chat_id, text)
+        return update
+
+    def send_audio(self, content, chat_id, text=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки аудио (только по одному) в указанный чат
+        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'audio.mp3'),
+                        файлы защищенные авторскими правами не загружаются
+        :param chat_id: чат куда будет загружено аудио
+        :param text: Сопровождающий текст к отправляемому(мым) видео
+        :return: update: результат работы POST запроса отправки видео
+        """
+        self.send_sending_audio(chat_id)
+        attach = []
+        if isinstance(content, str):
+            token = self.token_upload_content('audio', content)
+            attach.append({"type": "audio", "payload": token})
+        else:
+            for cont in content:
+                token = self.token_upload_content('audio', cont)
+                attach.append({"type": "audio", "payload": token})
+        update = self.send_content(attach, chat_id, text)
         return update
 
     def send_forward_message(self, text, mid, chat_id):
         """
+        https://dev.tamtam.chat/#operation/sendMessage
         Send forward message specific chat_id by post request
         Пересылает сообщение в указанный чат
+        :param self:
         :param text: текст к пересылаемому сообщению или None
         :param mid: message_id пересылаемого сообщения
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на post message в соответствии с API
         """
         self.send_typing_on(chat_id)
-        method = 'messages?access_token='
-        url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
-        params = {
-            "text": text,
-            "link":  {
-                       "type": "forward",
-                       "mid": mid
-                      }
+        link = {"type": "forward",
+                 "mid": mid
                  }
-        response = requests.post(url, data=json.dumps(params))
-        if response.status_code != 200:
-            print("Error sending message: {}".format(response.status_code))
-            update = None
-        else:
-            update = response.json()
+        update = self.send_content(None, chat_id, text, link)
         return update
 
     def send_reply_message(self, text, mid, chat_id):
         """
+        https://dev.tamtam.chat/#operation/sendMessage
         Send reply message specific chat_id by post request
         Формирует ответ на сообщение в указанный чат
         :param text: текст ответа на сообщение (обязательный параметр)
         :param mid: message_id сообщения на которое формируется ответ
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
-        :return update: response | ответ на post message в соответствии с API
+        :return update: response | ответ на POST запрос в соответствии с API
         """
         self.send_typing_on(chat_id)
-        method = 'messages?access_token='
-        url = ''.join([self.url, method, self.token, '&chat_id={}'.format(chat_id)])
-        params = {
-            "text": text,
-            "link":  {
-                       "type": "reply",
-                       "mid": mid
-                      }
-                 }
-        response = requests.post(url, data=json.dumps(params))
-        if response.status_code != 200:
-            print("Error sending message: {}".format(response.status_code))
-            update = None
-        else:
-            update = response.json()
+        link = {"type": "reply",
+                "mid": mid
+                }
+        update = self.send_content(None, chat_id, text, link)
         return update
 
+    def token_upload_content(self, type, content, content_name=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Вспомогательная функция получения Tokena для загрузки контента в ТамТам
+        :param type: тип контента ('audio', 'video', 'file', 'photo')
+        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
+        ;:param content_name: Имя с которым будет загружен файл
+        :return: update: результат работы POST запроса отправки файла
+        """
+        url = self.upload_url(type)
+        if content_name == None:
+            content_name = content
+        content = open(content, 'rb')
+        response = requests.post(url, files={
+                'files': (content_name, content, 'multipart/form-data')})
+        if response.status_code == 200:
+            token = response.json()
+            print(token)
+        else:
+            print("Error sending message")
+            token = None
+        return token
 
-
-
-
+    def send_content(self, attachments, chat_id, text=None, link=None, notify=True):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
+        :param attachments: Массив объектов (файл, фото, видео, аудио, кнопки)
+        :param chat_id: Чат куда отправляется контент
+        :param text: Текстовое описание контента
+        :param link: Пересылаемые (цитируемые) сообщения
+        :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
+        :return update: Возвращает результат POST запроса
+        """
+        method = 'messages'
+        params = (
+            ('access_token', self.token),
+            ('chat_id', chat_id),
+        )
+        data = {
+            "text": text,
+            "attachments": attachments,
+            "link": link,
+            "notify": notify
+        }
+        flag = 'attachment.not.ready'
+        while flag == 'attachment.not.ready':
+            response = requests.post(self.url + method, params=params, data=json.dumps(data))
+            upd = response.json()
+            print(upd)
+            if 'code' in upd.keys():
+                flag = upd.get('code')
+                print('ждем 5 сек...')
+                time.sleep(5)
+            else:
+                flag = None
+        if response.status_code == 200:
+            update = response.json()
+        else:
+            print("Error sending message: {}".format(response.status_code))
+            update = None
+        return update
