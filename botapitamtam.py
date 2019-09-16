@@ -2,11 +2,12 @@ import requests
 import json
 import time
 
+
 class BotHandler:
     """
     обработчик комманд
     """
-    
+
     def __init__(self, token):
         self.token = token
         self.url = 'https://botapi.tamtam.chat/'
@@ -49,19 +50,17 @@ class BotHandler:
             marker = update['marker']
         return marker
 
-
     def get_members(self, chat_id):
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
             "access_token": self.token
         }
         response = requests.get(self.url + method, params)
-        #members = (self.url + method, params)
+        # members = (self.url + method, params)
         members = response.json()
-        #if len(members['members']) == 0:
+        # if len(members['members']) == 0:
         #    members = None
         return members
-
 
     def get_update_type(self, update):
         """
@@ -93,8 +92,8 @@ class BotHandler:
                 upd = upd.get('message')
                 text = upd.get('body').get('text')
                 if 'link' in upd.keys():
-                   if upd.get('link').get('type') == 'forward':
-                       text = upd.get('link').get('message').get('text')
+                    if upd.get('link').get('type') == 'forward':
+                        text = upd.get('link').get('message').get('text')
 
         return text
 
@@ -148,12 +147,12 @@ class BotHandler:
             if 'message_id' in upd.keys():
                 chat_id = None
             elif 'chat_id' in upd.keys():
-                 chat_id = upd.get('chat_id')
+                chat_id = upd.get('chat_id')
             else:
                 upd = upd.get('message')
                 chat_id = upd.get('recipient').get('chat_id')
         return chat_id
-    
+
     def get_link_chat_id(self, update):
         """
         Получения идентификатора чата пересланного сообщения
@@ -171,7 +170,7 @@ class BotHandler:
                     if 'chat_id' in upd.keys():
                         chat_id = upd['chat_id']
         return chat_id
-    
+
     def get_user_id(self, update):
         """
         Получения идентификатора пользователя, инициировавшего событие
@@ -197,7 +196,7 @@ class BotHandler:
                 else:
                     user_id = upd['recipient']['user_id']
         return user_id
-    
+
     def get_link_user_id(self, update):
         """
         Получения идентификатора пользователя пересланного сообщения
@@ -259,7 +258,7 @@ class BotHandler:
                     if 'sender' in upd.keys():
                         name = upd['sender']['name']
         return name
-    
+
     def get_payload(self, update):
         """
         Метод получения значения нажатой кнопки, заданного в send_buttons
@@ -422,8 +421,8 @@ class BotHandler:
         self.send_typing_on(chat_id)
         attach = [{"type": "inline_keyboard",
                    "payload": {"buttons": buttons}
-                  }
-                 ]
+                   }
+                  ]
         update = self.send_content(attach, chat_id, text)
         return update
 
@@ -451,10 +450,10 @@ class BotHandler:
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки файла в указанный чат (файлы загружаются только по одному)
-        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
+        :param content: имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
         :param chat_id: чат куда будет загружен файл
-        :param text: Сопровождающий текст к отправляемому файлу
-        ;:param content_name: Имя с которым будет загружен файл
+        :param text: сопровождающий текст к отправляемому файлу
+        ;:param content_name: имя с которым будет загружен файл
         :return: update: результат работы POST запроса отправки файла
         """
         self.send_sending_file(chat_id)
@@ -467,10 +466,9 @@ class BotHandler:
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки фoто (нескольких фото) в указанный чат
-        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
-        :param chat_id: чат куда будет загружен файл
-        :param text: Сопровождающий текст к отправляемому файлу
-        ;:param content_name: Имя с которым будет загружен файл
+        :param content: имя файла или список имен файлов с изображениями
+        :param chat_id: чат куда будут загружены изображения
+        :param text: Сопровождающий текст к отправляемому контенту
         :return: update: результат работы POST запроса отправки файла
         """
         self.send_sending_photo(chat_id)
@@ -485,11 +483,30 @@ class BotHandler:
         update = self.send_content(attach, chat_id, text)
         return update
 
+    def send_photo_url(self, url, chat_id, text=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки фото (нескольких фото) в указанный чат по url
+        :param url: http адрес или список адресов с изображениями
+        :param chat_id: чат куда будут загружены изображения
+        :param text: сопровождающий текст к отправляемому контенту
+        :return: update: результат работы POST запроса отправки фото
+        """
+        self.send_sending_photo(chat_id)
+        attach = []
+        if isinstance(url, str):
+            attach.append({"type": "image", "payload": {'url': url}})
+        else:
+            for cont in url:
+                attach.append({"type": "image", "payload": {'url': cont}})
+        update = self.send_content(attach, chat_id, text)
+        return update
+
     def send_video(self, content, chat_id, text=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки видео (нескольких видео) в указанный чат
-        :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
+        :param content: имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
                         иди список файлов ['movie.mp4', 'movie2.mkv']
         :param chat_id: чат куда будут загружены видео
         :param text: Сопровождающий текст к отправляемому(мым) видео
@@ -528,16 +545,15 @@ class BotHandler:
         https://dev.tamtam.chat/#operation/sendMessage
         Send forward message specific chat_id by post request
         Пересылает сообщение в указанный чат
-        :param self:
         :param text: текст к пересылаемому сообщению или None
         :param mid: message_id пересылаемого сообщения
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
-        :return update: response | ответ на post message в соответствии с API
+        :return update: response | ответ на POST message в соответствии с API
         """
         self.send_typing_on(chat_id)
         link = {"type": "forward",
-                 "mid": mid
-                 }
+                "mid": mid
+                }
         update = self.send_content(None, chat_id, text, link)
         return update
 
@@ -572,7 +588,7 @@ class BotHandler:
             content_name = content
         content = open(content, 'rb')
         response = requests.post(url, files={
-                'files': (content_name, content, 'multipart/form-data')})
+            'files': (content_name, content, 'multipart/form-data')})
         if response.status_code == 200:
             token = response.json()
             print(token)
