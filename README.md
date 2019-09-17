@@ -22,4 +22,4 @@ https://github.com/registriren/yatranslate
 5. Если запрошенное событие не произошло в ответ получим None.
 
 ## Описание методов (в разработке, смотрите в основном коде):
-- [delete_message_id](doc/delete_message_id.md) - Удаляет сообщение (контент) по его message_id.
+- [delete_message](doc/delete_message.md) - Удаляет сообщение (контент) по его message_id.
