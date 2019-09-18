@@ -22,5 +22,6 @@ https://github.com/registriren/yatranslate
 5. Если запрошенное событие не произошло в ответ получим None.
 
 ## Описание методов (в разработке, смотрите в основном коде):
-- [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его message_id.
-- [get_chat_id](doc/get_chat_id.md) - получает ID чата (диалога) в которм происходит взаимодействие с ботом.
+- [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
+- [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
+- [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
