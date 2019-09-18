@@ -25,3 +25,4 @@ https://github.com/registriren/yatranslate
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
+- [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
