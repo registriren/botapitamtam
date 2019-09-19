@@ -155,7 +155,7 @@ class BotHandler:
 
     def get_link_chat_id(self, update):
         """
-        Получения идентификатора чата пересланного сообщения
+        Получение идентификатора чата пересланного сообщения
         API = subscriptions/Get updates/[updates][0][message][link][chat_id]
         :param update = результат работы метода get_update
         :return: возвращает, если это возможно, значение поля 'chat_id' пересланного боту сообщения (от кого)
@@ -591,7 +591,6 @@ class BotHandler:
             'files': (content_name, content, 'multipart/form-data')})
         if response.status_code == 200:
             token = response.json()
-            print(token)
         else:
             print("Error sending message")
             token = None
@@ -623,7 +622,6 @@ class BotHandler:
         while flag == 'attachment.not.ready':
             response = requests.post(self.url + method, params=params, data=json.dumps(data))
             upd = response.json()
-            print(upd)
             if 'code' in upd.keys():
                 flag = upd.get('code')
                 print('ждем 5 сек...')
