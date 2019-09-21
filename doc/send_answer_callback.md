@@ -1,6 +1,6 @@
 ## send_answer_callback(callback_id, notification, message=None)  
 https://dev.tamtam.chat/#operation/answerOnCallback  
-        Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат  
+        Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может быть обновленное сообщение или/и             кратковременное всплывающее уведомление пользователя.   
         :param callback_id: параметр, соответствующий нажатой кнопке, получаем методом [get_callback_id](get_callback_id.md)  
         :param notification: кратковременное, всплывающее уведомление  
         :param message: объекты в соответствии с API  
