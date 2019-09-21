@@ -27,4 +27,4 @@ https://github.com/registriren/yatranslate
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
 - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
-- [send_answer_callback](doc/send_answer_callback) - отправляет уведомление (реакцию) после нажатия кнопки.
+- [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
