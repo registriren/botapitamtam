@@ -657,7 +657,8 @@ class BotHandler:
     def send_answer_callback(self, callback_id, notification, message=None):
         """
         https://dev.tamtam.chat/#operation/answerOnCallback
-        Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
+        Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может
+        быть обновленное сообщение или/и кратковременное уведомление пользователя.
         :param callback_id: параметр, соответствующий нажатой кнопке
         :param notification: кратковременное, всплывающее уведомление
         :param message: объекты в соответствии с API
