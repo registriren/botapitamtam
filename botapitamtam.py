@@ -69,11 +69,12 @@ class BotHandler:
         :param update = результат работы метода get_update
         :return: возвращает значение поля 'update_type', при неудаче = None
         """
-        type = None
+        upd_type = None
         if update != None:
-            upd = update['updates'][0]
-            type = upd.get('update_type')
-        return type
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+                upd_type = upd.get('update_type')
+        return upd_type
 
     def get_text(self, update):
         """
@@ -275,6 +276,24 @@ class BotHandler:
                 if 'payload' in upd.keys():
                     payload = upd.get('payload')
         return payload
+
+    def get_callback_id(self, update):
+        """
+        Метод получения значения callback_id при нажатии кнопки
+        API = subscriptions/Get updates/[updates][0][callback][callback_id]
+        :param update: результат работы метода get_update
+        :return: возвращает callback_id нажатой кнопки или None
+        """
+        callback_id = None
+        type = self.get_update_type(update)
+        if update != None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+                if type == 'message_callback':
+                    upd = upd.get('callback')
+                    if 'callback_id' in upd.keys():
+                        callback_id = upd.get('callback_id')
+        return callback_id
 
     def get_message_id(self, update):
         """
@@ -617,6 +636,42 @@ class BotHandler:
             "attachments": attachments,
             "link": link,
             "notify": notify
+        }
+        flag = 'attachment.not.ready'
+        while flag == 'attachment.not.ready':
+            response = requests.post(self.url + method, params=params, data=json.dumps(data))
+            upd = response.json()
+            if 'code' in upd.keys():
+                flag = upd.get('code')
+                print('ждем 5 сек...')
+                time.sleep(5)
+            else:
+                flag = None
+        if response.status_code == 200:
+            update = response.json()
+        else:
+            print("Error sending message: {}".format(response.status_code))
+            update = None
+        return update
+
+    def send_answer_callback(self, callback_id, notification, message=None):
+        """
+        https://dev.tamtam.chat/#operation/answerOnCallback
+        Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
+        :param callback_id: параметр, соответствующий нажатой кнопке
+        :param notification: кратковременное, всплывающее уведомление
+        :param message: объекты в соответствии с API
+        :return update: результат POST запроса
+
+        """
+        method = 'answers'
+        params = (
+            ('access_token', self.token),
+            ('callback_id', callback_id),
+        )
+        data = {
+            "message": message,
+            "notification": notification
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
