@@ -1,6 +1,6 @@
 ## delete_message(message_id)
 Удаляет сообщение (контент) по его message_id. Удаление возможно только сообщений созданных ботом.
-message_id получаем методом get_message_id(update), где update - это внутреннее представление сообщения (сообщения с контентом).
+message_id получаем методом [get_message_id(update)](get_message_id.md), где update - это внутреннее представление сообщения (сообщения с контентом).
 ## Пример
 ```python
 from botapitamtam import BotHandler
