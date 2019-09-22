@@ -661,9 +661,19 @@ class BotHandler:
         быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.
         :param callback_id: параметр, соответствующий нажатой кнопке
         :param notification: кратковременное, всплывающее уведомление
-        :param message: объекты в соответствии с API
+        :param message: объекты в соответствии с API. Пример:
+                buttons = [[{"type": 'callback',
+                             "text": 'Test ок',
+                             "payload": 'ok'
+                             }]
+                           ]
+                attach = [{"type": "inline_keyboard",
+                           "payload": {"buttons": buttons}
+                           }
+                          ]
+                message = {"text": time.ctime(),
+                           "attachments": attach}
         :return update: результат POST запроса
-
         """
         method = 'answers'
         params = (
