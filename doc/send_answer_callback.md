@@ -30,10 +30,21 @@ def main():
                          "payload": 'ok'
                          }]
                        ]
-            bot.send_buttons("Test notification", buttons, chat_id)
-        if type_upd == 'message_callback':
+            bot.send_buttons(time.ctime(), buttons, chat_id)
+        if type == 'message_callback':
             if callback_id != None:
-                bot.send_answer_callback(callback_id, 'test well...') # выводим кратковременное уведомление
+                buttons = [[{"type": 'callback',
+                             "text": 'Test',
+                             "payload": 'ok'
+                             }]
+                           ]
+                attach = [{"type": "inline_keyboard",
+                           "payload": {"buttons": buttons}
+                           }
+                          ]
+                message = {"text": time.ctime(),
+                           "attachments": attach}
+                bot.send_answer_callback(callback_id, 'test well...', message) # выводим кратковременное уведомление
  
 if __name__ == '__main__':
     try:
