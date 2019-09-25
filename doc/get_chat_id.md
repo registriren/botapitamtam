@@ -1,6 +1,7 @@
 ## get_chat_id(update)
-Получает ID чата (диалога) в которм происходит взаимодействие с ботом. update получаем методом [get_updates](get_updates.md)
-## Пример
+Получает ID чата (диалога) в которм происходит взаимодействие с ботом.  
+**update** получаем методом [get_updates](get_updates.md)
+## Пример:
 ```python
 from botapitamtam import BotHandler
 import time
