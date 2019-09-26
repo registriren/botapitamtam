@@ -133,17 +133,30 @@ class BotHandler:
                                         url = upd1.get('url')
         return url
 
-    def get_chat_id(self, update):
+    def get_chat_id(self, update=None):
         """
         Получения идентификатора чата, в котором произошло событие
         API = subscriptions/Get updates/[updates][0][chat_id]
            или = subscriptions/Get updates/[updates][0][message][recipient][chat_id]
-        :param update = результат работы метода get_update
+        :param update = результат работы метода get_update, если update=None, то chat_id получается из последнего активного диалога
         :return: возвращает, если это возможно, значение поля 'chat_id' не зависимо от события, произошедшего с ботом
                  если событие - "удаление сообщения", то chat_id = None
         """
         chat_id = None
-        if update != None:
+        if update == None:
+            method = 'chats'
+            params = {
+                "access_token": self.token
+            }
+            response = requests.get(self.url + method, params)
+            if response.status_code == 200:
+                update = response.json()
+                if 'chats' in update.keys():
+                    update = update['chats'][0]
+                    chat_id = update.get('chat_id')
+            else:
+                print("Error: {}".format(response.status_code))
+        else:
             upd = update['updates'][0]
             if 'message_id' in upd.keys():
                 chat_id = None
@@ -153,6 +166,27 @@ class BotHandler:
                 upd = upd.get('message')
                 chat_id = upd.get('recipient').get('chat_id')
         return chat_id
+
+    def get_chat_id1(self):
+        """
+        Получения идентификатора чата, в котором произошло событие
+        API = subscriptions/Get updates/[updates][0][chat_id]
+           или = subscriptions/Get updates/[updates][0][message][recipient][chat_id]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'chat_id' не зависимо от события, произошедшего с ботом
+                 если событие - "удаление сообщения", то chat_id = None
+        """
+        method = 'chats'
+        params = {
+            "access_token": self.token
+        }
+        response = requests.get(self.url + method, params)
+        if response.status_code == 200:
+            update = response.json()
+        else:
+            print("Error: {}".format(response.status_code))
+            update = None
+        return update
 
     def get_link_chat_id(self, update):
         """
