@@ -1,6 +1,6 @@
-## get_chat_id(update)
+## get_chat_id(update=None)
 Получает ID чата (диалога) в которм происходит взаимодействие с ботом.  
-**update** получаем методом [get_updates](get_updates.md)
+**update** получаем методом [get_updates](get_updates.md). Если **update**=None, то возвращается chat_id последнего активного диалога.
 ## Пример:
 ```python
 from botapitamtam import BotHandler
@@ -12,7 +12,9 @@ bot = BotHandler(token)
 
 def main():
     marker = None
-    while True: # цикл ожидания взаимодействия с ботом, в данном примере необходимо ввести любой текст
+    chat_id = bot.get_chat_id()
+    bot.send_message("Напишите любое сообщение", chat_id)
+    while True: # цикл ожидания взаимодействия с ботом
         update = bot.get_updates(marker) # получаем внутреннее представление сообщения (контента) отправленного боту (сформированного ботом)
         # тут можно вставить любые действия которые должны выполняться во время ожидания события
         if update == None:  # проверка на пустое событие, если пусто - возврат к началу цикла
