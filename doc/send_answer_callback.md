@@ -8,6 +8,7 @@ https://dev.tamtam.chat/#operation/answerOnCallback
 ## Пример:
 ```python
 from botapitamtam import BotHandler
+import time
 
 token = 'access_token_primebot' # токен, полученный при создании бота в @PrimeBot
 
@@ -15,15 +16,19 @@ bot = BotHandler(token)
 
 def main():
     marker = None
-    while True: # цикл ожидания взаимодействия с ботом, в данном примере необходимо ввести любой текст
-        update = bot.get_updates(marker) # получаем внутреннее представление сообщения (контента) отправленного боту (сформированного ботом)
+    n = 0 
+    chat_id = bot.get_chat_id() # Получаем chat_id последнего активного диалога с ботом
+    bot.send_message("Напишите любое сообщение", chat_id)
+    while True:
+        last_update = bot.get_updates(
+            marker)  # получаем внутреннее представление сообщения (контента) отправленного боту (сформированного ботом)
         # тут можно вставить любые действия которые должны выполняться во время ожидания события
-        if update == None:  # проверка на пустое событие, если пусто - возврат к началу цикла
+        if last_update == None:  # проверка на пустое событие, если пусто - возврат к началу цикла
             continue
-        marker = bot.get_marker(last_update) # маркер следующего события в боте
+        marker = bot.get_marker(last_update)
         chat_id = bot.get_chat_id(last_update)  # получаем chat_id диалога с ботом
-        type_upd = bot.get_update_type(last_update) # получаем update_type события в боте
-        callback_id = bot.get_callback_id(last_update) # получаем callback_id если кнопка была нажата, или None
+        type = bot.get_update_type(last_update)
+        callback_id = bot.get_callback_id(last_update)
         if bot.get_text(last_update) != None:
             buttons = [[{"type": 'callback',
                          "text": 'Test',
@@ -33,8 +38,9 @@ def main():
             bot.send_buttons(time.ctime(), buttons, chat_id)
         if type == 'message_callback':
             if callback_id != None:
+                n += 1
                 buttons = [[{"type": 'callback',
-                             "text": 'Test',
+                             "text": 'Test[{}]'.format(n),
                              "payload": 'ok'
                              }]
                            ]
@@ -44,7 +50,7 @@ def main():
                           ]
                 message = {"text": time.ctime(),
                            "attachments": attach}
-                bot.send_answer_callback(callback_id, 'test well...', message) # выводим кратковременное уведомление
+                bot.send_answer_callback(callback_id, 'test well...', message) # выводим кратковременное уведомление и скорректированное событие по его callback_id
  
 if __name__ == '__main__':
     try:
