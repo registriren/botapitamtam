@@ -1,6 +1,10 @@
 import requests
 import json
 import time
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class BotHandler:
@@ -155,7 +159,7 @@ class BotHandler:
                     update = update['chats'][0]
                     chat_id = update.get('chat_id')
             else:
-                print("Error: {}".format(response.status_code))
+                logger.error("Error: {}".format(response.status_code))
         else:
             upd = update['updates'][0]
             if 'message_id' in upd.keys():
@@ -420,7 +424,7 @@ class BotHandler:
         }
         response = requests.delete(self.url + method, params=params)
         if response.status_code != 200:
-            print("Error delete message: {}".format(response.status_code))
+            logger.error("Error delete message: {}".format(response.status_code))
 
     def send_buttons(self, text, buttons, chat_id):
         """
@@ -624,7 +628,7 @@ class BotHandler:
         if response.status_code == 200:
             token = response.json()
         else:
-            print("Error sending message")
+            logger.error("Error sending message")
             token = None
         return token
 
@@ -656,14 +660,14 @@ class BotHandler:
             upd = response.json()
             if 'code' in upd.keys():
                 flag = upd.get('code')
-                print('ждем 5 сек...')
+                logger.info('ждем 5 сек...')
                 time.sleep(5)
             else:
                 flag = None
         if response.status_code == 200:
             update = response.json()
         else:
-            print("Error sending message: {}".format(response.status_code))
+            logger.error("Error sending message: {}".format(response.status_code))
             update = None
         return update
 
@@ -703,13 +707,13 @@ class BotHandler:
             upd = response.json()
             if 'code' in upd.keys():
                 flag = upd.get('code')
-                print('ждем 5 сек...')
+                logger.info('ждем 5 сек...')
                 time.sleep(5)
             else:
                 flag = None
         if response.status_code == 200:
             update = response.json()
         else:
-            print("Error sending message: {}".format(response.status_code))
+            logger.error("Error sending message: {}".format(response.status_code))
             update = None
         return update
