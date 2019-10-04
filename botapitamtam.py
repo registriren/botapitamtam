@@ -3,6 +3,9 @@ import json
 import time
 import logging
 
+from requests import ReadTimeout, Timeout
+from urllib3.exceptions import NewConnectionError, MaxRetryError
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -34,8 +37,10 @@ class BotHandler:
         try:
             response = requests.get(self.url + method, params)
             update = response.json()
-        except ConnectionError:
+        except (ConnectionError, TimeoutError, Timeout, NewConnectionError, MaxRetryError, ReadTimeout) as e:
+            logger.error("Error: %s.", e)
             update = None
+
         if len(update['updates']) != 0:
             self.send_mark_seen(chat_id=self.get_chat_id(update))
         else:
