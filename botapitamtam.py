@@ -82,7 +82,9 @@ class BotHandler:
         if update != None:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
-                upd_type = upd.get('update_type')
+            else:
+                upd = update
+            upd_type = upd.get('update_type')
         return upd_type
 
     def get_text(self, update):
@@ -96,7 +98,10 @@ class BotHandler:
         """
         text = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             type = self.get_update_type(update)
             if type == 'message_created':
                 upd = upd.get('message')
@@ -118,7 +123,10 @@ class BotHandler:
         """
         url = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             type = self.get_update_type(update)
             if type == 'message_created':
                 upd1 = upd.get('message').get('body')
@@ -166,7 +174,10 @@ class BotHandler:
             else:
                 logger.error("Error: {}".format(response.status_code))
         else:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             if 'message_id' in upd.keys():
                 chat_id = None
             elif 'chat_id' in upd.keys():
@@ -185,7 +196,10 @@ class BotHandler:
         """
         chat_id = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             if 'message' in upd.keys():
                 upd = upd['message']
                 if 'link' in upd.keys():
@@ -205,7 +219,10 @@ class BotHandler:
         """
         user_id = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             if 'message_id' in upd.keys():
                 user_id = None
             elif 'chat_id' in upd.keys():
@@ -229,7 +246,10 @@ class BotHandler:
         """
         user_id = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             if 'message' in upd.keys():
                 upd = upd['message']
                 if 'link' in upd.keys():
@@ -249,7 +269,10 @@ class BotHandler:
         """
         name = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             if 'message_id' in upd.keys():
                 name = None
             elif 'chat_id' in upd.keys():
@@ -273,7 +296,10 @@ class BotHandler:
         """
         name = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             if 'message' in upd.keys():
                 upd = upd['message']
                 if 'link' in upd.keys():
@@ -291,7 +317,10 @@ class BotHandler:
         """
         payload = None
         if update != None:
-            upd = update['updates'][0]
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
             type = self.get_update_type(update)
             if type == 'message_callback':
                 upd = upd.get('callback')
@@ -311,10 +340,12 @@ class BotHandler:
         if update != None:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
-                if type == 'message_callback':
-                    upd = upd.get('callback')
-                    if 'callback_id' in upd.keys():
-                        callback_id = upd.get('callback_id')
+            else:
+                upd = update
+            if type == 'message_callback':
+                upd = upd.get('callback')
+                if 'callback_id' in upd.keys():
+                    callback_id = upd.get('callback_id')
         return callback_id
 
     def get_message_id(self, update):
@@ -332,8 +363,10 @@ class BotHandler:
                 type = self.get_update_type(update)
                 if type == 'message_created' or type == 'message_callback':
                     mid = upd.get('message').get('body').get('mid')
-            elif 'message' in update.keys():
-                mid = update.get('message').get('body').get('mid')
+            else:
+                upd = update
+                if 'message' in upd.keys():
+                    mid = upd.get('message').get('body').get('mid')
         return mid
 
     def send_typing_on(self, chat_id):
