@@ -103,7 +103,7 @@ class BotHandler:
             else:
                 upd = update
             type = self.get_update_type(update)
-            if type == 'message_created':
+            if type == 'message_created' or type == 'message_edited':
                 upd = upd.get('message')
                 text = upd.get('body').get('text')
                 if 'link' in upd.keys():
