@@ -37,10 +37,9 @@ class BotHandler:
         try:
             response = requests.get(self.url + method, params)
             update = response.json()
-        except (ConnectionError, TimeoutError, Timeout, NewConnectionError, MaxRetryError, ReadTimeout) as e:
+        except Exception as e:
             logger.error("Error: %s.", e)
             update = None
-
         if len(update['updates']) != 0:
             self.send_mark_seen(chat_id=self.get_chat_id(update))
         else:
