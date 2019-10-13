@@ -107,8 +107,11 @@ class BotHandler:
                 text = upd.get('body').get('text')
                 if 'link' in upd.keys():
                     if upd.get('link').get('type') == 'forward':
-                        text = upd.get('link').get('message').get('text')
-
+                        try:
+                            text = upd.get('link').get('message').get('text')
+                        except Exception as e:
+                            logger.error("Error: %s.", e)
+                            text = None
         return text
 
     def get_url(self, update):
