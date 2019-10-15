@@ -656,7 +656,7 @@ class BotHandler:
         Вспомогательная функция получения Tokena для загрузки контента в ТамТам
         :param type: тип контента ('audio', 'video', 'file', 'photo')
         :param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
-        ;:param content_name: Имя с которым будет загружен файл
+        :param content_name: Имя с которым будет загружен файл
         :return: update: результат работы POST запроса отправки файла
         """
         url = self.upload_url(type)
