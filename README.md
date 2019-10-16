@@ -45,7 +45,7 @@ https://github.com/registriren/yatranslate
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](doc/send_buttons.md) - формирует кнопки.
-- [send_content](doc/send_content.md) - отправляет любой контент по сормированному attachments.
+- [send_content](doc/send_content.md) - отправляет любой контент по сформированному attachments.
 - [send_file](doc/send_file.md) - отправляет файл.
 - [send_forward_message](doc/send_forward_message.md) - пересылает сообщение по его идентификатору.
 - [send_mark_seen](doc/send_mark_seen.md) - отправляет уведомление о прочтении ботом сообщения.
