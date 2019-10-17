@@ -2,6 +2,7 @@ import requests
 import json
 import time
 import logging
+import os
 
 from requests import ReadTimeout, Timeout
 from urllib3.exceptions import NewConnectionError, MaxRetryError
@@ -39,7 +40,7 @@ class BotHandler:
             update = response.json()
         except Exception as e:
             logger.error("Error: %s.", e)
-            update = None
+            update = {}
         if len(update['updates']) != 0:
             self.send_mark_seen(chat_id=self.get_chat_id(update))
         else:
@@ -661,7 +662,7 @@ class BotHandler:
         """
         url = self.upload_url(type)
         if content_name == None:
-            content_name = content
+            content_name = os.path.basename(content)
         content = open(content, 'rb')
         response = requests.post(url, files={
             'files': (content_name, content, 'multipart/form-data')})
