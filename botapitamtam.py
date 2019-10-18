@@ -427,6 +427,17 @@ class BotHandler:
         params = {"action": "sending_photo"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
+    def send_sending_image(self, chat_id):
+        """
+        Отправка уведомления от бота в чат - 'отправка фото ...'
+        https://dev.tamtam.chat/#operation/sendAction
+        :param chat_id: чат куда необходимо отправить уведомление
+        :return:
+        """
+        method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
+        params = {"action": "sending_image"}
+        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+
     def send_sending_file(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'отправка файла...' #не работает, но ошибку не вызывает
@@ -539,7 +550,7 @@ class BotHandler:
         update = self.send_content(attach, chat_id, text)
         return update
 
-    def send_photo(self, content, chat_id, text=None):
+    def send_photo(self, content, chat_id, text=None):  # устаревший метод, используйте send_image
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки фoто (нескольких фото) в указанный чат
@@ -560,7 +571,7 @@ class BotHandler:
         update = self.send_content(attach, chat_id, text)
         return update
 
-    def send_photo_url(self, url, chat_id, text=None):
+    def send_photo_url(self, url, chat_id, text=None):  # устаревший метод, используйте send_image_url
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки фото (нескольких фото) в указанный чат по url
@@ -578,6 +589,47 @@ class BotHandler:
                 attach.append({"type": "image", "payload": {'url': cont}})
         update = self.send_content(attach, chat_id, text)
         return update
+
+    def send_image(self, content, chat_id, text=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки фoто (нескольких фото) в указанный чат
+        :param content: имя файла или список имен файлов с изображениями
+        :param chat_id: чат куда будут загружены изображения
+        :param text: Сопровождающий текст к отправляемому контенту
+        :return: update: результат работы POST запроса отправки файла
+        """
+        self.send_sending_photo(chat_id)
+        attach = []
+        if isinstance(content, str):
+            token = self.token_upload_content('image', content)
+            attach.append({"type": "image", "payload": token})
+        else:
+            for cont in content:
+                token = self.token_upload_content('image', cont)
+                attach.append({"type": "image", "payload": token})
+        update = self.send_content(attach, chat_id, text)
+        return update
+
+    def send_image_url(self, url, chat_id, text=None):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Метод отправки фото (нескольких фото) в указанный чат по url
+        :param url: http адрес или список адресов с изображениями
+        :param chat_id: чат куда будут загружены изображения
+        :param text: сопровождающий текст к отправляемому контенту
+        :return: update: результат работы POST запроса отправки фото
+        """
+        self.send_sending_photo(chat_id)
+        attach = []
+        if isinstance(url, str):
+            attach.append({"type": "image", "payload": {'url': url}})
+        else:
+            for cont in url:
+                attach.append({"type": "image", "payload": {'url': cont}})
+        update = self.send_content(attach, chat_id, text)
+        return update
+
 
     def send_video(self, content, chat_id, text=None):
         """
