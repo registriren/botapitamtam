@@ -10,6 +10,8 @@ https://dev.tamtam.chat/#operation/editMessage
 
 ## Пример
 ```python
+# этот пример показывает как можно сформировать и изменить совокупный контент
+
 from botapitamtam import BotHandler
 import time
 
@@ -30,28 +32,28 @@ def main():
         for last_update in list(
                 updates):  # формируем цикл на случай если updates вернул список из нескольких событий
             chat_id = bot.get_chat_id(last_update)
-
-            cont_img = 'test.png'
-            cont_video = 'movie.mp4'
-            buttons = [[{"type": 'callback',
+            
+            cont_img = 'test.png'     # тестовый файл изображения в рабочем каталоге
+            cont_video = 'movie.mp4'  # тестовый файл видео в рабочем каталоге
+            buttons = [[{"type": 'callback',             # формируем кнопку
                          "text": "Download? \U0001F61C",
                          "payload": 'ok'
                          }]]
 
-            image = bot.attach_image(cont_img)
-            video = bot.attach_video(cont_video)
-            key = bot.attach_buttons(buttons)
+            image = bot.attach_image(cont_img)    # подготовка изображения к совокупной отправке
+            video = bot.attach_video(cont_video)  # подготовка видео к совокупной отправке
+            key = bot.attach_buttons(buttons)     # подготовка кнопки к совокупной отправке
 
             attach = image + video + key
 
-            upd = bot.send_content(attach, chat_id, text='текст начальный')
-            mid = bot.get_message_id(upd)
+            upd = bot.send_content(attach, chat_id, text='текст начальный') # совокупная отправка контента
+            mid = bot.get_message_id(upd) # получаем идентификатор отправленного контента
 
-            upd = bot.send_message('Через 5 сек. всё изменится...', chat_id)
+            upd = bot.send_message('Через 5 сек. всё изменится...', chat_id) 
             mid1 = bot.get_message_id(upd)
             time.sleep(2)
             bot.delete_message(mid1)
-
+                # готовим контент к изменению
             cont_img = 'test2.png'
             cont_video = 'voko.mkv'
             buttons = [[{"type": 'callback',
@@ -65,5 +67,5 @@ def main():
 
             attach = image + video + key
 
-            bot.edit_content(mid, attach, text='ТЕКСТ ИЗМЕНЁННЫЙ')
+            bot.edit_content(mid, attach, text='ТЕКСТ ИЗМЕНЁННЫЙ') # изменяем загруженный контент
 ```
