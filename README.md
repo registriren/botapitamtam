@@ -26,7 +26,14 @@ https://github.com/registriren/yatranslate
 (*git clone https://github.com/registriren/botapitamtam*), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталоге с вашим кодом.
 
 ## Описание методов (в разработке, смотрите в основном коде):
+- [attach_audio](doc/attach_audio.md) - готовит аудио к совместной отправке с другим контентом.
+- [attach_buttons](doc/attach_buttons.md) - готовит кнопки к совместной отправке с другим контентом.
+- [attach_file](doc/attach_file.md) - готовит файл к совместной отправке с другим контентом.
+- [attach_image](doc/attach_image.md) - готовит изображения к совместной отправке с другим контентом.
+- [attach_image_url](doc/attach_image_url.md) - готовит изображения (по их URL) к совместной отправке с другим контентом.
+- [attach_video](doc/attach_video.md) - готовит видео к совместной отправке с другим контентом.
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
+- [edit_content](doc/edit_content.md) - изменяет контент по его идентификатору и сформированному аттач.
 - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id нажатой кнопки.
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
