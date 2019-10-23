@@ -27,6 +27,7 @@ https://github.com/registriren/yatranslate
 
 ## Описание методов (в разработке, смотрите в основном коде):
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
+- [edit_content](doc/edit_content.md) - изменяет контент по его идентификатору и сформированному аттач.
 - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id нажатой кнопки.
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
