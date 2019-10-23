@@ -1,6 +1,7 @@
 ## get_link_chat_id(update)
+https://dev.tamtam.chat/#operation/getUpdates  
 Получение идентификатора чата пересланного сообщения  
-**:param** update = результат работы метода [get_updates](get_updates.md).   
+:param **update** = результат работы метода [get_updates](get_updates.md).   
 **:return:** возвращает, если это возможно, значение поля 'chat_id'(от куда) пересланного боту сообщения.
 
 ## Пример:
