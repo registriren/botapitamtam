@@ -1,4 +1,5 @@
 ## get_chat_id(update=None)
+https://dev.tamtam.chat/#operation/getUpdates  
 Получает ID чата (диалога) в которм происходит взаимодействие с ботом.  
 **update** получаем методом [get_updates](get_updates.md). Если **update**=None, то возвращается chat_id последнего активного диалога.
 ## Пример:
