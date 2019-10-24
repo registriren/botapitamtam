@@ -1,6 +1,6 @@
 ## delete_message(message_id)
 https://dev.tamtam.chat/#operation/deleteMessage  
-Удаляет сообщение (контент) по его message_id. Удаление возможно только сообщений созданных ботом.
+Удаляет сообщение (контент) по его message_id. В диалоге с ботом возможно удаление только сообщений созданных ботом, в чатах удаление сообщений возможно при наличии у бота прав администратора.  
 **message_id** получаем методом [get_message_id(update)](get_message_id.md).  
 **update** получаем методом [get_updates](get_updates.md).  
 ## Пример
