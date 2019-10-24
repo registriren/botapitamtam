@@ -1,6 +1,6 @@
 ## attach_buttons(buttons)  
 https://dev.tamtam.chat/#operation/sendMessage    
-Метод подготовки кнопок к отправке  
+Метод подготовки кнопок к отправке через метод [send_content](send_content.md)
 ```bash
 :param buttons = [
                           [{"type": 'callback',
@@ -22,7 +22,6 @@ https://dev.tamtam.chat/#operation/sendMessage
                            :param text: подпись кнопки
                            :param payload: результат нажатия кнопки
                            :param intent: цвет кнопки    
-```
 :return: **attach:** подготовленный контент  
-
+```
 ## [Пример](https://github.com/registriren/botapitamtam/blob/master/doc/edit_content.md#пример)
