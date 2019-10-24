@@ -22,6 +22,6 @@ https://dev.tamtam.chat/#operation/sendMessage
                            :param text: подпись кнопки
                            :param payload: результат нажатия кнопки
                            :param intent: цвет кнопки    
-:return: **attach:** подготовленный контент  
+:return: attach: подготовленный контент  
 ```
 ## [Пример](https://github.com/registriren/botapitamtam/blob/master/doc/edit_content.md#пример)
