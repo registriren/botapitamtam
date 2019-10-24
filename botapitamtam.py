@@ -610,8 +610,8 @@ class BotHandler:
     def attach_file(self, content, content_name=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
-        Метод отправки файла в указанный чат (файлы загружаются только по одному)
-        :param content: имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
+        Метод подготовки файла (файлы загружаются только по одному) совместно с кнопками
+        :param content: имя файла или полный путь доступный боту на машине где он запущен, например '/mnt/files/movie.mp4'
         :param content_name: имя с которым будет загружен файл
         :return: attach: подготовленный контент
         """
