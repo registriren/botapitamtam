@@ -20,7 +20,7 @@ class BotHandler:
         self.token = token
         self.url = 'https://botapi.tamtam.chat/'
 
-    def get_updates(self, marker=None):
+    def get_updates(self, marker=None, limit=100, timeout=30):
         """
         Основная функция опроса состояния (событий) бота методом long polling
         This method is used to get updates from bot via get request. It is based on long polling.
@@ -29,9 +29,9 @@ class BotHandler:
         """
         method = 'updates'
         params = {
-            "timeout": 45,
-            "limit": 100,
             "marker": marker,
+            "limit": limit,
+            "timeout": timeout,
             "types": None,
             "access_token": self.token
         }
@@ -826,11 +826,15 @@ class BotHandler:
         :return: update: результат работы POST запроса отправки файла
         """
         url = self.upload_url(type)
-        if content_name == None:
+        response = 400
+        if content_name is None:
             content_name = os.path.basename(content)
-        content = open(content, 'rb')
+        try:
+            content = open(content, 'rb')
+        except Exception:
+            logger.error("Error upload file (no such file)")
         response = requests.post(url, files={
-            'files': (content_name, content, 'multipart/form-data')})
+           'files': (content_name, content, 'multipart/form-data')})
         if response.status_code == 200:
             token = response.json()
         else:
