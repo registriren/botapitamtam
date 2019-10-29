@@ -71,6 +71,42 @@ class BotHandler:
         #    members = None
         return members
 
+    def add_members(self, chat_id, user_ids):
+
+        method = 'chats/{}'.format(chat_id) + '/members'
+        params = {
+            "access_token": self.token
+        }
+        data = {
+            "user_ids": [
+                user_ids
+            ]
+        }
+        response = requests.post(self.url + method, params=params, data=json.dumps(data))
+
+        if response.status_code == 200:
+            add_members = response.json()
+        else:
+            logger.error("Error add members: {}".format(response.status_code))
+            add_members = None
+        return add_members
+
+    def delete_members(self, chat_id, user_id=None):
+
+        method = 'chats/{}'.format(chat_id) + '/members'
+        params = (
+            ('access_token', self.token),
+            ('user_id', user_id),
+        )
+        response = requests.delete(self.url + method, params=params)
+
+        if response.status_code == 200:
+            delete_members = response.json()
+        else:
+            logger.error("Error delete members: {}".format(response.status_code))
+            delete_members = None
+        return delete_members
+
     def get_update_type(self, update):
         """
         Метод получения типа события произошедшего с ботом
