@@ -60,6 +60,12 @@ class BotHandler:
         return marker
 
     def get_members(self, chat_id):
+        """
+        Возвращает пользователей, участвовавших в чате.
+        Returns users participated in chat.
+        https://dev.tamtam.chat/#operation/getMembers
+        API = chats/{chatId}/members
+        """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
             "access_token": self.token
@@ -72,7 +78,12 @@ class BotHandler:
         return members
 
     def add_members(self, chat_id, user_ids):
-
+        """
+        Добавляет пользователя в чат. Могут потребоваться дополнительные разрешения.
+        Adds members to chat. Additional permissions may require.
+        https://dev.tamtam.chat/#operation/addMembers
+        API = chats/{chatId}/members
+        """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
             "access_token": self.token
@@ -92,7 +103,12 @@ class BotHandler:
         return add_members
 
     def delete_members(self, chat_id, user_id=None):
-
+        """
+        Удаляет участника из чата. Могут потребоваться дополнительные разрешения.
+        Removes member from chat. Additional permissions may require.
+        https://dev.tamtam.chat/#operation/removeMember
+        API = chats/{chatId}/members
+        """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = (
             ('access_token', self.token),
