@@ -71,7 +71,7 @@ class BotHandler:
             "access_token": self.token
         }
         response = requests.get(self.url + method, params)
-
+        
         chat = response.json()
 
         return chat
