@@ -62,7 +62,54 @@ class BotHandler:
             marker = update['marker']
         return marker
 
+    def get_chat(self, chat_id):
+        """
+        Возвращает информацию о чате.
+        Returns info about chat.
+        https://dev.tamtam.chat/#operation/getChat
+        API = chats/{chatId}
+        """
+        method = 'chats/{}'.format(chat_id)
+        params = {
+            "access_token": self.token
+        }
+        response = requests.get(self.url + method, params)
+        
+        chat = response.json()
+
+        return chat
+
+    def edit_chat_info(self, chat_id, icon, title):
+        """
+        Редактирование информации чата: заголовок, значок, и т.д.
+        Edits chat info: title, icon, etc…
+        https://dev.tamtam.chat/#operation/editChat
+        API = chats/{chatId}
+        """
+        method = 'chats/{}'.format(chat_id)
+        params = {
+            "access_token": self.token
+        }
+        data = {
+            "icon": icon,
+            "title": title
+        }
+        response = requests.patch(self.url + method, params=params, data=json.dumps(data))
+
+        if response.status_code == 200:
+            edit_chat_info = response.json()
+        else:
+            logger.error("Error edit chat info: {}".format(response.status_code))
+            edit_chat_info = None
+        return edit_chat_info
+
     def get_members(self, chat_id):
+        """
+        Возвращает пользователей, участвовавших в чате.
+        Returns users participated in chat.
+        https://dev.tamtam.chat/#operation/getMembers
+        API = chats/{chatId}/members
+        """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
             "access_token": self.token
@@ -73,6 +120,52 @@ class BotHandler:
         # if len(members['members']) == 0:
         #    members = None
         return members
+
+    def add_members(self, chat_id, user_ids):
+        """
+        Добавляет пользователя в чат. Могут потребоваться дополнительные разрешения.
+        Adds members to chat. Additional permissions may require.
+        https://dev.tamtam.chat/#operation/addMembers
+        API = chats/{chatId}/members
+        """
+        method = 'chats/{}'.format(chat_id) + '/members'
+        params = {
+            "access_token": self.token
+        }
+        data = {
+            "user_ids": [
+                user_ids
+            ]
+        }
+        response = requests.post(self.url + method, params=params, data=json.dumps(data))
+
+        if response.status_code == 200:
+            add_members = response.json()
+        else:
+            logger.error("Error add members: {}".format(response.status_code))
+            add_members = None
+        return add_members
+
+    def delete_members(self, chat_id, user_id=None):
+        """
+        Удаляет участника из чата. Могут потребоваться дополнительные разрешения.
+        Removes member from chat. Additional permissions may require.
+        https://dev.tamtam.chat/#operation/removeMember
+        API = chats/{chatId}/members
+        """
+        method = 'chats/{}'.format(chat_id) + '/members'
+        params = (
+            ('access_token', self.token),
+            ('user_id', user_id),
+        )
+        response = requests.delete(self.url + method, params=params)
+
+        if response.status_code == 200:
+            delete_members = response.json()
+        else:
+            logger.error("Error delete members: {}".format(response.status_code))
+            delete_members = None
+        return delete_members
 
     def get_update_type(self, update):
         """
