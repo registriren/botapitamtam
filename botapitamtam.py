@@ -80,7 +80,7 @@ class BotHandler:
                 logger.error("Error get chat info: {}".format(response.status_code))
                 chat = None
         except Exception as e:
-            logger.error("Error connect get chat: %s.", e)
+            logger.error("Error connect get chat info: %s.", e)
             chat = None
         return chat
 
