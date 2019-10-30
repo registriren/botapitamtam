@@ -59,6 +59,47 @@ class BotHandler:
             marker = update['marker']
         return marker
 
+    def get_chat(self, chat_id):
+        """
+        Возвращает информацию о чате.
+        Returns info about chat.
+        https://dev.tamtam.chat/#operation/getChat
+        API = chats/{chatId}
+        """
+        method = 'chats/{}'.format(chat_id)
+        params = {
+            "access_token": self.token
+        }
+        response = requests.get(self.url + method, params)
+
+        chat = response.json()
+
+        return chat
+
+    def edit_chat_info(self, chat_id, icon, title):
+        """
+        Редактирование информации чата: заголовок, значок, и т.д.
+        Edits chat info: title, icon, etc…
+        https://dev.tamtam.chat/#operation/editChat
+        API = chats/{chatId}
+        """
+        method = 'chats/{}'.format(chat_id)
+        params = {
+            "access_token": self.token
+        }
+        data = {
+            "icon": icon,
+            "title": title
+        }
+        response = requests.patch(self.url + method, params=params, data=json.dumps(data))
+
+        if response.status_code == 200:
+            edit_chat_info = response.json()
+        else:
+            logger.error("Error edit chat info: {}".format(response.status_code))
+            edit_chat_info = None
+        return edit_chat_info
+
     def get_members(self, chat_id):
         """
         Возвращает пользователей, участвовавших в чате.
