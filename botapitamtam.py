@@ -115,20 +115,24 @@ class BotHandler:
             chat_info = None
         return chat_info
 
-    def get_members(self, chat_id):
+    def get_members(self, chat_id, user_ids, marker=None, count=20):
         """
-        https://dev.tamtam.chat/#operation/getMembers
-        Возвращает пользователей, участвующих в чате.
+        Возвращает пользователей, участвовавших в чате.
         Returns users participated in chat.
+        https://dev.tamtam.chat/#operation/getMembers
         API = chats/{chatId}/members
-        :param chat_id: идентификатор чата
-        :return: возвращает
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
-            "access_token": self.token
+            "access_token": self.token,
+            'user_ids': [
+                user_ids
+            ],
+            # "user_ids" : user_ids,
+            'marker': marker,
+            'count': count
         }
-        response = requests.get(self.url + method, params)
+        response = requests.get(self.url + method, params=params)
         # members = (self.url + method, params)
         members = response.json()
         # if len(members['members']) == 0:
