@@ -59,7 +59,7 @@ class BotHandler:
             marker = update['marker']
         return marker
 
-    def get_chat_info(self, chat_id):
+    def get_chat(self, chat_id):
         """
         https://dev.tamtam.chat/#operation/getChat
         Метод получения информации о чате (какой информации?).
@@ -86,10 +86,14 @@ class BotHandler:
 
     def edit_chat_info(self, chat_id, icon, title):
         """
-        Редактирование информации чата: заголовок, значок, и т.д.
-        Edits chat info: title, icon, etc…
         https://dev.tamtam.chat/#operation/editChat
+        Редактирование информации чата: заголовок и значок
+        Edits chat info: title, icon
         API = chats/{chatId}
+        :param chat_id: идентификатор изменяемого чата
+        :param icon: значек чата, формируется методом attach_image или attach_image_url
+        :param title: заголовок
+        :return: возвращает информацию о параметрах чата
         """
         method = 'chats/{}'.format(chat_id)
         params = {
@@ -99,21 +103,26 @@ class BotHandler:
             "icon": icon,
             "title": title
         }
-        response = requests.patch(self.url + method, params=params, data=json.dumps(data))
-
-        if response.status_code == 200:
-            edit_chat_info = response.json()
-        else:
-            logger.error("Error edit chat info: {}".format(response.status_code))
-            edit_chat_info = None
-        return edit_chat_info
+        try:
+            response = requests.patch(self.url + method, params=params, data=json.dumps(data))
+            if response.status_code == 200:
+                chat_info = response.json()
+            else:
+                logger.error("Error edit chat info: {}".format(response.status_code))
+                chat_info = None
+        except Exception as e:
+            logger.error("Error connect edit chat info: %s.", e)
+            chat_info = None
+        return chat_info
 
     def get_members(self, chat_id):
         """
-        Возвращает пользователей, участвовавших в чате.
-        Returns users participated in chat.
         https://dev.tamtam.chat/#operation/getMembers
+        Возвращает пользователей, участвующих в чате.
+        Returns users participated in chat.
         API = chats/{chatId}/members
+        :param chat_id: идентификатор чата
+        :return: возвращает
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
