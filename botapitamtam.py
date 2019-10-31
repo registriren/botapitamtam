@@ -246,7 +246,7 @@ class BotHandler:
                 logger.error("Error leave chat: {}".format(response.status_code))
                 leave_chat = None
         except Exception as e:
-            logger.error("Error leave chat: %s.", e)
+            logger.error("Error connect leave chat: %s.", e)
             leave_chat = None
         return leave_chat
 
