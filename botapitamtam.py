@@ -4,9 +4,6 @@ import time
 import logging
 import os
 
-from requests import ReadTimeout, Timeout
-from urllib3.exceptions import NewConnectionError, MaxRetryError
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -39,7 +36,7 @@ class BotHandler:
             response = requests.get(self.url + method, params)
             update = response.json()
         except Exception as e:
-            logger.error("Error connecting: %s.", e)
+            logger.error("Error get updates: %s.", e)
             update = {}
         if 'updates' in update.keys():
             if len(update['updates']) != 0:
@@ -62,21 +59,29 @@ class BotHandler:
             marker = update['marker']
         return marker
 
-    def get_chat(self, chat_id):
+    def get_chat_info(self, chat_id):
         """
-        Возвращает информацию о чате.
-        Returns info about chat.
         https://dev.tamtam.chat/#operation/getChat
+        Метод получения информации о чате (какой информации?).
+        Returns info about chat.
         API = chats/{chatId}
+        :param chat_id: идентификатор чата о котором получаем информацию
+        :return: возвращает информацию о чате в формате JSON или None при неудаче
         """
         method = 'chats/{}'.format(chat_id)
         params = {
             "access_token": self.token
         }
-        response = requests.get(self.url + method, params)
-        
-        chat = response.json()
-
+        try:
+            response = requests.get(self.url + method, params)
+            if response.status_code == 200:
+                chat = response.json()
+            else:
+                logger.error("Error get chat info: {}".format(response.status_code))
+                chat = None
+        except Exception as e:
+            logger.error("Error connect get chat info: %s.", e)
+            chat = None
         return chat
 
     def edit_chat_info(self, chat_id, icon, title):
