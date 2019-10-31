@@ -599,7 +599,7 @@ class BotHandler:
         params = {"action": "sending_file"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_message(self, text, chat_id):
+    def send_message(self, text, chat_id, dislinkprev=False ):
         """
         Send message to specific chat_id by post request
         Отправляет сообщение в соответствующий чат
@@ -609,7 +609,7 @@ class BotHandler:
         :return update: результат POST запроса на отправку сообщения
         """
         self.send_typing_on(chat_id)
-        update = self.send_content(None, chat_id, text)
+        update = self.send_content(None, chat_id, text, dislinkprev=dislinkprev)
         if update == None:
             logger.error("Error send message")
         return update
@@ -949,7 +949,7 @@ class BotHandler:
             token = None
         return token
 
-    def send_content(self, attachments, chat_id, text=None, link=None, notify=True):
+    def send_content(self, attachments, chat_id, text=None, link=None, notify=True, dislinkprev=False):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
@@ -958,12 +958,14 @@ class BotHandler:
         :param text: Текстовое описание контента
         :param link: Пересылаемые (цитируемые) сообщения
         :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
+        :param dislinkprev: Параметр определяет генерировать предпросмотр для ссылки или нет
         :return update: Возвращает результат POST запроса
         """
         method = 'messages'
         params = (
             ('access_token', self.token),
             ('chat_id', chat_id),
+            ('disable_link_preview', dislinkprev)
         )
         data = {
             "text": text,
