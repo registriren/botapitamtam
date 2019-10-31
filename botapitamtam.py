@@ -59,6 +59,68 @@ class BotHandler:
             marker = update['marker']
         return marker
 
+    def get_bot_info(self):
+        """
+        Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод возвращает идентификатор бота, имя и аватар (если есть)
+        Returns info about current bot. Current bot can be identified by access token. Method returns bot identifier, name and avatar (if any)
+        https://dev.tamtam.chat/#operation/getMyInfo
+        API = me
+        :return: bot_info: возвращает информацию о боте.
+        """
+        method = 'me'
+        params = {
+            "access_token": self.token,
+        }
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                bot_info = response.json()
+            else:
+                logger.error("Error get bot info: {}".format(response.status_code))
+                bot_info = None
+        except Exception as e:
+            logger.error("Error get bot info: %s.", e)
+            bot_info = None
+        return bot_info
+
+    def edit_bot_info(self, name, username, description, commands, photo):
+        """
+        Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные поля останутся нетронутыми/
+        Edits current bot info. Fill only the fields you want to update. All remaining fields will stay untouched
+        https://dev.tamtam.chat/#operation/editMyInfo
+        API = me
+        :param name: имя бота.
+        :param username: ссылка бота (она же ссылка).
+        :param description: описание бота.
+        :param commands = [
+        {"name": '/name_test_1', "description": "Тестовая команда 1"},
+        {"name": '/name_test_2', "description": "Тестовая команда 2"}]
+        :param photo: изображение бота. формируется методом attach_image или attach_image_url
+        :return edit_bot_info: возвращает результат PATCH запроса.
+        """
+        method = 'me'
+        params = {
+            "access_token": self.token
+        }
+        data = {
+            "name": name,
+            "username": username,
+            "description": description,
+            "commands": commands,
+            "photo": photo
+        }
+        try:
+            response = requests.patch(self.url + method, params=params, data=json.dumps(data))
+            if response.status_code == 200:
+                edit_bot_info = response.json()
+            else:
+                logger.error("Error edit bot info: {}".format(response.status_code))
+                edit_bot_info = None
+        except Exception as e:
+            logger.error("Error edit bot info: %s.", e)
+            edit_bot_info = None
+        return edit_bot_info
+
     def get_chat(self, chat_id):
         """
         https://dev.tamtam.chat/#operation/getChat
@@ -83,6 +145,84 @@ class BotHandler:
             logger.error("Error connect get chat info: %s.", e)
             chat = None
         return chat
+
+    def get_chats(self, count=50, marker=None):
+        """
+        Возвращает информацию о чатах, в которых участвовал бот: список результатов и маркер указывают на следующую страницу
+        Returns information about chats that bot participated in: a result list and marker points to the next page
+        https://dev.tamtam.chat/#operation/getChats
+        API = chats
+        :param count: кол-во чатов. максмум 100.
+        :param marker: указывает на следующую страницу данных. null для первой страницы
+        :return: chats: возвращает результат GET запроса.
+        """
+        method = 'chats'
+        params = {
+            "access_token": self.token,
+            "count": count,
+            "marker": marker
+        }
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                chats = response.json()
+            else:
+                logger.error("Error get chats: {}".format(response.status_code))
+                chats = None
+        except Exception as e:
+            logger.error("Error get chats: %s.", e)
+            chats = None
+        return chats
+
+    def get_chat_admins(self, chat_id):
+        """
+        Возвращает пользователей, участвовавших в чате.
+        Returns users participated in chat.
+        https://dev.tamtam.chat/#operation/getAdmins
+        API = chats/{chatId}/members
+        :param chat_id: идентификатор чата.
+        :return chat_admins: возвращает список администраторов чата.
+        """
+        method = 'chats/{}'.format(chat_id) + '/members/admins'
+        params = {
+            "access_token": self.token
+        }
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                chat_admins = response.json()
+            else:
+                logger.error("Error chat admins: {}".format(response.status_code))
+                chat_admins = None
+        except Exception as e:
+            logger.error("Error chat admins: %s.", e)
+            chat_admins = None
+        return chat_admins
+
+    def get_chat_membership(self, chat_id):
+        """
+        Возвращает информацию о членстве в чате для текущего бота.
+        Returns chat membership info for current bot.
+        https://dev.tamtam.chat/#operation/getMembership
+        API = chats/{chatId}/members/me
+        :param chat_id: идентификатор чата.
+        :return chat_membership: возвращает информацию о членстве бота в чате.
+        """
+        method = 'chats/{}'.format(chat_id) + '/members/me'
+        params = {
+            "access_token": self.token
+        }
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                chat_membership = response.json()
+            else:
+                logger.error("Error chat membership: {}".format(response.status_code))
+                chat_membership = None
+        except Exception as e:
+            logger.error("Error chat membership: %s.", e)
+            chat_membership = None
+        return chat_membership
 
     def edit_chat_info(self, chat_id, icon, title):
         """
@@ -115,24 +255,37 @@ class BotHandler:
             chat_info = None
         return chat_info
 
-    def get_members(self, chat_id):
+    def get_members(self, chat_id, user_ids, marker=None, count=20):
         """
-        https://dev.tamtam.chat/#operation/getMembers
-        Возвращает пользователей, участвующих в чате.
+        Возвращает пользователей, участвовавших в чате.
         Returns users participated in chat.
+        https://dev.tamtam.chat/#operation/getMembers
         API = chats/{chatId}/members
-        :param chat_id: идентификатор чата
-        :return: возвращает
+        :param chat_id: идентификатор изменяемого чата.
+        :param user_ids: идентификатор пользователя чата (канала).
+        :param marker: маркер.
+        :param count: кол-во пользователей. максимум 100.
+        :return: возвращает информацию о пользователях чата (канала)
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
-            "access_token": self.token
+            "access_token": self.token,
+            'user_ids': [
+                user_ids
+            ],
+            'marker': marker,
+            'count': count
         }
-        response = requests.get(self.url + method, params)
-        # members = (self.url + method, params)
-        members = response.json()
-        # if len(members['members']) == 0:
-        #    members = None
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                members = response.json()
+            else:
+                logger.error("Error get members: {}".format(response.status_code))
+                members = None
+        except Exception as e:
+            logger.error("Error get members: %s.", e)
+            members = None
         return members
 
     def add_members(self, chat_id, user_ids):
@@ -141,6 +294,9 @@ class BotHandler:
         Adds members to chat. Additional permissions may require.
         https://dev.tamtam.chat/#operation/addMembers
         API = chats/{chatId}/members
+        :param chat_id: идентификатор изменяемого чата.
+        :param user_ids: идентификатор пользователя чата (канала).
+        :return add_members: Возвращает результат POST запроса.
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
@@ -166,6 +322,9 @@ class BotHandler:
         Removes member from chat. Additional permissions may require.
         https://dev.tamtam.chat/#operation/removeMember
         API = chats/{chatId}/members
+        :param chat_id: идентификатор чата.
+        :param user_id: идентификатор пользователя.
+        :return delete_members: возвращает результат DELETE запроса.
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = (
@@ -599,7 +758,7 @@ class BotHandler:
         params = {"action": "sending_file"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_message(self, text, chat_id):
+    def send_message(self, text, chat_id, dislinkprev=False ):
         """
         Send message to specific chat_id by post request
         Отправляет сообщение в соответствующий чат
@@ -609,7 +768,7 @@ class BotHandler:
         :return update: результат POST запроса на отправку сообщения
         """
         self.send_typing_on(chat_id)
-        update = self.send_content(None, chat_id, text)
+        update = self.send_content(None, chat_id, text, dislinkprev=dislinkprev)
         if update == None:
             logger.error("Error send message")
         return update
@@ -949,7 +1108,7 @@ class BotHandler:
             token = None
         return token
 
-    def send_content(self, attachments, chat_id, text=None, link=None, notify=True):
+    def send_content(self, attachments, chat_id, text=None, link=None, notify=True, dislinkprev=False):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
@@ -958,12 +1117,14 @@ class BotHandler:
         :param text: Текстовое описание контента
         :param link: Пересылаемые (цитируемые) сообщения
         :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
+        :param dislinkprev: Параметр определяет генерировать предпросмотр для ссылки или нет
         :return update: Возвращает результат POST запроса
         """
         method = 'messages'
         params = (
             ('access_token', self.token),
             ('chat_id', chat_id),
+            ('disable_link_preview', dislinkprev)
         )
         data = {
             "text": text,
