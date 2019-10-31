@@ -68,4 +68,10 @@ def main():
             attach = image + video + key
 
             bot.edit_content(mid, attach, text='ТЕКСТ ИЗМЕНЁННЫЙ') # изменяем загруженный контент
+            
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit()
 ```
