@@ -61,8 +61,9 @@ class BotHandler:
 
     def get_bot_info(self):
         """
-        Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод возвращает идентификатор бота, имя и аватар (если есть)
-        Returns info about current bot. Current bot can be identified by access token. Method returns bot identifier, name and avatar (if any)
+        Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод
+        возвращает идентификатор бота, имя и аватар (если есть) Returns info about current bot. Current bot can be
+        identified by access token. Method returns bot identifier, name and avatar (if any)
         https://dev.tamtam.chat/#operation/getMyInfo
         API = me
         :return: bot_info: возвращает информацию о боте.
@@ -79,23 +80,24 @@ class BotHandler:
                 logger.error("Error get bot info: {}".format(response.status_code))
                 bot_info = None
         except Exception as e:
-            logger.error("Error get bot info: %s.", e)
+            logger.error("Error connect get bot info: %s.", e)
             bot_info = None
         return bot_info
 
     def edit_bot_info(self, name, username, description, commands, photo):
         """
-        Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные поля останутся нетронутыми/
-        Edits current bot info. Fill only the fields you want to update. All remaining fields will stay untouched
+        Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
+        поля останутся нетронутыми.
+        Edits current bot info. Fill only the fields you want to update. All remaining
+        fields will stay untouched
         https://dev.tamtam.chat/#operation/editMyInfo
         API = me
-        :param name: имя бота.
-        :param username: ссылка бота (она же ссылка).
-        :param description: описание бота.
-        :param commands = [
-        {"name": '/name_test_1', "description": "Тестовая команда 1"},
-        {"name": '/name_test_2', "description": "Тестовая команда 2"}]
-        :param photo: изображение бота. формируется методом attach_image или attach_image_url
+        :param name: имя бота
+        :param username: уникальное имя (@my_bot) бота без знака "@"
+        :param description: описание бота
+        :param commands: = [{"name": '/name_test_1', "description": "Тестовая команда 1"},
+                            {"name": '/name_test_2', "description": "Тестовая команда 2"}]
+        :param photo: изображение бота, формируется методом attach_image или attach_image_url
         :return edit_bot_info: возвращает результат PATCH запроса.
         """
         method = 'me'
@@ -117,7 +119,7 @@ class BotHandler:
                 logger.error("Error edit bot info: {}".format(response.status_code))
                 edit_bot_info = None
         except Exception as e:
-            logger.error("Error edit bot info: %s.", e)
+            logger.error("Error connect edit bot info: %s.", e)
             edit_bot_info = None
         return edit_bot_info
 
@@ -146,14 +148,14 @@ class BotHandler:
             chat = None
         return chat
 
-    def get_chats(self, count=50, marker=None):
+    def get_all_chats(self, count=50, marker=None):
         """
         Возвращает информацию о чатах, в которых участвовал бот: список результатов и маркер указывают на следующую страницу
         Returns information about chats that bot participated in: a result list and marker points to the next page
         https://dev.tamtam.chat/#operation/getChats
         API = chats
-        :param count: кол-во чатов. максмум 100.
-        :param marker: указывает на следующую страницу данных. null для первой страницы
+        :param count: количествово анализируемых чатов (максмум 100).
+        :param marker: указывает на следующую страницу данных, null для первой страницы
         :return: chats: возвращает результат GET запроса.
         """
         method = 'chats'
@@ -167,10 +169,10 @@ class BotHandler:
             if response.status_code == 200:
                 chats = response.json()
             else:
-                logger.error("Error get chats: {}".format(response.status_code))
+                logger.error("Error get all chats: {}".format(response.status_code))
                 chats = None
         except Exception as e:
-            logger.error("Error get chats: %s.", e)
+            logger.error("Error connect get all chats: %s.", e)
             chats = None
         return chats
 
@@ -180,8 +182,8 @@ class BotHandler:
         Returns users participated in chat.
         https://dev.tamtam.chat/#operation/getAdmins
         API = chats/{chatId}/members
-        :param chat_id: идентификатор чата.
-        :return chat_admins: возвращает список администраторов чата.
+        :param chat_id: идентификатор чата
+        :return chat_admins: возвращает список администраторов чата
         """
         method = 'chats/{}'.format(chat_id) + '/members/admins'
         params = {
@@ -195,18 +197,18 @@ class BotHandler:
                 logger.error("Error chat admins: {}".format(response.status_code))
                 chat_admins = None
         except Exception as e:
-            logger.error("Error chat admins: %s.", e)
+            logger.error("Error connect chat admins: %s.", e)
             chat_admins = None
         return chat_admins
 
     def get_chat_membership(self, chat_id):
         """
-        Возвращает информацию о членстве в чате для текущего бота.
+        Возвращает информацию о членстве в чате для текущего бота
         Returns chat membership info for current bot.
         https://dev.tamtam.chat/#operation/getMembership
         API = chats/{chatId}/members/me
-        :param chat_id: идентификатор чата.
-        :return chat_membership: возвращает информацию о членстве бота в чате.
+        :param chat_id: идентификатор чата
+        :return chat_membership: возвращает информацию о членстве бота в чате
         """
         method = 'chats/{}'.format(chat_id) + '/members/me'
         params = {
@@ -220,7 +222,7 @@ class BotHandler:
                 logger.error("Error chat membership: {}".format(response.status_code))
                 chat_membership = None
         except Exception as e:
-            logger.error("Error chat membership: %s.", e)
+            logger.error("Error connect chat membership: %s.", e)
             chat_membership = None
         return chat_membership
 
@@ -231,7 +233,7 @@ class BotHandler:
         https://dev.tamtam.chat/#operation/leaveChat
         API = chats/{chatId}/members/me
         :param chat_id: идентификатор изменяемого чата
-        :return: возвращает результат DELETE запроса.
+        :return: возвращает результат DELETE запроса
         """
         method = 'chats/{}'.format(chat_id) + '/members/me'
         params = {
@@ -259,7 +261,7 @@ class BotHandler:
         :param chat_id: идентификатор изменяемого чата
         :param icon: значек чата, формируется методом attach_image или attach_image_url
         :param title: заголовок
-        :return: возвращает информацию о параметрах чата
+        :return: возвращает информацию о параметрах измененного чата
         """
         method = 'chats/{}'.format(chat_id)
         params = {
@@ -283,14 +285,14 @@ class BotHandler:
 
     def get_members(self, chat_id, user_ids, marker=None, count=20):
         """
-        Возвращает пользователей, участвовавших в чате.
-        Returns users participated in chat.
+        Возвращает пользователей, участвовавших в чате. Returns users participated in chat.
         https://dev.tamtam.chat/#operation/getMembers
         API = chats/{chatId}/members
-        :param chat_id: идентификатор изменяемого чата.
-        :param user_ids: идентификатор пользователя чата (канала).
-        :param marker: маркер.
-        :param count: кол-во пользователей. максимум 100.
+        :param chat_id: идентификатор чата
+        :param user_ids: разделенный запятыми список идентификаторов пользователей для получения их членства, при
+        передаче этого параметра счетчик и маркер игнорируются
+        :param marker: маркер события
+        :param count: количество (счетчик) пользователей о которых получаем информацию (максимум 100)
         :return: возвращает информацию о пользователях чата (канала)
         """
         method = 'chats/{}'.format(chat_id) + '/members'
@@ -310,7 +312,7 @@ class BotHandler:
                 logger.error("Error get members: {}".format(response.status_code))
                 members = None
         except Exception as e:
-            logger.error("Error get members: %s.", e)
+            logger.error("Error connect get members: %s.", e)
             members = None
         return members
 
@@ -320,9 +322,9 @@ class BotHandler:
         Adds members to chat. Additional permissions may require.
         https://dev.tamtam.chat/#operation/addMembers
         API = chats/{chatId}/members
-        :param chat_id: идентификатор изменяемого чата.
-        :param user_ids: идентификатор пользователя чата (канала).
-        :return add_members: Возвращает результат POST запроса.
+        :param chat_id: идентификатор чата
+        :param user_ids: массив идентификаторов пользователей
+        :return: add_members: возвращает результат POST запроса
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = {
@@ -333,38 +335,44 @@ class BotHandler:
                 user_ids
             ]
         }
-        response = requests.post(self.url + method, params=params, data=json.dumps(data))
-
-        if response.status_code == 200:
-            add_members = response.json()
-        else:
-            logger.error("Error add members: {}".format(response.status_code))
+        try:
+            response = requests.post(self.url + method, params=params, data=json.dumps(data))
+            if response.status_code == 200:
+                add_members = response.json()
+            else:
+                logger.error("Error add members: {}".format(response.status_code))
+                add_members = None
+        except Exception as e:
+            logger.error("Error connect add members: %s.", e)
             add_members = None
         return add_members
 
-    def delete_members(self, chat_id, user_id=None):
+    def remove_member(self, chat_id, user_id):
         """
         Удаляет участника из чата. Могут потребоваться дополнительные разрешения.
         Removes member from chat. Additional permissions may require.
         https://dev.tamtam.chat/#operation/removeMember
         API = chats/{chatId}/members
-        :param chat_id: идентификатор чата.
-        :param user_id: идентификатор пользователя.
-        :return delete_members: возвращает результат DELETE запроса.
+        :param chat_id: идентификатор чата
+        :param user_id: идентификатор пользователя
+        :return remove_member: возвращает результат DELETE запроса
         """
         method = 'chats/{}'.format(chat_id) + '/members'
         params = (
             ('access_token', self.token),
             ('user_id', user_id),
         )
-        response = requests.delete(self.url + method, params=params)
-
-        if response.status_code == 200:
-            delete_members = response.json()
-        else:
-            logger.error("Error delete members: {}".format(response.status_code))
-            delete_members = None
-        return delete_members
+        try:
+            response = requests.delete(self.url + method, params=params)
+            if response.status_code == 200:
+                remove_member = response.json()
+            else:
+                logger.error("Error remove member: {}".format(response.status_code))
+                remove_member = None
+        except Exception as e:
+            logger.error("Error connect remove member: %s.", e)
+            remove_member = None
+        return remove_member
 
     def get_update_type(self, update):
         """
