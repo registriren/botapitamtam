@@ -77,7 +77,7 @@ https://github.com/registriren/yatranslate
 - [send_sending_video](doc/send_sending_video.md) - отправляет уведомление об отправке видео.
 - [send_typing_on](doc/send_typing_on.md) - отправляет уведомление о печати сообщения.
 - [send_video](doc/send_video.md) - отправляет видео.
-- [subscribe](doc/subscribe.md) - подписывается на получения обновлений через WebHook.
+- [subscribe](doc/subscribe.md) - подписывается на получение обновлений через WebHook.
 - [token_upload_content](doc/token_upload_content.md) - вспомогательная функция получения токена загружаемого изображения.
 - [unsubscribe](doc/unsubscribe.md) - отписывается от получения обновлений через WebHook.
 - [upload_url](doc/upload_url.md) - вспомогательная функция получения URL загружаемого изображения.
