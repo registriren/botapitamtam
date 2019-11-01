@@ -34,21 +34,21 @@ https://github.com/registriren/yatranslate
 - [attach_video](doc/attach_video.md) - готовит видео к совместной отправке с другим контентом.
 - [add_members](doc/add_members.md) - добавляет пользователя в чат.
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
-- [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию текущего бота.
-- [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию чата.
+- [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
+- [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
 - [edit_content](doc/edit_content.md) - изменяет контент по его идентификатору и сформированному аттач.
 - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id нажатой кнопки.
-- [get_bot_info](doc/get_bot_info.md) - получает информацию текущего бота.
-- [get_chat](doc/get_chat.md) - получает информацию текущего чата.
+- [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
+- [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
 - [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
-- [get_chat_admins](doc/get_chat_admins.md) - получает информацию о администраторах чата.
+- [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
 - [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
 - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
 - [get_link_user_id](doc/get_link_user_id.md) - получает идентификатор пользователя пересланного сообщения.
 - [get_marker](doc/get_marker.md) - получает маркер (порядковый номер) следующего события.
-- [get_members](doc/get_members.md) - получает members.
+- [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
 - [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения.
 - [get_name](doc/get_name.md) - получает имя пользователя.
 - [get_payload](doc/get_payload.md) - получает payload (присвоенное значение) нажатой кнопки.
