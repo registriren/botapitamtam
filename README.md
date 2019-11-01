@@ -60,7 +60,7 @@ https://github.com/registriren/yatranslate
 - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
 - [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
-- [subscribes](doc/subscribes.md) - подписывается на URL для получения обновлений.
+- [subscribe](doc/subscribe.md) - подписывается на URL для получения обновлений.
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](doc/send_buttons.md) - формирует кнопки.
