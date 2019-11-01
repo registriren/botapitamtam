@@ -224,6 +224,32 @@ class BotHandler:
             chat_membership = None
         return chat_membership
 
+    def leave_chat(self, chat_id):
+        """
+        Удаление бота из участников чата.
+        Removes bot from chat members.
+        https://dev.tamtam.chat/#operation/leaveChat
+        API = chats/{chatId}/members/me
+        :param chat_id: идентификатор изменяемого чата
+        :return: возвращает результат DELETE запроса.
+        """
+        method = 'chats/{}'.format(chat_id) + '/members/me'
+        params = {
+            "access_token": self.token
+        }
+        try:
+            response = requests.delete(self.url + method, params=params)
+            if response.status_code == 200:
+                leave_chat = response.json()
+                print(leave_chat)
+            else:
+                logger.error("Error leave chat: {}".format(response.status_code))
+                leave_chat = None
+        except Exception as e:
+            logger.error("Error connect leave chat: %s.", e)
+            leave_chat = None
+        return leave_chat
+
     def edit_chat_info(self, chat_id, icon, title):
         """
         https://dev.tamtam.chat/#operation/editChat
