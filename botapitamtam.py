@@ -67,7 +67,7 @@ class BotHandler:
                 logger.error("Error get subscriptions: {}".format(response.status_code))
                 subscriptions = None
         except Exception as e:
-            logger.error("Error get subscriptions: %s.", e)
+            logger.error("Error connect get subscriptions: %s.", e)
             subscriptions = None
         return subscriptions
 
@@ -79,11 +79,10 @@ class BotHandler:
         about new events in chat rooms at the specified URL.
         https://dev.tamtam.chat/#operation/subscribe
         API = subscriptions
-        :param url: URL HTTP(S) - конечной точки вашего бота. Должен начинаться с http(s)://
-        :param update_types: список типов обновлений, которые хочет получить ваш бот. [См. обновление объекта для
-        полного списка типов.]
-        :param version: версия API.
-        :return:
+        :param url: URL HTTP(S) - точки входа вашего бота, должен начинаться с http(s)://
+        :param update_types: список типов обновлений, которые хочет получить ваш бот [в разработке..]
+        :param version: версия API
+        :return: возвращает статус POST запроса
         """
         method = 'subscriptions'
         params = {
@@ -102,7 +101,7 @@ class BotHandler:
                 logger.error("Error subscribes: {}".format(response.status_code))
                 subscribe = None
         except Exception as e:
-            logger.error("Error subscribes: %s.", e)
+            logger.error("Error connect subscribes: %s.", e)
             subscribe = None
         return subscribe
 
@@ -114,8 +113,8 @@ class BotHandler:
         notifications about new events. Notification via the long-poll API becomes available for the bot
         https://dev.tamtam.chat/#operation/unsubscribe
         API = subscriptions
-        :param url: URL для удаления из подписок WebHook.
-        :return: возвращает результат DELETE запроса.
+        :param url: URL для удаления из подписок WebHook
+        :return: возвращает результат DELETE запроса
         """
         method = 'subscriptions'
         params = (
@@ -130,7 +129,7 @@ class BotHandler:
                 logger.error("Error unsubscribe: {}".format(response.status_code))
                 unsubscribe = None
         except Exception as e:
-            logger.error("Error unsubscribe: %s.", e)
+            logger.error("Error connect unsubscribe: %s.", e)
             unsubscribe = None
         return unsubscribe
 
