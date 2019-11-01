@@ -758,7 +758,7 @@ class BotHandler:
         params = {"action": "sending_file"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_message(self, text, chat_id, dislinkprev=False ):
+    def send_message(self, text, chat_id, dislinkprev=False):
         """
         Send message to specific chat_id by post request
         Отправляет сообщение в соответствующий чат
