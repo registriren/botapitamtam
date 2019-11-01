@@ -47,6 +47,92 @@ class BotHandler:
             update = None
         return update
 
+    def get_subscriptions(self):
+        """
+        Если ваш бот получает данные через WebHook, метод возвращает список всех подписок.
+        In case your bot gets data via WebHook, the method returns list of all subscriptions
+        https://dev.tamtam.chat/#operation/getSubscriptions
+        API = subscriptions
+        :return: возвращает список подписок.
+        """
+        method = 'subscriptions'
+        params = {
+            "access_token": self.token,
+        }
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                subscriptions = response.json()
+            else:
+                logger.error("Error get subscriptions: {}".format(response.status_code))
+                subscriptions = None
+        except Exception as e:
+            logger.error("Error connect get subscriptions: %s.", e)
+            subscriptions = None
+        return subscriptions
+
+    def subscribes(self, url, update_types, version):
+        """
+        Подписывается бот для получения обновлений через WebHook. После вызова этого метода бот будет получать
+        уведомления о новых событиях в чатах по указанному URL.
+        Subscribes bot to receive updates via WebHook. After calling this method, the bot will receive notifications
+        about new events in chat rooms at the specified URL.
+        https://dev.tamtam.chat/#operation/subscribe
+        API = subscriptions
+        :param url: URL HTTP(S) - точки входа вашего бота, должен начинаться с http(s)://
+        :param update_types: список типов обновлений, которые хочет получить ваш бот [в разработке..]
+        :param version: версия API
+        :return: возвращает статус POST запроса
+        """
+        method = 'subscriptions'
+        params = {
+            "access_token": self.token,
+        }
+        data = {
+            "url": url,
+            "update_types": update_types,
+            "version": version
+        }
+        try:
+            response = requests.post(self.url + method, params=params, data=json.dumps(data))
+            if response.status_code == 200:
+                subscribe = response.json()
+            else:
+                logger.error("Error subscribes: {}".format(response.status_code))
+                subscribe = None
+        except Exception as e:
+            logger.error("Error connect subscribes: %s.", e)
+            subscribe = None
+        return subscribe
+
+    def unsubscribe(self, url):
+        """
+        Отменяет подписку бота на получение обновлений через WebHook. После вызова метода бот перестает получать
+        уведомления о новых событиях. Уведомление через API длинного опроса становится доступным для бота
+        Unsubscribes bot from receiving updates via WebHook. After calling the method, the bot stops receiving
+        notifications about new events. Notification via the long-poll API becomes available for the bot
+        https://dev.tamtam.chat/#operation/unsubscribe
+        API = subscriptions
+        :param url: URL для удаления из подписок WebHook
+        :return: возвращает результат DELETE запроса
+        """
+        method = 'subscriptions'
+        params = (
+            ('access_token', self.token),
+            ('url', url),
+        )
+        try:
+            response = requests.delete(self.url + method, params=params)
+            if response.status_code == 200:
+                unsubscribe = response.json()
+            else:
+                logger.error("Error unsubscribe: {}".format(response.status_code))
+                unsubscribe = None
+        except Exception as e:
+            logger.error("Error connect unsubscribe: %s.", e)
+            unsubscribe = None
+        return unsubscribe
+
     def get_marker(self, update):
         """
         Метод получения маркера события
@@ -243,7 +329,6 @@ class BotHandler:
             response = requests.delete(self.url + method, params=params)
             if response.status_code == 200:
                 leave_chat = response.json()
-                print(leave_chat)
             else:
                 logger.error("Error leave chat: {}".format(response.status_code))
                 leave_chat = None
