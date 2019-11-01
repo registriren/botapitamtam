@@ -71,7 +71,7 @@ class BotHandler:
             subscriptions = None
         return subscriptions
 
-    def subscribes(self, url, update_types, version):
+    def subscribe(self, url, update_types, version):
         """
         Подписывается бот для получения обновлений через WebHook. После вызова этого метода бот будет получать
         уведомления о новых событиях в чатах по указанному URL.
