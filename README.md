@@ -52,11 +52,13 @@ https://github.com/registriren/yatranslate
 - [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения.
 - [get_name](doc/get_name.md) - получает имя пользователя.
 - [get_payload](doc/get_payload.md) - получает payload (присвоенное значение) нажатой кнопки.
+- [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события).
 - [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
 - [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события) .
 - [get_update_type](doc/get_update_type.md) - получает тип события, произошедшего в боте.
 - [get_updates](doc/get_updates.md) - получение событий, произошедших в боте.
 - [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события).  
+- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
 - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
 - [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
