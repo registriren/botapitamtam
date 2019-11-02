@@ -43,6 +43,7 @@ https://github.com/registriren/yatranslate
 - [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
 - [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
 - [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
+- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
 - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
@@ -52,6 +53,7 @@ https://github.com/registriren/yatranslate
 - [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения.
 - [get_name](doc/get_name.md) - получает имя пользователя.
 - [get_payload](doc/get_payload.md) - получает payload (присвоенное значение) нажатой кнопки.
+- [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события).
 - [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
 - [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события) .
 - [get_update_type](doc/get_update_type.md) - получает тип события, произошедшего в боте.
@@ -59,6 +61,8 @@ https://github.com/registriren/yatranslate
 - [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события).  
 - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
+- [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_content.
+- [link_reply](doc/link_reply.md) - формирует параметр link цитируемого сообщения для отправки через send_content.
 - [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.

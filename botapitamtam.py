@@ -234,6 +234,29 @@ class BotHandler:
             chat = None
         return chat
 
+    def get_chat_type(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        API = subscriptions/Get updates/[updates][0][message][recipient][chat_type]
+        Получает тип чата, канала, или диалога (Enum:"dialog" "chat" "channel")
+        :param update: результат работы метода get_updates
+        :return: возвращает значение поля chat_type.
+        """
+        chat_type = None
+        if update != None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            update_type = self.get_update_type(update)
+            if update_type == 'message_created':
+                upd1 = upd.get('message').get('recipient')
+                if 'chat_type' in upd1.keys():
+                    chat_type = upd1['chat_type']
+                else:
+                    chat_type = None
+        return chat_type
+
     def get_all_chats(self, count=50, marker=None):
         """
         Возвращает информацию о чатах, в которых участвовал бот: список результатов и маркер указывают на следующую страницу
@@ -792,7 +815,7 @@ class BotHandler:
                 time.sleep(5)
             else:
                 flag = None
-        #response = requests.put(self.url + method, params=params, data=json.dumps(data))
+        # response = requests.put(self.url + method, params=params, data=json.dumps(data))
         if response.status_code == 200:
             update = response.json()
         else:
@@ -1178,11 +1201,33 @@ class BotHandler:
         :return update: response | ответ на POST message в соответствии с API
         """
         self.send_typing_on(chat_id)
+        link = self.link_forward(mid)
+        update = self.send_content(None, chat_id, text, link)
+        return update
+
+    def link_reply(self, mid):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Формирует параметр link на цитируемуе сообщение для отправки через send_content
+        :param mid: идентификатор сообщения (get_message_id) на которое готовим link
+        :return link: сформированный параметр link
+        """
+        link = {"type": "reply",
+                "mid": mid
+                }
+        return link
+
+    def link_forward(self, mid):
+        """
+        https://dev.tamtam.chat/#operation/sendMessage
+        Формирует параметр link на пересылаемое сообщение для отправки через send_content
+        :param mid: идентификатор сообщения (get_message_id) на которое готовим link
+        :return link: сформированный параметр link
+        """
         link = {"type": "forward",
                 "mid": mid
                 }
-        update = self.send_content(None, chat_id, text, link)
-        return update
+        return link
 
     def send_reply_message(self, text, mid, chat_id):
         """
@@ -1195,9 +1240,7 @@ class BotHandler:
         :return update: response | ответ на POST запрос в соответствии с API
         """
         self.send_typing_on(chat_id)
-        link = {"type": "reply",
-                "mid": mid
-                }
+        link = self.link_reply(mid)
         update = self.send_content(None, chat_id, text, link)
         return update
 
@@ -1219,7 +1262,7 @@ class BotHandler:
         except Exception:
             logger.error("Error upload file (no such file)")
         response = requests.post(url, files={
-           'files': (content_name, content, 'multipart/form-data')})
+            'files': (content_name, content, 'multipart/form-data')})
         if response.status_code == 200:
             token = response.json()
         else:
