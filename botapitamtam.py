@@ -236,10 +236,11 @@ class BotHandler:
 
     def get_chat_type(self, update):
         """
-        Получает тип чата, канала, или диалога.
+        https://dev.tamtam.chat/#operation/getUpdates
         API = subscriptions/Get updates/[updates][0][message][recipient][chat_type]
-        :param update = результат работы метода get_update
-        :return: возвращает значения поля chat_type.
+        Получает тип чата, канала, или диалога (Enum:"dialog" "chat" "channel")
+        :param update: результат работы метода get_updates
+        :return: возвращает значение поля chat_type.
         """
         chat_type = None
         if update != None:
