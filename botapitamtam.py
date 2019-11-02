@@ -968,7 +968,7 @@ class BotHandler:
         :param text: подпись кнопки
         :param payload: значение кнопки при нажатии
         :param intent: цвет кнопки
-        :return: возвращает подготовденную кнопку для последующего формирования массива
+        :return: возвращает подготовленную кнопку для последующего формирования массива
         """
         button = [{"type": 'callback',
                    "text": text,
@@ -981,11 +981,33 @@ class BotHandler:
         Подготавливает кнопку с реакцией link
         :param text: подпись кнопки
         :param url: ссылка для перехода при нажатии
-        :return: возвращает подготовденную кнопку для последующего формирования массива
+        :return: возвращает подготовленную кнопку для последующего формирования массива
         """
         button = [{"type": 'link',
                    "text": text,
                    "url": url}]
+        return button
+
+    def button_contact(self, text):
+        """
+        Подготавливает кнопку с запросом контакта
+        :param text: подпись кнопки
+        :return: возвращает подготовленную кнопку для последующего формирования массива
+        """
+        button = [{"type": 'request_contact',
+                   "text": text}]
+        return button
+
+    def button_location(self, text, quick=False):
+        """
+        Подготавливает кнопку с запросом местоположения
+        :param text: подпись кнопки
+        :param quick: если true, отправляет местоположение без запроса подтверждения пользователя
+        :return: возвращает подготовленную кнопку для последующего формирования массива
+        """
+        button = [{"type": 'request_geo_location',
+                   "text": text,
+                   "quick": quick}]
         return button
 
     def send_buttons(self, text, buttons, chat_id):
@@ -997,22 +1019,23 @@ class BotHandler:
         :param buttons = [
                           [{"type": 'callback',
                            "text": 'line1_key1_text',
-                           "payload": 'payload1'},
+                           "payload": 'payload1',
+                           "intent": 'positive'},
                           {"type": 'link',
                            "text": 'line1_key2_API TamTam',
-                           "url": 'https://dev.tamtam.chat',
-                           "intent": 'positive'}],
+                           "url": 'https://dev.tamtam.chat'}],
                            [{"type": 'callback',
                            "text": 'line2_key1_text',
-                           "payload": 'payload1'},
+                           "payload": 'payload1',
+                           "intent": 'negative'},
                           {"type": 'link',
                            "text": 'line2_key2_API TamTam',
-                           "url": 'https://dev.tamtam.chat',
-                           "intent": 'positive'}]
+                           "url": 'https://dev.tamtam.chat'}]
                          ]
                            :param type: реакция на нажатие кнопки
                            :param text: подпись кнопки
                            :param payload: результат нажатия кнопки
+                           :param url: ссылка на ресурс
                            :param intent: цвет кнопки
         :return update: результат POST запроса на отправку кнопок
         """

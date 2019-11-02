@@ -35,10 +35,11 @@ def main():
             
             cont_img = 'test.png'     # тестовый файл изображения в рабочем каталоге
             cont_video = 'movie.mp4'  # тестовый файл видео в рабочем каталоге
-            buttons = [[{"type": 'callback',             # формируем кнопку
-                         "text": "Download? \U0001F61C",
-                         "payload": 'ok'
-                         }]]
+           
+            button = bot.button_link('Открыть mail.ru', 'http://mail.ru') # готовим первую кнопку
+            button2 = bot.button_link('Открыть ok.ru', 'http://ok.ru') # готовим вторую кнопку
+            button.extend(button2) # формируем кнопки в строку
+            buttons = [button]
 
             image = bot.attach_image(cont_img)    # подготовка изображения к совокупной отправке
             video = bot.attach_video(cont_video)  # подготовка видео к совокупной отправке
@@ -54,12 +55,12 @@ def main():
             time.sleep(2)
             bot.delete_message(mid1)
                 # готовим контент к изменению
-            cont_img = 'test2.png'
-            cont_video = 'voko.mkv'
-            buttons = [[{"type": 'callback',
-                         "text": "Upload? =))",
-                         "payload": 'ok'
-                         }]]
+            cont_img = 'test2.png' # файл должен быть в рабочем каталоге
+            cont_video = 'voko.mkv' # файл должен быть в рабочем каталоге
+            
+            button = bot.button_callback('Новая кнопка 1', 'short')
+            button2 = bot.button_callback('Новая кнопка 2', 'long')
+            buttons = [button, button2] # формируем кнопки в колонку
 
             image = bot.attach_image(cont_img)
             video = bot.attach_video(cont_video)

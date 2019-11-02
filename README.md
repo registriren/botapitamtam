@@ -26,13 +26,17 @@ https://github.com/registriren/yatranslate
 (*git clone https://github.com/registriren/botapitamtam*), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталогах с вашими ботами.
 
 ## Описание методов (в разработке, смотрите в основном коде):
+- [add_members](doc/add_members.md) - добавляет пользователя в чат.
 - [attach_audio](doc/attach_audio.md) - готовит аудио к совместной отправке с другим контентом.
 - [attach_buttons](doc/attach_buttons.md) - готовит кнопки к совместной отправке с другим контентом.
 - [attach_file](doc/attach_file.md) - готовит файл к совместной отправке с другим контентом.
 - [attach_image](doc/attach_image.md) - готовит изображения к совместной отправке с другим контентом.
 - [attach_image_url](doc/attach_image_url.md) - готовит изображения (по их URL) к совместной отправке с другим контентом.
 - [attach_video](doc/attach_video.md) - готовит видео к совместной отправке с другим контентом.
-- [add_members](doc/add_members.md) - добавляет пользователя в чат.
+- [button_callback](doc/button_callback.md) - готовит кнопку с реакцией callback для дальнейшего формирования в массив.
+- [button_contact](doc/button_contact.md) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
+- [button_link](doc/button_link.md) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
+- [button_location](doc/button_location.md) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
 - [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
