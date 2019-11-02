@@ -35,7 +35,6 @@ class BotHandler:
         try:
             response = requests.get(self.url + method, params)
             update = response.json()
-            logger.info('updates: %s', update)
         except Exception as e:
             logger.error("Error get updates: %s.", e)
             update = {}
