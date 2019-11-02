@@ -61,6 +61,8 @@ https://github.com/registriren/yatranslate
 - [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
 - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
+- [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_content.
+- [link_reply](doc/link_reply.md) - формирует параметр link цитируемого сообщения для отправки через send_content.
 - [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
