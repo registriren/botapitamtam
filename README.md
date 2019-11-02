@@ -32,23 +32,36 @@ https://github.com/registriren/yatranslate
 - [attach_image](doc/attach_image.md) - готовит изображения к совместной отправке с другим контентом.
 - [attach_image_url](doc/attach_image_url.md) - готовит изображения (по их URL) к совместной отправке с другим контентом.
 - [attach_video](doc/attach_video.md) - готовит видео к совместной отправке с другим контентом.
+- [add_members](doc/add_members.md) - добавляет пользователя в чат.
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
+- [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
+- [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
 - [edit_content](doc/edit_content.md) - изменяет контент по его идентификатору и сформированному аттач.
 - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id нажатой кнопки.
+- [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
+- [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
+- [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
+- [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
+- [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
 - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
 - [get_link_user_id](doc/get_link_user_id.md) - получает идентификатор пользователя пересланного сообщения.
 - [get_marker](doc/get_marker.md) - получает маркер (порядковый номер) следующего события.
-- [get_members](doc/get_members.md) - получает members.
+- [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
 - [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения.
 - [get_name](doc/get_name.md) - получает имя пользователя.
 - [get_payload](doc/get_payload.md) - получает payload (присвоенное значение) нажатой кнопки.
+- [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события).
+- [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
 - [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события) .
 - [get_update_type](doc/get_update_type.md) - получает тип события, произошедшего в боте.
 - [get_updates](doc/get_updates.md) - получение событий, произошедших в боте.
 - [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события).  
+- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
 - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
+- [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
+- [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](doc/send_buttons.md) - формирует кнопки.
@@ -66,5 +79,7 @@ https://github.com/registriren/yatranslate
 - [send_sending_video](doc/send_sending_video.md) - отправляет уведомление об отправке видео.
 - [send_typing_on](doc/send_typing_on.md) - отправляет уведомление о печати сообщения.
 - [send_video](doc/send_video.md) - отправляет видео.
+- [subscribe](doc/subscribe.md) - подписывается на получение обновлений через WebHook.
 - [token_upload_content](doc/token_upload_content.md) - вспомогательная функция получения токена загружаемого изображения.
+- [unsubscribe](doc/unsubscribe.md) - отписывается от получения обновлений через WebHook.
 - [upload_url](doc/upload_url.md) - вспомогательная функция получения URL загружаемого изображения.

@@ -234,6 +234,29 @@ class BotHandler:
             chat = None
         return chat
 
+    def get_chat_type(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        API = subscriptions/Get updates/[updates][0][message][recipient][chat_type]
+        Получает тип чата, канала, или диалога (Enum:"dialog" "chat" "channel")
+        :param update: результат работы метода get_updates
+        :return: возвращает значение поля chat_type.
+        """
+        chat_type = None
+        if update != None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            update_type = self.get_update_type(update)
+            if update_type == 'message_created':
+                upd1 = upd.get('message').get('recipient')
+                if 'chat_type' in upd1.keys():
+                    chat_type = upd1['chat_type']
+                else:
+                    chat_type = None
+        return chat_type
+
     def get_all_chats(self, count=50, marker=None):
         """
         Возвращает информацию о чатах, в которых участвовал бот: список результатов и маркер указывают на следующую страницу
