@@ -43,6 +43,7 @@ https://github.com/registriren/yatranslate
 - [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
 - [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
 - [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
+- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
 - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
 - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
 - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
@@ -58,7 +59,6 @@ https://github.com/registriren/yatranslate
 - [get_update_type](doc/get_update_type.md) - получает тип события, произошедшего в боте.
 - [get_updates](doc/get_updates.md) - получение событий, произошедших в боте.
 - [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события).  
-- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
 - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
 - [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_content.
