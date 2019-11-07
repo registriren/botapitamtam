@@ -385,7 +385,6 @@ class BotHandler:
             icon_i = self.token_upload_content('image', icon)
         else:
             icon_i = {"url": icon_url}
-        # icon_ur = self.token_upload_content('url', icon_url)
         data = {
             "icon": icon_i,
             "title": title
