@@ -170,7 +170,7 @@ class BotHandler:
             bot_info = None
         return bot_info
 
-    def edit_bot_info(self, name, username, description, commands, photo):
+    def edit_bot_info(self, name, username, description, commands, photo, photo_url=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
         поля останутся нетронутыми.
@@ -181,21 +181,26 @@ class BotHandler:
         :param name: имя бота
         :param username: уникальное имя (@my_bot) бота без знака "@"
         :param description: описание бота
-        :param commands: = [{"name": '/name_test_1', "description": "Тестовая команда 1"},
-                            {"name": '/name_test_2', "description": "Тестовая команда 2"}]
-        :param photo: изображение бота, формируется методом attach_image или attach_image_url
+        :param commands: = [{"name": '/команда_1', "description": "Описание команды 1"},
+                            {"name": '/команда_2', "description": "Описание команды 2"}]
+        :param photo: изображение бота
+        :param photo_url: ссылка на изображение бота
         :return edit_bot_info: возвращает результат PATCH запроса.
         """
         method = 'me'
         params = {
             "access_token": self.token
         }
+        if photo_url is None:
+            photo_i = self.token_upload_content('image', photo)
+        else:
+            photo_i = {"url": photo_url}
         data = {
             "name": name,
             "username": username,
             "description": description,
             "commands": commands,
-            "photo": photo
+            "photo": photo_i
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
@@ -360,14 +365,15 @@ class BotHandler:
             leave_chat = None
         return leave_chat
 
-    def edit_chat_info(self, chat_id, icon, title):
+    def edit_chat_info(self, chat_id, icon, title, icon_url=None):
         """
         https://dev.tamtam.chat/#operation/editChat
         Редактирование информации чата: заголовок и значок
         Edits chat info: title, icon
         API = chats/{chatId}
         :param chat_id: идентификатор изменяемого чата
-        :param icon: значек чата, формируется методом attach_image или attach_image_url
+        :param icon: файл значка
+        :param icon_url: ссылка на изображение
         :param title: заголовок
         :return: возвращает информацию о параметрах измененного чата
         """
@@ -375,12 +381,18 @@ class BotHandler:
         params = {
             "access_token": self.token
         }
+        if icon_url is None:
+            icon_i = self.token_upload_content('image', icon)
+        else:
+            icon_i = {"url": icon_url}
+        # icon_ur = self.token_upload_content('url', icon_url)
         data = {
-            "icon": icon,
+            "icon": icon_i,
             "title": title
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
+            print(response.json())
             if response.status_code == 200:
                 chat_info = response.json()
             else:
