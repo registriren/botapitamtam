@@ -183,7 +183,7 @@ class BotHandler:
         :param description: описание бота
         :param commands: = [{"name": '/команда_1', "description": "Описание команды 1"},
                             {"name": '/команда_2', "description": "Описание команды 2"}]
-        :param photo: изображение бота
+        :param photo: файл с изображением бота
         :param photo_url: ссылка на изображение бота
         :return edit_bot_info: возвращает результат PATCH запроса.
         """
