@@ -2,12 +2,14 @@
 https://dev.tamtam.chat/#operation/editMyInfo  
 Метод редактирует текущую информацию о боте.  
 :param **name:** имя бота  
-:param **username:** уникальное имя (@my_bot) бота без знака "@"  
+:param **username:** уникальное имя бота (например @my_bot) без знака "@"  
 :param **description:** описание бота  
 :param **commands:** = [{"name": '/команда', "description": "Описание команды"}]  
 :param **photo:** файл с изображением  
 :param **photo_url:** ссылка на изображение  
 :return **edit_bot_info:** возвращает результат PATCH запроса  
+
+Если параметр **photo_url** не пустой, то параметр **photo** не рассматривается.  
 
 ## Пример
 ```python
