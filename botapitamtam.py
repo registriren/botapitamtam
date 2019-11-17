@@ -391,7 +391,7 @@ class BotHandler:
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
-            print(response.json())
+            #print(response.json())
             if response.status_code == 200:
                 chat_info = response.json()
             else:
