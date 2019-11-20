@@ -590,14 +590,18 @@ class BotHandler:
             params = {
                 "access_token": self.token
             }
-            response = requests.get(self.url + method, params)
-            if response.status_code == 200:
-                update = response.json()
-                if 'chats' in update.keys():
-                    update = update['chats'][0]
-                    chat_id = update.get('chat_id')
-            else:
-                logger.error("Error: {}".format(response.status_code))
+            try:
+                response = requests.get(self.url + method, params=params)
+                if response.status_code == 200:
+                    update = response.json()
+                    if 'chats' in update.keys():
+                        update = update['chats'][0]
+                        chat_id = update.get('chat_id')
+                else:
+                    logger.error("Error get chat_id: {}".format(response.status_code))
+            except Exception as e:
+                logger.error("Error connect get chat id: %s.", e)
+                chat_id = None
         else:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
@@ -607,9 +611,10 @@ class BotHandler:
                 chat_id = None
             elif 'chat_id' in upd.keys():
                 chat_id = upd.get('chat_id')
-            else:
+            elif 'message' in upd.keys():
                 upd = upd.get('message')
-                chat_id = upd.get('recipient').get('chat_id')
+                if 'recipient' in upd.keys():
+                    chat_id = upd.get('recipient').get('chat_id')
         return chat_id
 
     def get_link_chat_id(self, update):
