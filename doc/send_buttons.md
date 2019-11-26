@@ -40,7 +40,7 @@ token = 'access_token_primebot' # токен, полученный при соз
 bot = BotHandler(token)
 
 user_id = 000000000000 # ваш user_id для авторизации
-catalog = '/opt/' # рабочий каталог с ботами в нем находятся катологи с ботами
+catalog = '/opt/' # рабочий каталог, в нем находятся катологи с ботами
 commands = {'list': None,                     
             'log': 'log.txt',
             'upd_restart': 'upd_restart.sh', # командные файлы действий с ботами (должны находится в каталоге каждого бота)
