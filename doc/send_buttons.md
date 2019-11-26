@@ -34,10 +34,6 @@ from botapitamtam import BotHandler
 import json
 from subprocess import call
 import os
-import logging
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 token = 'access_token_primebot' # токен, полученный при создании бота в @PrimeBot
 
