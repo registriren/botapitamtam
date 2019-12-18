@@ -802,7 +802,7 @@ class BotHandler:
                     mid = upd.get('message').get('body').get('mid')
         return mid
 
-    def edit_message(self, message_id, attachments, text=None, link=None, notify=True):
+    def edit_message(self, message_id, text, attachments=None, link=None, notify=True):
         """
         https://dev.tamtam.chat/#operation/editMessage
         Метод  изменения (обновления) любого контента по его идентификатору
