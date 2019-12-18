@@ -1,4 +1,4 @@
-## edit_content(message_id, attachments, text=None, link=None, notify=True)  
+## edit_message(message_id, text, attachments=None, link=None, notify=True)  
 https://dev.tamtam.chat/#operation/editMessage  
 Метод  изменения (обновления) любого контента по его идентификатору  
 :param **message_id:** Идентификатор редактируемого контента  
@@ -47,7 +47,7 @@ def main():
 
             attach = image + video + key
 
-            upd = bot.send_content(attach, chat_id, text='текст начальный') # совокупная отправка контента
+            upd = bot.send_message('текст начальный', chat_id, attachments=attach) # совокупная отправка контента
             mid = bot.get_message_id(upd) # получаем идентификатор отправленного контента
 
             upd = bot.send_message('Через 5 сек. всё изменится...', chat_id) 
@@ -68,7 +68,7 @@ def main():
 
             attach = image + video + key
 
-            bot.edit_content(mid, attach, text='ТЕКСТ ИЗМЕНЁННЫЙ') # изменяем загруженный контент
+            bot.edit_message(mid, 'ТЕКСТ ИЗМЕНЁННЫЙ', attachments=attach) # изменяем загруженный контент
             
 if __name__ == '__main__':
     try:
