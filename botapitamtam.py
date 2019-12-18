@@ -1,8 +1,11 @@
-import requests
+# Version 0.2.0.1
+
 import json
-import time
 import logging
 import os
+import time
+
+import requests
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -391,7 +394,7 @@ class BotHandler:
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
-            print(response.json())
+            #print(response.json())
             if response.status_code == 200:
                 chat_info = response.json()
             else:
@@ -590,14 +593,18 @@ class BotHandler:
             params = {
                 "access_token": self.token
             }
-            response = requests.get(self.url + method, params)
-            if response.status_code == 200:
-                update = response.json()
-                if 'chats' in update.keys():
-                    update = update['chats'][0]
-                    chat_id = update.get('chat_id')
-            else:
-                logger.error("Error: {}".format(response.status_code))
+            try:
+                response = requests.get(self.url + method, params=params)
+                if response.status_code == 200:
+                    update = response.json()
+                    if 'chats' in update.keys():
+                        update = update['chats'][0]
+                        chat_id = update.get('chat_id')
+                else:
+                    logger.error("Error get chat_id: {}".format(response.status_code))
+            except Exception as e:
+                logger.error("Error connect get chat id: %s.", e)
+                chat_id = None
         else:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
@@ -607,9 +614,10 @@ class BotHandler:
                 chat_id = None
             elif 'chat_id' in upd.keys():
                 chat_id = upd.get('chat_id')
-            else:
+            elif 'message' in upd.keys():
                 upd = upd.get('message')
-                chat_id = upd.get('recipient').get('chat_id')
+                if 'recipient' in upd.keys():
+                    chat_id = upd.get('recipient').get('chat_id')
         return chat_id
 
     def get_link_chat_id(self, update):
@@ -794,7 +802,7 @@ class BotHandler:
                     mid = upd.get('message').get('body').get('mid')
         return mid
 
-    def edit_content(self, message_id, attachments, text=None, link=None, notify=True):
+    def edit_message(self, message_id, text, attachments=None, link=None, notify=True):
         """
         https://dev.tamtam.chat/#operation/editMessage
         Метод  изменения (обновления) любого контента по его идентификатору
@@ -830,7 +838,7 @@ class BotHandler:
         if response.status_code == 200:
             update = response.json()
         else:
-            logger.error("Error edit content: {}".format(response.status_code))
+            logger.error("Error edit message: {}".format(response.status_code))
             update = None
         return update
 
@@ -911,21 +919,6 @@ class BotHandler:
         params = {"action": "sending_file"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_message(self, text, chat_id, dislinkprev=False):
-        """
-        Send message to specific chat_id by post request
-        Отправляет сообщение в соответствующий чат
-        API = messages/Send message/{text}
-        :param text: text of message / текст сообщения
-        :param chat_id: integer, chat id of user / чат куда поступит сообщение
-        :return update: результат POST запроса на отправку сообщения
-        """
-        self.send_typing_on(chat_id)
-        update = self.send_content(None, chat_id, text, dislinkprev=dislinkprev)
-        if update == None:
-            logger.error("Error send message")
-        return update
-
     def delete_message(self, message_id):
         """
         Delete message to specific chat_id by post request
@@ -944,27 +937,9 @@ class BotHandler:
 
     def attach_buttons(self, buttons):
         """
-        Метод подготовки кнопок к отправке
-        :param buttons = [
-                          [{"type": 'callback',
-                           "text": 'line1_key1_text',
-                           "payload": 'payload1'},
-                          {"type": 'link',
-                           "text": 'line1_key2_API TamTam',
-                           "url": 'https://dev.tamtam.chat',
-                           "intent": 'positive'}],
-                           [{"type": 'callback',
-                           "text": 'line2_key1_text',
-                           "payload": 'payload1'},
-                          {"type": 'link',
-                           "text": 'line2_key2_API TamTam',
-                           "url": 'https://dev.tamtam.chat',
-                           "intent": 'positive'}]
-                         ]
-                           :param type: реакция на нажатие кнопки
-                           :param text: подпись кнопки
-                           :param payload: результат нажатия кнопки
-                           :param intent: цвет кнопки
+        Метод подготовки к отправке кнопок в качестве элемента attachments
+        :param buttons: кнопки в формате списка, cформированные при помощи:
+            button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
         attach = [{"type": "inline_keyboard",
@@ -1052,7 +1027,7 @@ class BotHandler:
         """
         self.send_typing_on(chat_id)
         attach = self.attach_buttons(buttons)
-        update = self.send_content(attach, chat_id, text)
+        update = self.send_message(text, chat_id, attachments=attach)
         return update
 
     def upload_url(self, type):
@@ -1099,35 +1074,7 @@ class BotHandler:
         """
         self.send_sending_file(chat_id)
         attach = self.attach_file(content, content_name)
-        update = self.send_content(attach, chat_id, text)
-        return update
-
-    def send_photo(self, content, chat_id, text=None):  # устаревший метод, используйте send_image
-        """
-        https://dev.tamtam.chat/#operation/sendMessage
-        Метод отправки фoто (нескольких фото) в указанный чат
-        :param content: имя файла или список имен файлов с изображениями
-        :param chat_id: чат куда будут загружены изображения
-        :param text: Сопровождающий текст к отправляемому контенту
-        :return: update: результат работы POST запроса отправки файла
-        """
-        self.send_sending_photo(chat_id)
-        attach = self.attach_image(content)
-        update = self.send_content(attach, chat_id, text)
-        return update
-
-    def send_photo_url(self, url, chat_id, text=None):  # устаревший метод, используйте send_image_url
-        """
-        https://dev.tamtam.chat/#operation/sendMessage
-        Метод отправки фото (нескольких фото) в указанный чат по url
-        :param url: http адрес или список адресов с изображениями
-        :param chat_id: чат куда будут загружены изображения
-        :param text: сопровождающий текст к отправляемому контенту
-        :return: update: результат работы POST запроса отправки фото
-        """
-        self.send_sending_photo(chat_id)
-        attach = self.attach_image_url(url)
-        update = self.send_content(attach, chat_id, text)
+        update = self.send_message(text, chat_id, attachments=attach)
         return update
 
     def attach_image(self, content):
@@ -1158,7 +1105,7 @@ class BotHandler:
         """
         self.send_sending_photo(chat_id)
         attach = self.attach_image(content)
-        update = self.send_content(attach, chat_id, text)
+        update = self.send_message(text, chat_id, attachments=attach)
         return update
 
     def attach_image_url(self, url):
@@ -1187,7 +1134,7 @@ class BotHandler:
         """
         self.send_sending_photo(chat_id)
         attach = self.attach_image_url(url)
-        update = self.send_content(attach, chat_id, text)
+        update = self.send_message(text, chat_id, attachments=attach)
         return update
 
     def attach_video(self, content):
@@ -1220,7 +1167,7 @@ class BotHandler:
         """
         self.send_sending_video(chat_id)
         attach = self.attach_video(content)
-        update = self.send_content(attach, chat_id, text)
+        update = self.send_message(text, chat_id, attachments=attach)
         return update
 
     def attach_audio(self, content):
@@ -1247,7 +1194,7 @@ class BotHandler:
         """
         self.send_sending_audio(chat_id)
         attach = self.attach_audio(content)
-        update = self.send_content(attach, chat_id, text)
+        update = self.send_message(text, chat_id, attachments=attach)
         return update
 
     def send_forward_message(self, text, mid, chat_id):
@@ -1262,13 +1209,13 @@ class BotHandler:
         """
         self.send_typing_on(chat_id)
         link = self.link_forward(mid)
-        update = self.send_content(None, chat_id, text, link)
+        update = self.send_message(text, chat_id, link=link)
         return update
 
     def link_reply(self, mid):
         """
         https://dev.tamtam.chat/#operation/sendMessage
-        Формирует параметр link на цитируемуе сообщение для отправки через send_content
+        Формирует параметр link на цитируемуе сообщение для отправки через send_message
         :param mid: идентификатор сообщения (get_message_id) на которое готовим link
         :return link: сформированный параметр link
         """
@@ -1280,7 +1227,7 @@ class BotHandler:
     def link_forward(self, mid):
         """
         https://dev.tamtam.chat/#operation/sendMessage
-        Формирует параметр link на пересылаемое сообщение для отправки через send_content
+        Формирует параметр link на пересылаемое сообщение для отправки через send_message
         :param mid: идентификатор сообщения (get_message_id) на которое готовим link
         :return link: сформированный параметр link
         """
@@ -1301,7 +1248,7 @@ class BotHandler:
         """
         self.send_typing_on(chat_id)
         link = self.link_reply(mid)
-        update = self.send_content(None, chat_id, text, link)
+        update = self.send_message(text, chat_id, link=link)
         return update
 
     def token_upload_content(self, type, content, content_name=None):
@@ -1330,11 +1277,11 @@ class BotHandler:
             token = None
         return token
 
-    def send_content(self, attachments, chat_id, text=None, link=None, notify=True, dislinkprev=False):
+    def send_message(self, text, chat_id, attachments=None, link=None, notify=True, dislinkprev=False):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
-        :param attachments: Массив объектов (файл, фото, видео, аудио, кнопки)
+        :param attachments: Массив объектов (файл, фото, видео, аудио, кнопки и т.д.)
         :param chat_id: Чат куда отправляется контент
         :param text: Текстовое описание контента
         :param link: Пересылаемые (цитируемые) сообщения
@@ -1368,29 +1315,21 @@ class BotHandler:
         if response.status_code == 200:
             update = response.json()
         else:
-            logger.error("Error sending content: {}".format(response.status_code))
+            logger.error("Error sending message: {}".format(response.status_code))
             update = None
         return update
 
-    def send_answer_callback(self, callback_id, notification, message=None):
+    def send_answer_callback(self, callback_id, notification, text=None, attachments=None, link=None, notify=None):
         """
         https://dev.tamtam.chat/#operation/answerOnCallback
         Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может
         быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.
         :param callback_id: параметр, соответствующий нажатой кнопке
         :param notification: кратковременное, всплывающее уведомление
-        :param message: объекты в соответствии с API. Пример:
-                buttons = [[{"type": 'callback',
-                             "text": 'Test ок',
-                             "payload": 'ok'
-                             }]
-                           ]
-                attach = [{"type": "inline_keyboard",
-                           "payload": {"buttons": buttons}
-                           }
-                          ]
-                message = {"text": time.ctime(),
-                           "attachments": attach}
+        :param text: обновленное (новое) текстовое сообщение
+        :param attachments: измененный (новый) контент (изображения, видео, кнопки и т.д.)
+        :param link: цитируемое сообщение
+        :param notify: если false, то участники чата не получат уведомление (по умолчанию true)
         :return update: результат POST запроса
         """
         method = 'answers'
@@ -1398,6 +1337,11 @@ class BotHandler:
             ('access_token', self.token),
             ('callback_id', callback_id),
         )
+        message = {"text": text,
+                   "attachments": attachments,
+                   "link": link,
+                   "notify": notify
+                   }
         data = {
             "message": message,
             "notification": notification
