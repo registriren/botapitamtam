@@ -25,6 +25,32 @@ https://github.com/registriren/yatranslate
 (*git clone https://github.com/registriren/botapitamtam*), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталогах с вашими ботами.
 9. Отправка простого однотипного контента (текст и фото, текст и видео, в чат  
 ## Описание методов (в разработке, смотрите в основном коде):
+### Получение информации о событиях в чате с ботом
+- **[get_updates](doc/get_updates.md) - получение событий, произошедших в чате с ботом (боту отправлено текстовое сообщение, картинка, видео, нажата кнопка и т.д. С результатом работы, помещенным в переменную, например *update*, этого метода, работают нижеперечисленные методы:**  
+  - [get_marker](doc/get_marker.md) - получает маркер (порядковый номер) следующего события, необходим в технических целях.
+  - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата в которм происходит взаимодействие с ботом.
+  - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
+  - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id (идентификатора клавиатуры), предназначенного для создания реакции на факт нажатия кнопки с помощью метода [send_answer_callback](doc/send_answer_callback).
+  - [get_payload](doc/get_payload.md) - получает payload (текстовое значение, не путать с наименованием кнопки) нажатой кнопки.
+  - [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события).
+  - [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения (события).
+  - [get_name](doc/get_name.md) - получает имя пользователя, сформировавшего событие.
+  - [get_update_type](doc/get_update_type.md) - получает тип события (например bot_started), произошедшего с ботом.
+  - [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события). 
+  - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
+  - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
+  - [get_link_user_id](doc/get_link_user_id.md) - получает идентификатор пользователя пересланного сообщения.
+
+
+- [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
+- [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
+- [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
+- [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
+- [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
+- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
+- [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
+- [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
+
 - [add_members](doc/add_members.md) - добавляет пользователя в чат.
 - [attach_audio](doc/attach_audio.md) - готовит аудио к совместной отправке с другим контентом.
 - [attach_buttons](doc/attach_buttons.md) - готовит кнопки к совместной отправке с другим контентом.
@@ -40,32 +66,10 @@ https://github.com/registriren/yatranslate
 - [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
 - [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
 - [edit_message](doc/edit_message.md) - изменяет контент по его идентификатору и сформированному аттач.
-- [get_callback_id](doc/get_callback_id.md) - получает значение callback_id нажатой кнопки.
-- [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
-- [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
-- [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
-- [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
-- [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
-- [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type.
-- [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата (диалога) в которм происходит взаимодействие с ботом.
-- [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
-- [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
-- [get_link_user_id](doc/get_link_user_id.md) - получает идентификатор пользователя пересланного сообщения.
-- [get_marker](doc/get_marker.md) - получает маркер (порядковый номер) следующего события.
-- [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
-- [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения.
-- [get_name](doc/get_name.md) - получает имя пользователя.
-- [get_payload](doc/get_payload.md) - получает payload (присвоенное значение) нажатой кнопки.
-- [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события).
-- [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
-- [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события) .
-- [get_update_type](doc/get_update_type.md) - получает тип события, произошедшего в боте.
-- [get_updates](doc/get_updates.md) - получение событий, произошедших в боте.
-- [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события).  
-- [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
+
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
-- [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_content.
-- [link_reply](doc/link_reply.md) - формирует параметр link цитируемого сообщения для отправки через send_content.
+- [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_message.
+- [link_reply](doc/link_reply.md) - формирует параметр link цитируемого сообщения для отправки через send_message.
 - [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
