@@ -28,9 +28,8 @@ https://github.com/registriren/yatranslate
 ### Получение информации о событиях в чате с ботом
 - **[get_updates](doc/get_updates.md) - получение событий, произошедших в чате с ботом (боту отправлено текстовое сообщение, картинка, видео, нажата кнопка и т.д.) С результатом работы, помещенным в переменную (например *update*) этого метода, работают нижеперечисленные методы:**  
   - [get_marker](doc/get_marker.md) - получает маркер (порядковый номер) следующего события, необходим в технических целях.
-  - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата в которм происходит взаимодействие с ботом, данный идентификатор требуется в следующих методах:
+  - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата в которм происходит взаимодействие с ботом, только этот идентификатор требуется в следующих методах:
     - [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
-    - [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
     - [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
     - [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
   - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
@@ -44,10 +43,11 @@ https://github.com/registriren/yatranslate
   - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
   - [get_link_user_id](doc/get_link_user_id.md) - получает идентификатор пользователя пересланного сообщения.
   - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
-  - [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
   - [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type (диалог, чат, канал).
-  - [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
-  - [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
+- [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
+- [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
+- [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
+- [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
 
 - [add_members](doc/add_members.md) - добавляет пользователя в чат.
 - [attach_audio](doc/attach_audio.md) - готовит аудио к совместной отправке с другим контентом.
