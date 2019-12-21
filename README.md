@@ -40,7 +40,7 @@ https://github.com/registriren/yatranslate
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
 - [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
-- [edit_message](doc/edit_message.md) - изменяет контент по его идентификатору и сформированному аттач.
+- [edit_content](doc/edit_content.md) - изменяет контент по его идентификатору и сформированному аттач.
 - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id нажатой кнопки.
 - [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
 - [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
@@ -71,12 +71,13 @@ https://github.com/registriren/yatranslate
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](doc/send_buttons.md) - формирует кнопки.
+- [send_content](doc/send_content.md) - отправляет любой контент по сформированному attachments.
 - [send_file](doc/send_file.md) - отправляет файл.
 - [send_forward_message](doc/send_forward_message.md) - пересылает сообщение по его идентификатору.
 - [send_mark_seen](doc/send_mark_seen.md) - отправляет уведомление о прочтении ботом сообщения.
-- [send_message](doc/send_message.md) - отправляет текстовое сообщение и любой контент по сформированному attachments.  
-- [send_image](doc/send_image.md) - отправляет изображение (несколько изображений) из локального файла.
-- [send_image_url](doc/send_image_url.md) - отправляет изображение из URL.
+- [send_message](doc/send_message.md) - отправляет текстовое сообщение.
+- [send_photo](doc/send_photo.md) - отправляет изображение (несколько изображений) из локального файла.
+- [send_photo_url](doc/send_photo_url.md) - отправляет изображение из URL.
 - [send_reply_message](doc/send_reply_message.md) - формирует ответ на сообщение.
 - [send_sending_audio](doc/send_sending_audio.md) - отправляет уведомление об отправке аудио.
 - [send_sending_file](doc/send_sending_file.md) - отправляет уведомление об отправке файла.
