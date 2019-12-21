@@ -50,28 +50,28 @@ https://github.com/registriren/yatranslate
 - [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
 
 - [add_members](doc/add_members.md) - добавляет пользователя в чат.
+### Подготовка контента (фото, видео, файл, кнопки) к совместной отправке в чат через параметр *attachments=*
 - [attach_audio](doc/attach_audio.md) - готовит аудио к совместной отправке с другим контентом.
-- [attach_buttons](doc/attach_buttons.md) - готовит кнопки к совместной отправке с другим контентом.
 - [attach_file](doc/attach_file.md) - готовит файл к совместной отправке с другим контентом.
 - [attach_image](doc/attach_image.md) - готовит изображения к совместной отправке с другим контентом.
 - [attach_image_url](doc/attach_image_url.md) - готовит изображения (по их URL) к совместной отправке с другим контентом.
 - [attach_video](doc/attach_video.md) - готовит видео к совместной отправке с другим контентом.
-- [button_callback](doc/button_callback.md) - готовит кнопку с реакцией callback для дальнейшего формирования в массив.
-- [button_contact](doc/button_contact.md) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
-- [button_link](doc/button_link.md) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
-- [button_location](doc/button_location.md) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
+- [attach_buttons](doc/attach_buttons.md) - готовит массив кнопок к совместной отправке с другим контентом, при этом сами кнопки предварительно формируются следующими методами:
+  - [button_callback](doc/button_callback.md) - готовит кнопку с реакцией callback для дальнейшего формирования в массив.
+  - [button_contact](doc/button_contact.md) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
+  - [button_link](doc/button_link.md) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
+  - [button_location](doc/button_location.md) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
 - [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
 - [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
 - [edit_message](doc/edit_message.md) - изменяет контент по его идентификатору и сформированному аттач.
-
 - [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
 - [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_message.
 - [link_reply](doc/link_reply.md) - формирует параметр link цитируемого сообщения для отправки через send_message.
 - [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
 - [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
-- [send_buttons](doc/send_buttons.md) - формирует кнопки.
+- [send_buttons](doc/send_buttons.md) - отправляет текст с кнопками в чат.
 - [send_file](doc/send_file.md) - отправляет файл.
 - [send_forward_message](doc/send_forward_message.md) - пересылает сообщение по его идентификатору.
 - [send_mark_seen](doc/send_mark_seen.md) - отправляет уведомление о прочтении ботом сообщения.
