@@ -91,6 +91,7 @@ https://github.com/registriren/yatranslate
 - [upload_url](doc/upload_url.md) - вспомогательная функция получения URL загружаемого изображения.
 
 
+## Подробное описание методов  
 ### get_updates(marker=None, limit=100, timeout=30):  
 https://dev.tamtam.chat/#operation/getUpdates  
 Основная функция опроса состояния (событий) бота методом long polling  
