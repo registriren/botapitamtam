@@ -101,11 +101,13 @@ This method is used to get updates from bot via get request. It is based on long
 **:param timeout:** время в течение которого держится соединение с сервером ТамТам в ожидании событий.  
 **:return:** возвращает набор значений, соответствующих событию в боте в формате JSON, если событие не произошло, то через определенный интервал времени возвращается None.  
 
+
 ### get_subscriptions():  
 https://dev.tamtam.chat/#operation/getSubscriptions  
 Если ваш бот получает данные через WebHook, метод возвращает список всех подписок.  
 In case your bot gets data via WebHook, the method returns list of all subscriptions  
 **:return:** возвращает список подписок.
+
 
 ### subscribe(url, update_types, version):  
 https://dev.tamtam.chat/#operation/subscribe  
@@ -118,7 +120,8 @@ about new events in chat rooms at the specified URL.
 **:param version:** версия API  
 **:return:** возвращает статус POST запроса  
 
-### unsubscribe(self, url):    
+
+### unsubscribe(url):    
 https://dev.tamtam.chat/#operation/unsubscribe  
 Отменяет подписку бота на получение обновлений через WebHook. После вызова метода бот перестает получать
 уведомления о новых событиях. Уведомление через API длинного опроса становится доступным для бота  
@@ -127,15 +130,14 @@ notifications about new events. Notification via the long-poll API becomes avail
 **:param url:** URL для удаления из подписок WebHook  
 **:return:** возвращает результат DELETE запроса  
 
-    def get_marker(self, update):
-        """
-        Метод получения маркера события
-        API = subscriptions/Get updates/[marker]
-        :param update = результат работы метода get_update
-        :return: возвращает значение поля 'marker', при неудаче = None
-        """
+
+### get_marker(update):  
+Метод получения маркера события  
+**:param update:** результат работы метода (get_update)[README.md#get_updatesmarkernone-limit100-timeout30]   
+**:return:** возвращает значение поля 'marker', при неудаче = None  
+
        
-    def get_bot_info(self):
+### get_bot_info():
         """
         Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод
         возвращает идентификатор бота, имя и аватар (если есть) Returns info about current bot. Current bot can be
