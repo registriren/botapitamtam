@@ -92,7 +92,7 @@ https://github.com/registriren/yatranslate
 
 
 ## Подробное описание методов  
-### get_updates(marker=None, limit=100, timeout=30):  
+### get_updates(marker=None, limit=100, timeout=30): 
 https://dev.tamtam.chat/#operation/getUpdates  
 Основная функция опроса состояния (событий) бота методом long polling  
 This method is used to get updates from bot via get request. It is based on long polling.  
