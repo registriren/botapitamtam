@@ -102,6 +102,7 @@ This method is used to get updates from bot via get request. It is based on long
 **:return:** возвращает набор значений, соответствующих событию в боте в формате JSON, если событие не произошло, то через определенный интервал времени возвращается None.  
 
 
+
 ### get_subscriptions():  
 https://dev.tamtam.chat/#operation/getSubscriptions  
 Если ваш бот получает данные через WebHook, метод возвращает список всех подписок.  
