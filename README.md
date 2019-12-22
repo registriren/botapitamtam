@@ -133,7 +133,7 @@ notifications about new events. Notification via the long-poll API becomes avail
 
 ### get_marker(update):  
 Метод получения маркера события  
-**:param update:** результат работы метода (get_update)[README.md#get_updatesmarkernone-limit100-timeout30]   
+**:param update:** результат работы метода [get_updates](README.md#get_updatesmarkernone-limit100-timeout30)   
 **:return:** возвращает значение поля 'marker', при неудаче = None  
 
        
