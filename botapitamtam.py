@@ -1002,27 +1002,7 @@ class BotHandler:
         Отправляет кнопки (количество, рядность и функционал определяются параметром buttons) в соответствующий чат
         :param text: Текст выводимый над блоком кнопок
         :param chat_id: integer, chat id of user / чат где будут созданы кнопки
-        :param buttons = [
-                          [{"type": 'callback',
-                           "text": 'line1_key1_text',
-                           "payload": 'payload1',
-                           "intent": 'positive'},
-                          {"type": 'link',
-                           "text": 'line1_key2_API TamTam',
-                           "url": 'https://dev.tamtam.chat'}],
-                           [{"type": 'callback',
-                           "text": 'line2_key1_text',
-                           "payload": 'payload1',
-                           "intent": 'negative'},
-                          {"type": 'link',
-                           "text": 'line2_key2_API TamTam',
-                           "url": 'https://dev.tamtam.chat'}]
-                         ]
-                           :param type: реакция на нажатие кнопки
-                           :param text: подпись кнопки
-                           :param payload: результат нажатия кнопки
-                           :param url: ссылка на ресурс
-                           :param intent: цвет кнопки
+        :param buttons: массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.
         :return update: результат POST запроса на отправку кнопок
         """
         self.send_typing_on(chat_id)
@@ -1277,12 +1257,13 @@ class BotHandler:
             token = None
         return token
 
-    def send_message(self, text, chat_id, attachments=None, link=None, notify=True, dislinkprev=False):
+    def send_message(self, text, chat_id, user_id=None, attachments=None, link=None, notify=True, dislinkprev=False):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
         :param attachments: Массив объектов (файл, фото, видео, аудио, кнопки и т.д.)
         :param chat_id: Чат куда отправляется контент
+        :param user_id: Идентификатор пользователя, которому отправляем сообщение
         :param text: Текстовое описание контента
         :param link: Пересылаемые (цитируемые) сообщения
         :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
@@ -1294,6 +1275,7 @@ class BotHandler:
         params = (
             ('access_token', self.token),
             ('chat_id', chat_id),
+            ('user_id', user_id),
             ('disable_link_preview', dislinkprev)
         )
         data = {
