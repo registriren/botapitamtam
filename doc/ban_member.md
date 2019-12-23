@@ -1,5 +1,5 @@
 ## ban_member
-https://dev.tamtam.chat/#operation/removeMember
+https://dev.tamtam.chat/#operation/removeMember  
 Метод блокирует и удаляет участника из чата. Могут потребоваться дополнительные разрешения.  
 **get_link_user_id** - получаем методом [get_link_user_id(update)](get_link_user_id.md).  
 ## Пример
