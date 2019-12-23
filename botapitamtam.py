@@ -496,6 +496,36 @@ class BotHandler:
             remove_member = None
         return remove_member
 
+    def ban_member(self, chat_id, user_id, block=True):
+        """
+        Блокирует и удаляет участника из чата. Могут потребоваться дополнительные разрешения.
+        Blocks and removes member from chat. Additional permissions may require.
+        https://dev.tamtam.chat/#operation/removeMember
+        API = chats/{chatId}/members
+        :param chat_id: идентификатор чата
+        :param user_id: идентификатор пользователя
+        :param block: при true блокирует пользователя в чате.
+        Применимо только для публичных чатов, или же чатов, имеющих личную ссылку. Иначе игнорируется.
+        :return ban_member: возвращает результат DELETE запроса
+        """
+        method = 'chats/{}'.format(chat_id) + '/members'
+        params = (
+            ('access_token', self.token),
+            ('user_id', user_id),
+            ('block', block),
+        )
+        try:
+            response = requests.delete(self.url + method, params=params)
+            if response.status_code == 200:
+                ban_member = response.json()
+            else:
+                logger.error("Error ban member: {}".format(response.status_code))
+                ban_member = None
+        except Exception as e:
+            logger.error("Error connect ban member: %s.", e)
+            ban_member = None
+        return ban_member
+
     def get_update_type(self, update):
         """
         Метод получения типа события произошедшего с ботом
