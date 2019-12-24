@@ -368,15 +368,15 @@ class BotHandler:
             leave_chat = None
         return leave_chat
 
-    def edit_chat_info(self, chat_id, icon, title, icon_url=None):
+    def edit_chat_info(self, chat_id, icon=None, title=None, icon_url=None):
         """
         https://dev.tamtam.chat/#operation/editChat
-        Редактирование информации чата: заголовок и значок
+        Редактирование информации чата: заголовок и значок, бот должен иметь соответствующие разрешения
         Edits chat info: title, icon
         API = chats/{chatId}
         :param chat_id: идентификатор изменяемого чата
         :param icon: файл значка
-        :param icon_url: ссылка на изображение
+        :param icon_url: ссылка на изображение (имеет приоритет перед файлом значка)
         :param title: заголовок
         :return: возвращает информацию о параметрах измененного чата
         """
@@ -384,17 +384,18 @@ class BotHandler:
         params = {
             "access_token": self.token
         }
-        if icon_url is None:
-            icon_i = self.token_upload_content('image', icon)
+        if icon != None:
+            icon = self.token_upload_content('image', icon)
         else:
-            icon_i = {"url": icon_url}
+            icon = {}
+        icon_res = {"url": icon_url}
+        icon_res.update(icon)
         data = {
-            "icon": icon_i,
+            "icon": icon_res,
             "title": title
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
-            #print(response.json())
             if response.status_code == 200:
                 chat_info = response.json()
             else:
