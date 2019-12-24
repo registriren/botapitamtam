@@ -173,7 +173,74 @@ class BotHandler:
             bot_info = None
         return bot_info
 
-    def edit_bot_info(self, name, username, description, commands, photo, photo_url=None):
+    def bot_name(self):
+        """
+        Возвращает имя текущего бота
+        :return:
+        """
+        bot = self.get_bot_info()
+        name = bot['name']
+        return name
+
+    def bot_username(self):
+        """
+        Возвращает username текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        username = bot['username']
+        return username
+
+    def bot_user_id(self):
+        """
+        Возвращает айди текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        bot_user_id = bot['user_id']
+        return bot_user_id
+
+    def bot_description(self):
+        """
+        Возвращает описание текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'description' in bot:
+            description = bot['description']
+            return description
+
+    def bot_avatar_url(self):
+        """
+        Возвращает ссылку на аватар.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'avatar_url' in bot:
+            avatar_url = bot['avatar_url']
+            return avatar_url
+
+    def bot_full_avatar_url(self):
+        """
+        Возвращает ссылку на аватар большого размера.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'full_avatar_url' in bot:
+            full_avatar_url = bot['full_avatar_url']
+            return full_avatar_url
+
+    def bot_commands(self):
+        """
+        Возвращает список команд текущего бота (если они есть)
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'commands' in bot:
+            commands = bot['commands']
+            return commands
+
+    def edit_bot_info(self, name=None, username=None, description=None, commands=None, photo=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
         поля останутся нетронутыми.
@@ -186,24 +253,19 @@ class BotHandler:
         :param description: описание бота
         :param commands: = [{"name": '/команда_1', "description": "Описание команды 1"},
                             {"name": '/команда_2', "description": "Описание команды 2"}]
-        :param photo: файл с изображением бота
-        :param photo_url: ссылка на изображение бота
+        :param photo: файл с изображением бота (так же может быть и ссылка. см. метод set_image)
         :return edit_bot_info: возвращает результат PATCH запроса.
         """
         method = 'me'
         params = {
             "access_token": self.token
         }
-        if photo_url is None:
-            photo_i = self.token_upload_content('image', photo)
-        else:
-            photo_i = {"url": photo_url}
         data = {
             "name": name,
             "username": username,
             "description": description,
             "commands": commands,
-            "photo": photo_i
+            "photo": photo
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
@@ -368,15 +430,15 @@ class BotHandler:
             leave_chat = None
         return leave_chat
 
-    def edit_chat_info(self, chat_id, icon, title, icon_url=None):
+    def edit_chat_info(self, chat_id, icon=None, title=None, icon_url=None):
         """
         https://dev.tamtam.chat/#operation/editChat
-        Редактирование информации чата: заголовок и значок
-        Edits chat info: title, icon
         API = chats/{chatId}
+        Редактирование информации чата: заголовок и значок, бот должен иметь соответствующие разрешения
+        Edits chat info: title, icon
         :param chat_id: идентификатор изменяемого чата
         :param icon: файл значка
-        :param icon_url: ссылка на изображение
+        :param icon_url: ссылка на изображение (имеет приоритет перед файлом значка)
         :param title: заголовок
         :return: возвращает информацию о параметрах измененного чата
         """
@@ -384,17 +446,18 @@ class BotHandler:
         params = {
             "access_token": self.token
         }
-        if icon_url is None:
-            icon_i = self.token_upload_content('image', icon)
+        if icon != None:
+            icon = self.token_upload_content('image', icon)
         else:
-            icon_i = {"url": icon_url}
+            icon = {}
+        icon_res = {"url": icon_url}
+        icon_res.update(icon)
         data = {
-            "icon": icon_i,
+            "icon": icon_res,
             "title": title
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
-            #print(response.json())
             if response.status_code == 200:
                 chat_info = response.json()
             else:
@@ -972,10 +1035,14 @@ class BotHandler:
             button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
-        attach = [{"type": "inline_keyboard",
-                   "payload": {"buttons": buttons}
-                   }
-                  ]
+        attach = [
+            {
+                "type": "inline_keyboard",
+                "payload": {
+                    "buttons": buttons
+                }
+            }
+        ]
         return attach
 
     def button_callback(self, text, payload, intent='default'):
@@ -1024,6 +1091,30 @@ class BotHandler:
         button = [{"type": 'request_geo_location',
                    "text": text,
                    "quick": quick}]
+        return button
+
+    def button_chat(self, text, chat_title, chat_description, start_payload=None, uuid=None):
+        """
+        :param text: текст кнопки.
+        :param chat_title: заголоков чата, который будет создан.
+        :param chat_description: описание чата.
+        :param start_payload: начальная загрузка будет отправлена ​​боту, как только будет создан чат.
+        :param uuid: уникальный идентификатор кнопки для всех кнопок чата на клавиатуре.
+            Если uuid изменился, новый чат будет создан при следующем нажатии.
+            Сервер сгенерирует его в тот момент, когда кнопка изначально размещена.
+            Повторно используйте его, когда редактируете сообщение.
+        :return:
+        """
+        button = [
+            {
+                "type": 'chat',
+                "text": text,
+                "chat_title": chat_title,
+                "chat_description": chat_description,
+                "start_payload": start_payload,
+                "uuid": uuid,
+            }
+        ]
         return button
 
     def send_buttons(self, text, buttons, chat_id):
