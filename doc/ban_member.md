@@ -1,5 +1,5 @@
 ## ban_member
-https://dev.tamtam.chat/#operation/removeMember
+https://dev.tamtam.chat/#operation/removeMember  
 Метод блокирует и удаляет участника из чата. Могут потребоваться дополнительные разрешения.  
 **get_link_user_id** - получаем методом [get_link_user_id(update)](get_link_user_id.md).  
 ## Пример
@@ -21,11 +21,8 @@ def main():
         chat_id = bot.get_chat_id(last_update) # получаем chat_id в чате (или канале)
         link_user_id = bot.get_link_user_id(last_update) # получаем link_user_id сообщения пользователя из чата (или канала), если он там был.
         if text == '/ban':
-            bot.ban_member(chat_id, user_id=link_user_id)
-            bot.send_message('Пользователь был удален и забанен.', chat_id)
-        elif text == '/remove':
-            bot.remove_member(chat_id, user_id=link_user_id)
-            bot.send_message('Пользователь был удалён.', chat_id)
+                bot.ban_member(chat_id, user_id=link_user_id)
+                bot.send_message('Пользователь был удален и забанен.', chat_id)
         
  
 if __name__ == '__main__':
