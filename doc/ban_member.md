@@ -21,11 +21,8 @@ def main():
         chat_id = bot.get_chat_id(last_update) # получаем chat_id в чате (или канале)
         link_user_id = bot.get_link_user_id(last_update) # получаем link_user_id сообщения пользователя из чата (или канала), если он там был.
         if text == '/ban':
-            bot.ban_member(chat_id, user_id=link_user_id)
-            bot.send_message('Пользователь был удален и забанен.', chat_id)
-        elif text == '/remove':
-            bot.remove_member(chat_id, user_id=link_user_id)
-            bot.send_message('Пользователь был удалён.', chat_id)
+                bot.ban_member(chat_id, user_id=link_user_id)
+                bot.send_message('Пользователь был удален и забанен.', chat_id)
         
  
 if __name__ == '__main__':
