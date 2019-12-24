@@ -240,22 +240,6 @@ class BotHandler:
             commands = bot['commands']
             return commands
 
-    def set_image(self, image, image_url=None):
-        """
-        Вспомогательный метод для изменения изображения у методов edit_bot_info и edit_chat_info.
-            Есть вероятная вероятность, что при значении None параметру image, будет ошибка.
-        :param image: имя файла с изображением. пример: your_image.jpg
-        :param image_url: ссылка на изображение.
-        :return: возвращает результат исходя из выбранного параметра. по дефолту = image.
-        """
-        if image_url is None:
-            set_image = self.token_upload_content('image', image)
-        else:
-            set_image = {
-                "url": image_url
-            }
-        return set_image
-
     def edit_bot_info(self, name=None, username=None, description=None, commands=None, photo=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
@@ -446,23 +430,30 @@ class BotHandler:
             leave_chat = None
         return leave_chat
 
-    def edit_chat_info(self, chat_id, title=None, icon=None):
+    def edit_chat_info(self, chat_id, icon=None, title=None, icon_url=None):
         """
         https://dev.tamtam.chat/#operation/editChat
-        Редактирование информации чата: заголовок и значок
-        Edits chat info: title, icon
         API = chats/{chatId}
+        Редактирование информации чата: заголовок и значок, бот должен иметь соответствующие разрешения
+        Edits chat info: title, icon
         :param chat_id: идентификатор изменяемого чата
-        :param icon: файл с изображением (так же может быть и ссылка. см. метод set_image)
-        :param title: заголовок чата
+        :param icon: файл значка
+        :param icon_url: ссылка на изображение (имеет приоритет перед файлом значка)
+        :param title: заголовок
         :return: возвращает информацию о параметрах измененного чата
         """
         method = 'chats/{}'.format(chat_id)
         params = {
             "access_token": self.token
         }
+        if icon != None:
+            icon = self.token_upload_content('image', icon)
+        else:
+            icon = {}
+        icon_res = {"url": icon_url}
+        icon_res.update(icon)
         data = {
-            "icon": icon,
+            "icon": icon_res,
             "title": title
         }
         try:
