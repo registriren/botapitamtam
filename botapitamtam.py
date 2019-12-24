@@ -151,8 +151,9 @@ class BotHandler:
     def get_bot_info(self):
         """
         Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод
-        возвращает идентификатор бота, имя и аватар (если есть) Returns info about current bot. Current bot can be
-        identified by access token. Method returns bot identifier, name and avatar (if any)
+        возвращает идентификатор бота, имя и аватар (если есть).
+        Returns info about current bot. Current bot can be identified by access token.
+        Method returns bot identifier, name and avatar (if any).
         https://dev.tamtam.chat/#operation/getMyInfo
         API = me
         :return: bot_info: возвращает информацию о боте.
@@ -172,6 +173,73 @@ class BotHandler:
             logger.error("Error connect get bot info: %s.", e)
             bot_info = None
         return bot_info
+
+    def bot_user_id(self):
+        """
+        Возвращает айди текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        bot_user_id = bot['user_id']
+        return bot_user_id
+
+    def bot_name(self):
+        """
+        Возвращает имя текущего бота
+        :return:
+        """
+        bot = self.get_bot_info()
+        name = bot['name']
+        return name
+
+    def bot_username(self):
+        """
+        Возвращает username текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        username = bot['username']
+        return username
+
+    def bot_avatar_url(self):
+        """
+        Возвращает ссылку на аватар текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'avatar_url' in bot:
+            avatar_url = bot['avatar_url']
+            return avatar_url
+
+    def bot_full_avatar_url(self):
+        """
+        Возвращает ссылку на аватар большого размера текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'full_avatar_url' in bot:
+            full_avatar_url = bot['full_avatar_url']
+            return full_avatar_url
+
+    def bot_commands(self):
+        """
+        Возвращает список команд текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'commands' in bot:
+            commands = bot['commands']
+            return commands
+
+    def bot_description(self):
+        """
+        Возвращает описание текущего бота.
+        :return:
+        """
+        bot = self.get_bot_info()
+        if 'description' in bot:
+            description = bot['description']
+            return description
 
     def edit_bot_info(self, name, username, description, commands, photo, photo_url=None):
         """
