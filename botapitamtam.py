@@ -241,7 +241,7 @@ class BotHandler:
             description = bot['description']
             return description
 
-    def edit_bot_info(self, name, username, description, commands, photo, photo_url=None):
+    def edit_bot_info(self, name, username, description, commands, photo=None, photo_url=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
         поля останутся нетронутыми.
@@ -262,16 +262,20 @@ class BotHandler:
         params = {
             "access_token": self.token
         }
-        if photo_url is None:
-            photo_i = self.token_upload_content('image', photo)
+        if photo is not None:
+            photo = self.token_upload_content('image', photo)
         else:
-            photo_i = {"url": photo_url}
+            photo = {}
+        photo_res = {
+            "url": photo_url
+        }
+        photo_res.update(photo)
         data = {
             "name": name,
             "username": username,
             "description": description,
             "commands": commands,
-            "photo": photo_i
+            "photo": photo_res
         }
         try:
             response = requests.patch(self.url + method, params=params, data=json.dumps(data))
