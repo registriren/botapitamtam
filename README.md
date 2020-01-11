@@ -360,8 +360,8 @@ https://dev.tamtam.chat/#operation/sendAction
 
 ### send_sending_file(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
-Отправка уведомления от бота в чат - 'отправка файла...'  
-**:param chat_id:** чат куда необходимо отправить уведомление    
+Отправка уведомления от бота в чат - 'отправка файла...'    
+**:param chat_id:** чат куда необходимо отправить уведомление      
 **:return:**
 
 ### delete_message(message_id):
@@ -370,8 +370,8 @@ Delete message to specific chat_id by post request
 **:param message_id:** идентификатор сообщения  
 
 ### attach_buttons(buttons):
-Метод подготовки к отправке кнопок в качестве элемента attachments  
-**:param buttons:** кнопки в формате списка, cформированные при помощи методов button_callback, button_contact, button_link, button_location и т.д.  
+Метод подготовки к отправке кнопок в качестве элемента attachments    
+**:param buttons:** кнопки в формате списка, cформированные при помощи методов button_callback, button_contact, button_link, button_location и т.д.    
 **:return attach:** подготовленный контент  
 
 ### button_callback(text, payload, intent='default'):
@@ -407,141 +407,140 @@ Send buttons to specific chat_id by post request
 **:return update:** результат POST запроса на отправку кнопок  
 
 ### upload_url(type):
-https://dev.tamtam.chat/#operation/getUploadUrl
-Вспомогательная функция получения URL для загрузки контента в ТамТам
-:param type: тип контента ('audio', 'video', 'file', 'photo')
-:return: URL на который будет отправляться контент
+https://dev.tamtam.chat/#operation/getUploadUrl  
+Вспомогательная функция получения URL для загрузки контента в ТамТам  
+**:param type:** тип контента ('audio', 'video', 'file', 'photo')  
+**:return:** URL на который будет отправляться контент  
 
 ### attach_file(content, content_name=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод подготовки файла (файлы загружаются только по одному) совместно с кнопками
-:param content: имя файла или полный путь доступный боту на машине где он запущен, например '/mnt/files/movie.mp4'
-:param content_name: имя с которым будет загружен файл
-:return attach: подготовленный контент
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод подготовки файла (файлы загружаются только по одному) совместно с кнопками  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен, например '/mnt/files/movie.mp4'  
+**:param content_name:** имя с которым будет загружен файл  
+**:return attach:** подготовленный контент  
 
 ### send_file(content, chat_id, text=None, content_name=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод отправки файла в указанный чат (файлы загружаются только по одному)
-:param content: имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
-:param chat_id: чат куда будет загружен файл
-:param text: сопровождающий текст к отправляемому файлу
-:param content_name: имя с которым будет загружен файл
-:return update: результат работы POST запроса отправки файла
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод отправки файла в указанный чат (файлы загружаются только по одному)  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'  
+**:param chat_id:** чат куда будет загружен файл  
+**:param text:** сопровождающий текст к отправляемому файлу  
+**:param content_name:** имя с которым будет загружен файл  
+**:return update:** результат работы POST запроса отправки файла  
 
 ### attach_image(content):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод подготовки изображений (нескольких изображений) в указанный чат
-:param content: имя файла или список имен файлов с изображениями
-:return attach: подготовленный контент
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод подготовки изображений (нескольких изображений) в указанный чат  
+**:param content:** имя файла или список имен файлов с изображениями  
+**:return attach:** подготовленный контент  
 
 ### send_image(content, chat_id, text=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод отправки фoто (нескольких фото) в указанный чат
-:param content: имя файла или список имен файлов с изображениями
-:param chat_id: чат куда будут загружены изображения
-:param text: Сопровождающий текст к отправляемому контенту
-:return update: результат работы POST запроса отправки файла
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод отправки фoто (нескольких фото) в указанный чат  
+**:param content:** имя файла или список имен файлов с изображениями  
+**:param chat_id:** чат куда будут загружены изображения  
+**:param text:** сопровождающий текст к отправляемому контенту  
+**:return update:** результат работы POST запроса отправки файла  
 
 ### attach_image_url(url):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод подготовки изображений (нескольких изображений) к отправке по их url
-:param url: http адрес или список адресов с изображениями
-:return attach: подготовленный контент
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод подготовки изображений (нескольких изображений) к отправке по их url  
+**:param url:** http адрес или список адресов с изображениями  
+**:return attach:** подготовленный контент  
 
 ### send_image_url(url, chat_id, text=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод отправки фото (нескольких фото) в указанный чат по url
-:param url: http адрес или список адресов с изображениями
-:param chat_id: чат куда будут загружены изображения
-:param text: сопровождающий текст к отправляемому контенту
-:return update: результат работы POST запроса отправки фото
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод отправки фото (нескольких фото) в указанный чат по url  
+**:param url:** http адрес или список адресов с изображениями  
+**:param chat_id:** чат куда будут загружены изображения  
+**:param text:** сопровождающий текст к отправляемому контенту  
+**:return update:** результат работы POST запроса отправки фото  
 
 ### attach_video(content):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод подготовки к отправке видео (нескольких видео)
-:param content: имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
-иди список файлов ['movie.mp4', 'movie2.mkv']
-:return attach: подготовленный контент
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод подготовки к отправке видео (нескольких видео)  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
+или список файлов ['movie.mp4', 'movie2.mkv']  
+**:return attach:** подготовленный контент  
 
 ### send_video(content, chat_id, text=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод отправки видео (нескольких видео) в указанный чат
-:param content: имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'
-иди список файлов ['movie.mp4', 'movie2.mkv']
-:param chat_id: чат куда будут загружены видео
-:param text: Сопровождающий текст к отправляемому(мым) видео
-:return update: результат работы POST запроса отправки видео
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод отправки видео (нескольких видео) в указанный чат  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4' или список файлов ['movie.mp4', 'movie2.mkv']
+**:param chat_id:** чат куда будут загружены видео  
+**:param text:** Сопровождающий текст к отправляемому(мым) видео  
+**:return update:** результат работы POST запроса отправки видео  
 
 ### attach_audio(content):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод подготовки аудио (только по одному) к отправке
-:param content: имя файла или полный путь доступный боту на машине где он запущен (например 'audio.mp3'),
-файлы защищенные авторскими правами не загружаются
-:return attach: подготовленный контент
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод подготовки аудио (только по одному) к отправке  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен (например 'audio.mp3'),
+файлы защищенные авторскими правами не загружаются  
+**:return attach:** подготовленный контент  
 
 ### send_audio(content, chat_id, text=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод отправки аудио (только по одному) в указанный чат
-:param content: имя файла или полный путь доступный боту на машине где он запущен (например 'audio.mp3'),
-файлы защищенные авторскими правами не загружаются
-:param chat_id: чат куда будет загружено аудио
-:param text: сопровождающий текст к отправляемому аудио
-:return update: результат работы POST запроса отправки аудио
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод отправки аудио (только по одному) в указанный чат  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен (например 'audio.mp3'),
+файлы защищенные авторскими правами не загружаются  
+**:param chat_id:** чат куда будет загружено аудио  
+**:param text:** сопровождающий текст к отправляемому аудио  
+**:return update:** результат работы POST запроса отправки аудио  
 
 ### send_forward_message(text, mid, chat_id):
-https://dev.tamtam.chat/#operation/sendMessage
-Send forward message specific chat_id by post request
-Пересылает сообщение в указанный чат
-:param text: текст к пересылаемому сообщению или None
-:param mid: message_id пересылаемого сообщения
-:param chat_id: integer, chat id of user / чат куда отправится сообщение
-:return update: response | ответ на POST message в соответствии с API
+https://dev.tamtam.chat/#operation/sendMessage  
+Send forward message specific chat_id by post request  
+Пересылает сообщение в указанный чат  
+**:param text:** текст к пересылаемому сообщению или None  
+**:param mid:** message_id пересылаемого сообщения  
+**:param chat_id:** integer, chat id of user / чат куда отправится сообщение  
+**:return update:** response | ответ на POST message в соответствии с API  
 
 ### link_reply(mid):
-https://dev.tamtam.chat/#operation/sendMessage
-Формирует параметр link на цитируемуе сообщение для отправки через send_message
-:param mid: идентификатор сообщения (get_message_id) на которое готовим link
-:return link: сформированный параметр link
+https://dev.tamtam.chat/#operation/sendMessage  
+Формирует параметр link на цитируемуе сообщение для отправки через send_message  
+**:param mid:** идентификатор сообщения (get_message_id) на которое готовим link  
+**:return link:** сформированный параметр link  
 
 ### link_forward(mid):
-https://dev.tamtam.chat/#operation/sendMessage
-Формирует параметр link на пересылаемое сообщение для отправки через send_message
-:param mid: идентификатор сообщения (get_message_id) на которое готовим link
-:return link: сформированный параметр link
+https://dev.tamtam.chat/#operation/sendMessage  
+Формирует параметр link на пересылаемое сообщение для отправки через send_message  
+**:param mid:** идентификатор сообщения (get_message_id) на которое готовим link  
+**:return link:** сформированный параметр link  
 
 ### send_reply_message(text, mid, chat_id):
-https://dev.tamtam.chat/#operation/sendMessage
-Send reply message specific chat_id by post request
-Формирует ответ на сообщение в указанный чат
-:param text: текст ответа на сообщение (обязательный параметр)
-:param mid: message_id сообщения на которое формируется ответ
-:param chat_id: integer, chat id of user / чат куда отправится сообщение
-:return update: response | ответ на POST запрос в соответствии с API
+https://dev.tamtam.chat/#operation/sendMessage  
+Send reply message specific chat_id by post request  
+Формирует ответ на сообщение в указанный чат  
+**:param text:** текст ответа на сообщение (обязательный параметр)  
+**:param mid:** message_id сообщения на которое формируется ответ  
+**:param chat_id:** integer, chat id of user / чат куда отправится сообщение  
+**:return update:** response | ответ на POST запрос в соответствии с API  
 
 ### token_upload_content(type, content, content_name=None):
-https://dev.tamtam.chat/#operation/sendMessage
-Вспомогательная функция получения Tokena для загрузки контента в ТамТам
-:param type: тип контента ('audio', 'video', 'file', 'photo')
-:param content: имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')
-:param content_name: Имя с которым будет загружен файл
-:return update: результат работы POST запроса отправки файла
+https://dev.tamtam.chat/#operation/sendMessage  
+Вспомогательная функция получения Tokena для загрузки контента в ТамТам  
+**:param type:** тип контента ('audio', 'video', 'file', 'photo')  
+**:param content:** имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')  
+**:param content_name:** Имя с которым будет загружен файл  
+**:return update:** результат работы POST запроса отправки файла  
 
 ### send_message(text, chat_id, user_id=None, attachments=None, link=None, notify=True, dislinkprev=False):
-https://dev.tamtam.chat/#operation/sendMessage
-Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
-:param attachments: Массив объектов (файл, фото, видео, аудио, кнопки и т.д.)
-:param chat_id: Чат куда отправляется контент
-:param user_id: Идентификатор пользователя, которому отправляем сообщение
-:param text: Текстовое описание контента
-:param link: Пересылаемые (цитируемые) сообщения
-:param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
-:param dislinkprev: Параметр определяет генерировать предпросмотр для ссылки или нет
-:return update: Возвращает результат POST запроса
+https://dev.tamtam.chat/#operation/sendMessage  
+Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат  
+**:param attachments:** Массив объектов (файл, фото, видео, аудио, кнопки и т.д.)  
+**:param chat_id:** Чат куда отправляется контент  
+**:param user_id:** Идентификатор пользователя, которому отправляем сообщение  
+**:param text:** Текстовое описание контента  
+**:param link:** Пересылаемые (цитируемые) сообщения  
+**:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
+**:param dislinkprev:** Параметр определяет генерировать предпросмотр для ссылки или нет  
+**:return update:** Возвращает результат POST запроса  
 
 
 ### send_answer_callback(callback_id, notification, text=None, attachments=None, link=None, notify=None):
 https://dev.tamtam.chat/#operation/answerOnCallback  
-Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.  
+Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.    
 **:param callback_id:** параметр, соответствующий нажатой кнопке  
 **:param notification:** кратковременное, всплывающее уведомление  
 **:param text:** обновленное (новое) текстовое сообщение  
