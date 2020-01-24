@@ -17,78 +17,78 @@ https://github.com/registriren/yatranslate
 1. Методы, которые начинаются с *get_* получают события, произошедшие с ботом (написанные или пересланные сообщения, результат нажатия кнопок, вложения и т.д.).
 2. Методы, которые начинаются с *send_* формируют события в боте (отправляют сообщения, генерируют кнопки и т.д.).
 3. Методы не имеющие указанные "префиксы" позволяют удалять, изменять сообщения, либо являются вспомогательными.
-4. В основном цикле Вашей программы осуществляем запрос происходящих с ботом событий методом [get_updates()](doc/get_updates.md). Результат помещаем в переменную, например [upd = get_updates()](doc/get_updates.md).
-5. Результат работы сформированных вами событий так же можно поместить в переменную, например [upd = send_message(text, chat_id)](doc/send_message.md). Чаще всего из результата сформированного события требуется получить параметр *message_id* с помощью которого в дальнейшем можно изменять (удалять) данное событие (сообщение, контент).  
-6. Для получения "тела" события, которое необходимо обработать, передаем переменную *upd* выбранному методу *get_* , например [get_text(upd)](doc/get_text.md), работаем с результатом. Если запрошенное событие не произошло в ответ получим *None*.  
-7. В зависимости от интенсивности событий и частоты запросов на получение обновлений, [get_updates()](doc/get_updates.md) может возвращать несколько событий списком, в этом случае потребуется добавить еще один цикл для обработки этого списка, пример подобной реализации: https://github.com/registriren/yatranslate или установить параметр *limit=1* в методе [get_updates()](doc/get_updates.md)
+4. В основном цикле Вашей программы осуществляем запрос происходящих с ботом событий методом *get_updates*. Результат помещаем в переменную, например *upd = get_updates()*.
+5. Результат работы сформированных вами событий так же можно поместить в переменную, например *upd = send_message(text, chat_id)*. Чаще всего из результата сформированного события требуется получить параметр *message_id* с помощью которого в дальнейшем можно изменять (удалять) данное событие (сообщение, контент).  
+6. Для получения "тела" события, которое необходимо обработать, передаем переменную *upd* выбранному методу *get_* , например *get_text(upd)*, работаем с результатом. Если запрошенное событие не произошло в ответ получим *None*.  
+7. В зависимости от интенсивности событий и частоты запросов на получение обновлений, *get_updates* может возвращать несколько событий списком, в этом случае потребуется добавить еще один цикл для обработки этого списка, пример подобной реализации: https://github.com/registriren/yatranslate или установить параметр *limit=1* в параметрах *get_updates*
 8. Для работы с библиотекой поместите файл [botapitamtam.py](botapitamtam.py) в каталог с вашим кодом. Для удобного использования библиотеки во многих ботах с возможностью получения обновлений необходимо клонировать репозиторий в отдельный каталог
 (*git clone https://github.com/registriren/botapitamtam*), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталогах с вашими ботами.
-9. Отправка простого однотипного контента (текст и фото, текст и видео, в чат  
+9. Отправка простого однотипного контента (текст и фото, текст и видео, текст и кнопки) в чат осуществляется с помощью методов *send_image, send_video, send_buttons*.  
 ## Описание методов (в разработке, смотрите в основном коде):
 ### Получение информации о событиях в чате с ботом
-- **[get_updates](README.md#get_updatesmarkernone-limit100-timeout30) - получение событий, произошедших в чате с ботом (боту отправлено текстовое сообщение, картинка, видео, нажата кнопка и т.д.) С результатом работы, помещенным в переменную (например *update*) этого метода, работают нижеперечисленные методы:**  
+- **[get_updates](#get_updatesmarkernone-limit100-timeout30) - получение событий, произошедших в чате с ботом (боту отправлено текстовое сообщение, картинка, видео, нажата кнопка и т.д.) С результатом работы, помещенным в переменную (например *update*) этого метода, работают нижеперечисленные методы:**  
   - [get_marker](#get_markerupdate) - получает маркер (порядковый номер) следующего события, необходим в технических целях.
-  - [get_chat_id](doc/get_chat_id.md) - получает идентификатор чата в которм происходит взаимодействие с ботом, только этот идентификатор требуется в следующих методах:
-    - [get_chat](doc/get_chat.md) - получает информацию о текущем чате.
-    - [get_chat_admins](doc/get_chat_admins.md) - получает информацию об администраторах чата.
-    - [get_chat_membership](doc/get_chat_membership.md) - получает информацию о членстве в чате для текущего бота.
-  - [get_user_id](doc/get_user_id.md) - получает идентификатор пользователя полученного сообщения.
-  - [get_callback_id](doc/get_callback_id.md) - получает значение callback_id (идентификатора клавиатуры), предназначенного для создания реакции на факт нажатия кнопки с помощью метода [send_answer_callback](doc/send_answer_callback).
-  - [get_payload](doc/get_payload.md) - получает payload (текстовое значение, не путать с наименованием кнопки) нажатой кнопки.
-  - [get_text](doc/get_text.md) - получает значение поля text полученного сообщения (события).
-  - [get_message_id](doc/get_message_id.md) - получает идентификатор сообщения (события).
-  - [get_name](doc/get_name.md) - получает имя пользователя, сформировавшего событие.
-  - [get_update_type](doc/get_update_type.md) - получает тип события (например bot_started), произошедшего с ботом.
-  - [get_url](doc/get_url.md) - получает значение поля URL полученного сообщения (события). 
-  - [get_link_name](doc/get_link_name.md) - получает имя пользователя пересланного сообщения.
-  - [get_link_user_id](doc/get_link_user_id.md) - получает идентификатор пользователя пересланного сообщения.
-  - [get_link_chat_id](doc/get_link_chat_id.md) - получает идентификатор чата пересланного сообщения.
-  - [get_chat_type](doc/get_chat_type.md) - получает значение поля chat_type (диалог, чат, канал).
-- [get_members](doc/get_members.md) - получает информацию о пользователях участвующих в чате.
-- [get_all_chats](doc/get_all_chats.md) - получает информацию о чатах, в которых участвовал бот.
-- [get_bot_info](doc/get_bot_info.md) - получает информацию о текущем боте.
-- [get_subscriptions](doc/get_subscriptions.md) - возвращает список подписок на WebHook.
-
-- [add_members](doc/add_members.md) - добавляет пользователя в чат.
+  - [get_chat_id](#get_chat_idupdatenone) - получает идентификатор чата в которм происходит взаимодействие с ботом, только этот идентификатор требуется в следующих методах:
+    - [get_chat](#get_chatchat_id) - получает информацию о текущем чате.
+    - [get_chat_admins](#get_chat_adminschat_id) - получает информацию об администраторах чата.
+    - [get_chat_membership](#get_chat_membershipchat_id) - получает информацию о членстве в чате для текущего бота.
+  - [get_user_id](#get_user_idupdate) - получает идентификатор пользователя полученного сообщения.
+  - [get_callback_id](#get_callback_idupdate) - получает значение callback_id (идентификатора клавиатуры), предназначенного для создания реакции на факт нажатия кнопки с помощью метода [send_answer_callback](doc/send_answer_callback).
+  - [get_payload](#get_payloadupdate) - получает payload (текстовое значение, не путать с наименованием кнопки) нажатой кнопки.
+  - [get_text](#get_textupdate) - получает значение поля text полученного сообщения (события).
+  - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
+  - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
+  - [get_update_type](#get_update_typeupdate) - получает тип события (например bot_started), произошедшего с ботом.
+  - [get_url](#get_urlupdate) - получает значение поля URL полученного сообщения (события). 
+  - [get_link_name](#get_link_nameupdate) - получает имя пользователя пересланного сообщения.
+  - [get_link_user_id](#get_link_user_idupdate) - получает идентификатор пользователя пересланного сообщения.
+  - [get_link_chat_id](#get_link_chat_idupdate) - получает идентификатор чата пересланного сообщения.
+  - [get_chat_type](#get_chat_typeupdate) - получает значение поля chat_type (диалог, чат, канал).
+- [get_members](#get_memberschat_id-user_ids-markernone-count20) - получает информацию о пользователях участвующих в чате.
+- [get_all_chats](#get_all_chatscount50-markernone) - получает информацию о чатах, в которых участвовал бот.
+- [get_bot_info](#get_bot_info) - получает информацию о текущем боте.
+- [get_subscriptions](#get_subscriptions) - возвращает список подписок на WebHook.
+- [add_members](#add_memberschat_id-user_ids) - добавляет пользователя в чат.
 ### Подготовка контента (фото, видео, файл, кнопки) к совместной отправке в чат через параметр *attachments=*
-- [attach_audio](doc/attach_audio.md) - готовит аудио к совместной отправке с другим контентом.
-- [attach_file](doc/attach_file.md) - готовит файл к совместной отправке с другим контентом.
-- [attach_image](doc/attach_image.md) - готовит изображения к совместной отправке с другим контентом.
-- [attach_image_url](doc/attach_image_url.md) - готовит изображения (по их URL) к совместной отправке с другим контентом.
-- [attach_video](doc/attach_video.md) - готовит видео к совместной отправке с другим контентом.
-- [attach_buttons](doc/attach_buttons.md) - готовит массив кнопок к совместной отправке с другим контентом, при этом сами кнопки предварительно формируются следующими методами:
-  - [button_callback](doc/button_callback.md) - готовит кнопку с реакцией callback для дальнейшего формирования в массив.
-  - [button_contact](doc/button_contact.md) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
-  - [button_link](doc/button_link.md) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
-  - [button_location](doc/button_location.md) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
-- [delete_message](doc/delete_message.md) - удаляет сообщение (контент) по его идентификатору (message_id).
-- [edit_bot_info](doc/edit_bot_info.md) - редактирует информацию о текущем боте.
-- [edit_chat_info](doc/edit_chat_info.md) - редактирует информацию о чате.
-- [edit_message](doc/edit_message.md) - изменяет контент по его идентификатору и сформированному аттач.
-- [leave_chat](doc/leave_chat.md) - удаляет бота из текущего чата.
-- [link_forward](doc/link_forward.md) - формирует параметр link пересылаемого сообщения для отправки через send_message.
-- [link_reply](doc/link_reply.md) - формирует параметр link цитируемого сообщения для отправки через send_message.
-- [remove_member](doc/remove_member.md) - удаляет пользователя из чата.
-- [send_answer_callback](doc/send_answer_callback.md) - отправляет уведомление (реакцию) после нажатия кнопки.
-- [send_audio](doc/send_audio.md) - отправляет аудиофайл с преобразованием в формат ТамТам.
-- [send_buttons](doc/send_buttons.md) - отправляет текст с кнопками в чат.
-- [send_file](doc/send_file.md) - отправляет файл.
-- [send_forward_message](doc/send_forward_message.md) - пересылает сообщение по его идентификатору.
-- [send_mark_seen](doc/send_mark_seen.md) - отправляет уведомление о прочтении ботом сообщения.
-- [send_message](doc/send_message.md) - отправляет текстовое сообщение и любой контент по сформированному attachments.
-- [send_image](doc/send_image.md) - отправляет изображение (несколько изображений) из локального файла.
-- [send_image_url](doc/send_image_url.md) - отправляет изображение из URL.
-- [send_reply_message](doc/send_reply_message.md) - формирует ответ на сообщение.
-- [send_sending_audio](doc/send_sending_audio.md) - отправляет уведомление об отправке аудио.
-- [send_sending_file](doc/send_sending_file.md) - отправляет уведомление об отправке файла.
-- [send_sending_photo](doc/send_sending_photo.md) - отправляет уведомление об отправке изображения.
-- [send_sending_video](doc/send_sending_video.md) - отправляет уведомление об отправке видео.
-- [send_typing_on](doc/send_typing_on.md) - отправляет уведомление о печати сообщения.
-- [send_video](doc/send_video.md) - отправляет видео.
-- [subscribe](doc/subscribe.md) - подписывается на получение обновлений через WebHook.
-- [token_upload_content](doc/token_upload_content.md) - вспомогательная функция получения токена загружаемого изображения.
-- [unsubscribe](doc/unsubscribe.md) - отписывается от получения обновлений через WebHook.
-- [upload_url](doc/upload_url.md) - вспомогательная функция получения URL загружаемого изображения.
+- [attach_audio](#attach_audiocontent) - готовит аудио к совместной отправке с другим контентом.
+- [attach_file](#attach_filecontent-content_namenone) - готовит файл к совместной отправке с другим контентом.
+- [attach_image](#attach_imagecontent) - готовит изображения к совместной отправке с другим контентом.
+- [attach_image_url](#attach_image_urlurl) - готовит изображения (по их URL) к совместной отправке с другим контентом.
+- [attach_video](#attach_videocontent) - готовит видео к совместной отправке с другим контентом.
+- [attach_buttons](#attach_buttonsbuttons) - готовит массив кнопок к совместной отправке с другим контентом, при этом сами кнопки предварительно формируются следующими методами:
+  - [button_callback](#button_callbacktext-payload-intentdefault) - готовит кнопку с реакцией callback для дальнейшего формирования в массив.
+  - [button_contact](#button_contacttext) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
+  - [button_link](#button_linktext-url) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
+  - [button_location](#button_locationtext-quickfalse) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
+- [delete_message](#delete_messagemessage_id) - удаляет сообщение (контент) по его идентификатору (message_id).
+- [edit_bot_info](#edit_bot_infoname-username-description-commands-photo-photo_urlnone) - редактирует информацию о текущем боте.
+- [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
+- [edit_message](#edit_messagemessage_id-text-attachmentsnone-linknone-notifytrue) - изменяет контент по его идентификатору и сформированному аттач.
+- [leave_chat](#leave_chatchat_id) - удаляет бота из текущего чата.
+- [link_forward](#link_forwardmid) - формирует параметр link пересылаемого сообщения для отправки через send_message.
+- [link_reply](#link_replymid) - формирует параметр link цитируемого сообщения для отправки через send_message.
+- [remove_member](#remove_memberchat_id-user_id) - удаляет пользователя из чата.
+- [send_answer_callback](#send_answer_callbackcallback_id-notification-textnone-attachmentsnone-linknone-notifynone) - отправляет уведомление (реакцию) после нажатия кнопки.
+- [send_audio](#send_audiocontent-chat_id-textnone) - отправляет аудиофайл с преобразованием в формат ТамТам.
+- [send_buttons](#send_buttonstext-buttons-chat_id) - отправляет текст с кнопками в чат.
+- [send_file](#send_filecontent-chat_id-textnone-content_namenone) - отправляет файл.
+- [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.
+- [send_mark_seen](#send_mark_seenchat_id) - отправляет уведомление о прочтении ботом сообщения.
+- [send_message](#send_messagetext-chat_id-user_idnone-attachmentsnone-linknone-notifytrue-dislinkprevfalse) - отправляет текстовое сообщение и любой контент по сформированному attachments.
+- [send_image](#send_imagecontent-chat_id-textnone) - отправляет изображение (несколько изображений) из локального файла.
+- [send_image_url](#send_image_urlurl-chat_id-textnone) - отправляет изображение из URL.
+- [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.
+- [send_sending_audio](#send_sending_audiochat_id) - отправляет уведомление об отправке аудио.
+- [send_sending_file](#send_sending_filechat_id) - отправляет уведомление об отправке файла.
+- [send_sending_photo](#send_sending_photochat_id) - отправляет уведомление об отправке изображения.
+- [send_sending_image](#send_sending_imagechat_id) - отправляет уведомление об отправке изображения.
+- [send_sending_video](#send_sending_videochat_id) - отправляет уведомление об отправке видео.
+- [send_typing_on](#send_typing_onchat_id) - отправляет уведомление о печати сообщения.
+- [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.
+- [subscribe](#subscribeurl-update_types-version) - подписывается на получение обновлений через WebHook.
+- [token_upload_content](#token_upload_contenttype-content-content_namenone) - вспомогательная функция получения токена загружаемого изображения.
+- [unsubscribe](#unsubscribeurl) - отписывается от получения обновлений через WebHook.
+- [upload_url](#upload_urltype) - вспомогательная функция получения URL загружаемого изображения.
 
 
 ## Подробное описание методов  
