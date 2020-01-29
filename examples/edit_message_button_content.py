@@ -24,10 +24,9 @@ def main():
             cont_img = 'test.png'     # тестовый файл изображения в рабочем каталоге
             cont_video = 'movie.mp4'  # тестовый файл видео в рабочем каталоге
            
-            button = bot.button_link('Открыть mail.ru', 'http://mail.ru') # готовим первую кнопку
+            button1 = bot.button_link('Открыть mail.ru', 'http://mail.ru') # готовим первую кнопку
             button2 = bot.button_link('Открыть ok.ru', 'http://ok.ru') # готовим вторую кнопку
-            button.extend(button2) # формируем кнопки в строку
-            buttons = [button]
+            buttons = [button1, button2] # формируем кнопки в строку
 
             image = bot.attach_image(cont_img)    # подготовка изображения к совокупной отправке
             video = bot.attach_video(cont_video)  # подготовка видео к совокупной отправке
@@ -35,7 +34,7 @@ def main():
 
             attach = image + video + key
 
-            upd = bot.send_message(attach, chat_id, text='текст начальный') # совокупная отправка контента
+            upd = bot.send_message('текст начальный', chat_id, attachments=attach) # совокупная отправка контента
             mid = bot.get_message_id(upd) # получаем идентификатор отправленного контента
 
             upd = bot.send_message('Через 5 сек. всё изменится...', chat_id) 
@@ -46,9 +45,9 @@ def main():
             cont_img = 'test2.png' # файл должен быть в рабочем каталоге
             cont_video = 'voko.mkv' # файл должен быть в рабочем каталоге
             
-            button = bot.button_callback('Новая кнопка 1', 'short')
+            button1 = bot.button_callback('Новая кнопка 1', 'short')
             button2 = bot.button_callback('Новая кнопка 2', 'long')
-            buttons = [button, button2] # формируем кнопки в колонку
+            buttons = [[button1], [button2]] # формируем кнопки в колонку
 
             image = bot.attach_image(cont_img)
             video = bot.attach_video(cont_video)
@@ -56,7 +55,7 @@ def main():
 
             attach = image + video + key
 
-            bot.edit_message(mid, attach, text='ТЕКСТ ИЗМЕНЁННЫЙ') # изменяем загруженный контент
+            bot.edit_message(mid, 'ТЕКСТ ИЗМЕНЁННЫЙ', attachments=attach) # изменяем загруженный контент
             
 if __name__ == '__main__':
     try:
