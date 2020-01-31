@@ -1045,10 +1045,24 @@ class BotHandler:
             button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
-        attach = [{"type": "inline_keyboard",
-                   "payload": {"buttons": buttons}
-                   }
-                  ]
+        attach = None
+        if isinstance(buttons, list):
+            try:
+                if buttons[0][0]:
+                    attach = [{"type": "inline_keyboard",
+                               "payload": {"buttons": buttons}
+                               }
+                              ]
+            except:
+                attach = [{"type": "inline_keyboard",
+                           "payload": {"buttons": [buttons]}
+                           }
+                          ]
+        else:
+            attach = [{"type": "inline_keyboard",
+                       "payload": {"buttons": [[buttons]]}
+                       }
+                      ]
         return attach
 
     def button_callback(self, text, payload, intent='default'):
@@ -1059,10 +1073,10 @@ class BotHandler:
         :param intent: цвет кнопки
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
-        button = [{"type": 'callback',
-                   "text": text,
-                   "payload": payload,
-                   "intent": intent}]
+        button = {"type": 'callback',
+                  "text": text,
+                  "payload": payload,
+                  "intent": intent}
         return button
 
     def button_link(self, text, url):
@@ -1072,9 +1086,9 @@ class BotHandler:
         :param url: ссылка для перехода при нажатии
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
-        button = [{"type": 'link',
+        button = {"type": 'link',
                    "text": text,
-                   "url": url}]
+                   "url": url}
         return button
 
     def button_contact(self, text):
@@ -1083,8 +1097,8 @@ class BotHandler:
         :param text: подпись кнопки
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
-        button = [{"type": 'request_contact',
-                   "text": text}]
+        button = {"type": 'request_contact',
+                   "text": text}
         return button
 
     def button_location(self, text, quick=False):
@@ -1094,9 +1108,9 @@ class BotHandler:
         :param quick: если true, отправляет местоположение без запроса подтверждения пользователя
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
-        button = [{"type": 'request_geo_location',
+        button = {"type": 'request_geo_location',
                    "text": text,
-                   "quick": quick}]
+                   "quick": quick}
         return button
 
     def send_buttons(self, text, buttons, chat_id):
