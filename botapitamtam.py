@@ -945,7 +945,7 @@ class BotHandler:
             update = None
         return update
 
-    def send_typing_on(self, chat_id):
+    def typing_on(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'печатает...'
         https://dev.tamtam.chat/#operation/sendAction
@@ -967,7 +967,7 @@ class BotHandler:
         params = {"action": "mark_seen"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_sending_video(self, chat_id):
+    def sending_video(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'отправка видео...'
         https://dev.tamtam.chat/#operation/sendAction
@@ -978,7 +978,7 @@ class BotHandler:
         params = {"action": "sending_video"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_sending_audio(self, chat_id):
+    def sending_audio(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'отправка аудио...'
         https://dev.tamtam.chat/#operation/sendAction
@@ -989,7 +989,7 @@ class BotHandler:
         params = {"action": "sending_audio"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_sending_photo(self, chat_id):
+    def sending_photo(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'отправка фото ...'
         https://dev.tamtam.chat/#operation/sendAction
@@ -1000,7 +1000,7 @@ class BotHandler:
         params = {"action": "sending_photo"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_sending_image(self, chat_id):
+    def sending_image(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'отправка фото ...'
         https://dev.tamtam.chat/#operation/sendAction
@@ -1011,7 +1011,7 @@ class BotHandler:
         params = {"action": "sending_image"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_sending_file(self, chat_id):
+    def sending_file(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'отправка файла...' #не работает, но ошибку не вызывает
         https://dev.tamtam.chat/#operation/sendAction
@@ -1045,6 +1045,7 @@ class BotHandler:
             button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
+        self.typing_on(self.get_chat_id())
         attach = None
         if isinstance(buttons, list):
             try:
@@ -1122,7 +1123,7 @@ class BotHandler:
         :param buttons: массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.
         :return update: результат POST запроса на отправку кнопок
         """
-        self.send_typing_on(chat_id)
+        self.typing_on(chat_id)
         attach = self.attach_buttons(buttons)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1155,6 +1156,7 @@ class BotHandler:
         :param content_name: имя с которым будет загружен файл
         :return: attach: подготовленный контент
         """
+        self.sending_file(self.get_chat_id())
         token = self.token_upload_content('file', content, content_name)
         attach = [{"type": "file", "payload": token}]
         return attach
@@ -1169,7 +1171,7 @@ class BotHandler:
         :param content_name: имя с которым будет загружен файл
         :return: update: результат работы POST запроса отправки файла
         """
-        self.send_sending_file(chat_id)
+        self.sending_file(chat_id)
         attach = self.attach_file(content, content_name)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1181,6 +1183,7 @@ class BotHandler:
         :param content: имя файла или список имен файлов с изображениями
         :return: attach: подготовленный контент
         """
+        self.sending_photo(self.get_chat_id())
         attach = []
         if isinstance(content, str):
             token = self.token_upload_content('image', content)
@@ -1200,7 +1203,7 @@ class BotHandler:
         :param text: Сопровождающий текст к отправляемому контенту
         :return: update: результат работы POST запроса отправки файла
         """
-        self.send_sending_photo(chat_id)
+        self.sending_photo(chat_id)
         attach = self.attach_image(content)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1212,6 +1215,7 @@ class BotHandler:
         :param url: http адрес или список адресов с изображениями
         :return: attach: подготовленный контент
         """
+        self.sending_photo(self.get_chat_id())
         attach = []
         if isinstance(url, str):
             attach.append({"type": "image", "payload": {'url': url}})
@@ -1229,7 +1233,7 @@ class BotHandler:
         :param text: сопровождающий текст к отправляемому контенту
         :return: update: результат работы POST запроса отправки фото
         """
-        self.send_sending_photo(chat_id)
+        self.sending_photo(chat_id)
         attach = self.attach_image_url(url)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1242,6 +1246,7 @@ class BotHandler:
                         иди список файлов ['movie.mp4', 'movie2.mkv']
         :return: attach: подготовленный контент
         """
+        self.sending_video(self.get_chat_id())
         attach = []
         if isinstance(content, str):
             token = self.token_upload_content('video', content)
@@ -1262,7 +1267,7 @@ class BotHandler:
         :param text: Сопровождающий текст к отправляемому(мым) видео
         :return: update: результат работы POST запроса отправки видео
         """
-        self.send_sending_video(chat_id)
+        self.sending_video(chat_id)
         attach = self.attach_video(content)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1289,7 +1294,7 @@ class BotHandler:
         :param text: сопровождающий текст к отправляемому аудио
         :return: update: результат работы POST запроса отправки аудио
         """
-        self.send_sending_audio(chat_id)
+        self.sending_audio(chat_id)
         attach = self.attach_audio(content)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1304,7 +1309,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на POST message в соответствии с API
         """
-        self.send_typing_on(chat_id)
+        self.typing_on(chat_id)
         link = self.link_forward(mid)
         update = self.send_message(text, chat_id, link=link)
         return update
@@ -1343,7 +1348,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на POST запрос в соответствии с API
         """
-        self.send_typing_on(chat_id)
+        self.typing_on(chat_id)
         link = self.link_reply(mid)
         update = self.send_message(text, chat_id, link=link)
         return update
@@ -1387,7 +1392,7 @@ class BotHandler:
         :param dislinkprev: Параметр определяет генерировать предпросмотр для ссылки или нет
         :return update: Возвращает результат POST запроса
         """
-        self.send_typing_on(chat_id)
+        self.typing_on(chat_id)
         method = 'messages'
         params = (
             ('access_token', self.token),
