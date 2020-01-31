@@ -21,12 +21,12 @@ def main():
         type = bot.get_update_type(last_update)
         callback_id = bot.get_callback_id(last_update)
         if bot.get_text(last_update) != None:
-            buttons = [bot.button_callback('Test', 'ok')] # кнопки всегда должны быть списком
+            buttons = bot.button_callback('Test', 'ok') # готовим кнопку
             bot.send_buttons(time.ctime(), buttons, chat_id)
         if type == 'message_callback':
             if callback_id != None:
                 n += 1
-                key = [bot.button_callback('Test[{}]'.format(n), 'ok')] # кнопки всегда должны быть списком
+                key = bot.button_callback('Test[{}]'.format(n), 'ok') # готовим кнопку
                 attach = bot.attach_buttons(key) # при необходимости можно добавить еще attach путем сложения 
                 text = time.ctime()
                 bot.send_answer_callback(callback_id, 'test well...', text=text,
