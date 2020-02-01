@@ -43,7 +43,7 @@ class BotHandler:
             update = {}
         if 'updates' in update.keys():
             if len(update['updates']) != 0:
-                self.send_mark_seen(chat_id=self.get_chat_id(update))
+                self.mark_seen(chat_id=self.get_chat_id(update))
             else:
                 update = None
         else:
@@ -956,7 +956,7 @@ class BotHandler:
         params = {"action": "typing_on"}
         requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
 
-    def send_mark_seen(self, chat_id):
+    def mark_seen(self, chat_id):
         """
         Отправка в чат маркера о прочтении ботом сообщения
         https://dev.tamtam.chat/#operation/sendAction

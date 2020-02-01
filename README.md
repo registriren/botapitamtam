@@ -56,7 +56,7 @@
 - [get_bot_info](#get_bot_info) - получает информацию о текущем боте.
 - [get_subscriptions](#get_subscriptions) - возвращает список подписок на WebHook.
 - [add_members](#add_memberschat_id-user_ids) - добавляет пользователя в чат.
-### Подготовка контента (фото, видео, файл, кнопки) к совместной отправке в чат через параметр *attachments=*
+### Подготовка контента (фото, видео, файл, кнопки) к совместной отправке в чат через параметр `attachments=`
 - [attach_audio](#attach_audiocontent) - готовит аудио к совместной отправке с другим контентом.
 - [attach_file](#attach_filecontent-content_namenone) - готовит файл к совместной отправке с другим контентом.
 - [attach_image](#attach_imagecontent) - готовит изображения к совместной отправке с другим контентом.
@@ -67,35 +67,39 @@
   - [button_contact](#button_contacttext) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
   - [button_link](#button_linktext-url) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
   - [button_location](#button_locationtext-quickfalse) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
+### Формирование (отправка, изменение) событий в чатах с ботом
 - [delete_message](#delete_messagemessage_id) - удаляет сообщение (контент) по его идентификатору (message_id).
-- [edit_bot_info](#edit_bot_infoname-username-description-commands-photo-photo_urlnone) - редактирует информацию о текущем боте.
-- [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
 - [edit_message](#edit_messagemessage_id-text-attachmentsnone-linknone-notifytrue) - изменяет контент по его идентификатору и сформированному аттач.
-- [leave_chat](#leave_chatchat_id) - удаляет бота из текущего чата.
-- [link_forward](#link_forwardmid) - формирует параметр link пересылаемого сообщения для отправки через send_message.
-- [link_reply](#link_replymid) - формирует параметр link цитируемого сообщения для отправки через send_message.
-- [remove_member](#remove_memberchat_id-user_id) - удаляет пользователя из чата.
 - [send_answer_callback](#send_answer_callbackcallback_id-notification-textnone-attachmentsnone-linknone-notifynone) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](#send_audiocontent-chat_id-textnone) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](#send_buttonstext-buttons-chat_id) - отправляет текст с кнопками в чат.
 - [send_file](#send_filecontent-chat_id-textnone-content_namenone) - отправляет файл.
-- [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.
-- [mark_seen](#mark_seenchat_id) - отправляет уведомление о прочтении ботом сообщения.
 - [send_message](#send_messagetext-chat_id-user_idnone-attachmentsnone-linknone-notifytrue-dislinkprevfalse) - отправляет текстовое сообщение и любой контент по сформированному attachments.
+  - [link_forward](#link_forwardmid) - формирует параметр `link` пересылаемого сообщения для отправки через `send_message`.
+  - [link_reply](#link_replymid) - формирует параметр `link` цитируемого сообщения для отправки через `send_message`.
 - [send_image](#send_imagecontent-chat_id-textnone) - отправляет изображение (несколько изображений) из локального файла.
 - [send_image_url](#send_image_urlurl-chat_id-textnone) - отправляет изображение из URL.
+- [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.
+- [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.
 - [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.
+### Методы обслуживания ботов и чатов
+- [edit_bot_info](#edit_bot_infoname-username-description-commands-photo-photo_urlnone) - редактирует информацию о текущем боте.
+- [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
+- [leave_chat](#leave_chatchat_id) - удаляет бота из текущего чата.
+- [remove_member](#remove_memberchat_id-user_id) - удаляет пользователя из чата.
+### Вспомогательные методы
+- [mark_seen](#mark_seenchat_id) - отправляет уведомление о прочтении ботом сообщения.
 - [sending_audio](#sending_audiochat_id) - отправляет уведомление об отправке аудио.
 - [sending_file](#sending_filechat_id) - отправляет уведомление об отправке файла.
 - [sending_photo](#sending_photochat_id) - отправляет уведомление об отправке изображения.
 - [sending_image](#sending_imagechat_id) - отправляет уведомление об отправке изображения.
 - [sending_video](#sending_videochat_id) - отправляет уведомление об отправке видео.
 - [typing_on](#typing_onchat_id) - отправляет уведомление о печати сообщения.
-- [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.
-- [subscribe](#subscribeurl-update_types-version) - подписывается на получение обновлений через WebHook.
 - [token_upload_content](#token_upload_contenttype-content-content_namenone) - вспомогательная функция получения токена загружаемого изображения.
-- [unsubscribe](#unsubscribeurl) - отписывается от получения обновлений через WebHook.
 - [upload_url](#upload_urltype) - вспомогательная функция получения URL загружаемого изображения.
+### Технические методы
+- [subscribe](#subscribeurl-update_types-version) - подписывается на получение обновлений через WebHook.
+- [unsubscribe](#unsubscribeurl) - отписывается от получения обновлений через WebHook.
 
 
 ## Подробное описание методов  
