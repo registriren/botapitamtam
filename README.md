@@ -25,9 +25,9 @@ https://github.com/registriren/yatranslate
 (*git clone https://github.com/registriren/botapitamtam*), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталогах с вашими ботами.
 9. Отправка простого однотипного контента (текст и фото, текст и видео, текст и кнопки) в чат осуществляется с помощью методов *send_image, send_video, send_buttons*.
 10. Формирование кнопок осуществляется в несколько этапов:
-  - Готовим кнопки в зависимости от типа (callback, link, request_contact, request_geo_location, chat) с помощью соответствующих методов button_callback, button_link, button_contact и т.п. результат работы методов присваем переменной, например *key1 = button_callback('Кнопка1', 'payload-key1')*
-  - Если необходимо объединить кнопки в строку *key_str = [[key1, key2, key3]]*
-  - Если необходимо объединить кнопки в столбец *key_stb = [[key4], [key5]]*
+  - Готовим кнопки в зависимости от типа (callback, link, request_contact, request_geo_location, chat) с помощью соответствующих методов button_callback, button_link, button_contact и т.п. результат работы методов присваем переменной, например `*key1 = button_callback('Кнопка1', 'payload-key1')*`
+  - Если необходимо объединить кнопки в строку `*key_str = [[key1, key2, key3]]*`
+  - Если необходимо объединить кнопки в столбец `*key_stb = [[key4], [key5]]*`
   - Можно сочетать вышеуказанные правила или просто сложить подготавливаемые кнопки *key_res = key_str + key_stb*
   - Теперь можно отправить кнопки в бот методом *send_buttons(text, key_res, chat_id)* или сделать их частью attachments для совместной отправки с другим контентом (фото, видео и т.п.) при помощи соответствующих методов (*send_message, send_answer_callback, edit_message и др.*), содержащих в качестве параметра *attachments=*
   - Примеры в разделе [Examples](examples/)
