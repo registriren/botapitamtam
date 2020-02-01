@@ -3,33 +3,33 @@
 
 Примеры реализации ботов с использованем библиотеки:   
 
-https://github.com/registriren/filelink
+<https://github.com/registriren/filelink>
 
-https://github.com/registriren/yatranslate
+<https://github.com/registriren/yatranslate>
   
 
 Библиотека находится в стадии разработки, поэтому возможны изменения синтаксиса, которые приведут к неработоспособности вашего кода, проверяйте перед применением изменений на своей системе.
 
-Чат для обсуждения вопросов, связанных с работой библиотеки https://tt.me/botapitamtam
+Чат для обсуждения вопросов, связанных с работой библиотеки <https://tt.me/botapitamtam>
 
 Принцип взаимодействия с библиотекой:
 - 
-1. Методы, которые начинаются с *get_* получают события, произошедшие с ботом (написанные или пересланные сообщения, результат нажатия кнопок, вложения и т.д.).
-2. Методы, которые начинаются с *send_* формируют события в боте (отправляют сообщения, генерируют кнопки и т.д.).
+1. Методы, которые начинаются с `get_` получают события, произошедшие с ботом (написанные или пересланные сообщения, результат нажатия кнопок, вложения и т.д.).
+2. Методы, которые начинаются с `send_` формируют события в боте (отправляют сообщения, генерируют кнопки и т.д.).
 3. Методы не имеющие указанные "префиксы" позволяют удалять, изменять сообщения, либо являются вспомогательными.
-4. В основном цикле Вашей программы осуществляем запрос происходящих с ботом событий методом *get_updates*. Результат помещаем в переменную, например *upd = get_updates()*.
-5. Результат работы сформированных вами событий так же можно поместить в переменную, например *upd = send_message(text, chat_id)*. Чаще всего из результата сформированного события требуется получить параметр *message_id* с помощью которого в дальнейшем можно изменять (удалять) данное событие (сообщение, контент).  
-6. Для получения "тела" события, которое необходимо обработать, передаем переменную *upd* выбранному методу *get_* , например *get_text(upd)*, работаем с результатом. Если запрошенное событие не произошло в ответ получим *None*.  
-7. В зависимости от интенсивности событий и частоты запросов на получение обновлений, *get_updates* может возвращать несколько событий списком, в этом случае потребуется добавить еще один цикл для обработки этого списка, пример подобной реализации: https://github.com/registriren/yatranslate или установить параметр *limit=1* в параметрах *get_updates*
+4. В основном цикле Вашей программы осуществляем запрос происходящих с ботом событий методом `get_updates`. Результат помещаем в переменную, например `upd = get_updates()`.
+5. Результат работы сформированных вами событий так же можно поместить в переменную, например `upd = send_message(text, chat_id)`. Чаще всего из результата сформированного события требуется получить параметр `message_id` с помощью которого в дальнейшем можно изменять (удалять) данное событие (сообщение, контент).  
+6. Для получения "тела" события, которое необходимо обработать, передаем переменную `upd` выбранному методу `get_` , например `get_text(upd)`, работаем с результатом. Если запрошенное событие не произошло в ответ получим `None`.  
+7. В зависимости от интенсивности событий и частоты запросов на получение обновлений, `get_updates` может возвращать несколько событий списком, в этом случае потребуется добавить еще один цикл для обработки этого списка, пример подобной реализации: <https://github.com/registriren/yatranslate> или установить параметр `limit=1` в параметрах `get_updates`
 8. Для работы с библиотекой поместите файл [botapitamtam.py](botapitamtam.py) в каталог с вашим кодом. Для удобного использования библиотеки во многих ботах с возможностью получения обновлений необходимо клонировать репозиторий в отдельный каталог
-(*git clone https://github.com/registriren/botapitamtam*), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталогах с вашими ботами.
-9. Отправка простого однотипного контента (текст и фото, текст и видео, текст и кнопки) в чат осуществляется с помощью методов *send_image, send_video, send_buttons*.
+(`git clone https://github.com/registriren/botapitamtam`), а символьную ссылку на файл [botapitamtam.py](botapitamtam.py) разместить в каталогах с вашими ботами.
+9. Отправка простого однотипного контента (текст и фото, текст и видео, текст и кнопки) в чат осуществляется с помощью методов `send_image, send_video, send_buttons`.
 10. Формирование кнопок осуществляется в несколько этапов:
-  - Готовим кнопки в зависимости от типа (callback, link, request_contact, request_geo_location, chat) с помощью соответствующих методов button_callback, button_link, button_contact и т.п. результат работы методов присваем переменной, например `*key1 = button_callback('Кнопка1', 'payload-key1')*`
-  - Если необходимо объединить кнопки в строку `*key_str = [[key1, key2, key3]]*`
-  - Если необходимо объединить кнопки в столбец `*key_stb = [[key4], [key5]]*`
-  - Можно сочетать вышеуказанные правила или просто сложить подготавливаемые кнопки *key_res = key_str + key_stb*
-  - Теперь можно отправить кнопки в бот методом *send_buttons(text, key_res, chat_id)* или сделать их частью attachments для совместной отправки с другим контентом (фото, видео и т.п.) при помощи соответствующих методов (*send_message, send_answer_callback, edit_message и др.*), содержащих в качестве параметра *attachments=*
+  - Готовим кнопки в зависимости от типа (`callback, link, request_contact, request_geo_location, chat`) с помощью соответствующих методов `button_callback, button_link, button_contact и т.п.` результат работы методов присваем переменной, например `key1 = button_callback('Кнопка1', 'payload-key1')`
+  - Если необходимо объединить кнопки в строку `key_str = [[key1, key2, key3]]`
+  - Если необходимо объединить кнопки в столбец `key_stb = [[key4], [key5]]`
+  - Можно сочетать вышеуказанные правила или просто сложить подготавливаемые кнопки `key_res = key_str + key_stb`
+  - Теперь можно отправить кнопки в бот методом `send_buttons(text, key_res, chat_id)` или сделать их частью `attachments` для совместной отправки с другим контентом (фото, видео и т.п.) при помощи соответствующих методов (`send_message, send_answer_callback, edit_message и др.`), содержащих в качестве параметра `attachments=`
   - Примеры в разделе [Examples](examples/)
 ## Описание методов (в разработке, смотрите в основном коде):
 ### Получение информации о событиях в чате с ботом
@@ -80,17 +80,17 @@ https://github.com/registriren/yatranslate
 - [send_buttons](#send_buttonstext-buttons-chat_id) - отправляет текст с кнопками в чат.
 - [send_file](#send_filecontent-chat_id-textnone-content_namenone) - отправляет файл.
 - [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.
-- [send_mark_seen](#send_mark_seenchat_id) - отправляет уведомление о прочтении ботом сообщения.
+- [mark_seen](#mark_seenchat_id) - отправляет уведомление о прочтении ботом сообщения.
 - [send_message](#send_messagetext-chat_id-user_idnone-attachmentsnone-linknone-notifytrue-dislinkprevfalse) - отправляет текстовое сообщение и любой контент по сформированному attachments.
 - [send_image](#send_imagecontent-chat_id-textnone) - отправляет изображение (несколько изображений) из локального файла.
 - [send_image_url](#send_image_urlurl-chat_id-textnone) - отправляет изображение из URL.
 - [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.
-- [send_sending_audio](#send_sending_audiochat_id) - отправляет уведомление об отправке аудио.
-- [send_sending_file](#send_sending_filechat_id) - отправляет уведомление об отправке файла.
-- [send_sending_photo](#send_sending_photochat_id) - отправляет уведомление об отправке изображения.
-- [send_sending_image](#send_sending_imagechat_id) - отправляет уведомление об отправке изображения.
-- [send_sending_video](#send_sending_videochat_id) - отправляет уведомление об отправке видео.
-- [send_typing_on](#send_typing_onchat_id) - отправляет уведомление о печати сообщения.
+- [sending_audio](#sending_audiochat_id) - отправляет уведомление об отправке аудио.
+- [sending_file](#sending_filechat_id) - отправляет уведомление об отправке файла.
+- [sending_photo](#sending_photochat_id) - отправляет уведомление об отправке изображения.
+- [sending_image](#sending_imagechat_id) - отправляет уведомление об отправке изображения.
+- [sending_video](#sending_videochat_id) - отправляет уведомление об отправке видео.
+- [typing_on](#typing_onchat_id) - отправляет уведомление о печати сообщения.
 - [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.
 - [subscribe](#subscribeurl-update_types-version) - подписывается на получение обновлений через WebHook.
 - [token_upload_content](#token_upload_contenttype-content-content_namenone) - вспомогательная функция получения токена загружаемого изображения.
@@ -329,43 +329,43 @@ https://dev.tamtam.chat/#operation/editMessage
 **:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
 **:return update:** Возвращает результат PUT запроса  
 
-### send_typing_on(chat_id):
+### typing_on(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
 Отправка уведомления от бота в чат - 'печатает...'  
 **:param chat_id:** чат куда необходимо отправить уведомление  
 **:return:**
 
-### send_mark_seen(chat_id):
+### mark_seen(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
 Отправка в чат маркера о прочтении ботом сообщения  
 **:param chat_id:** чат куда необходимо отправить уведомление  
 **:return:**
 
-### send_sending_video(chat_id):
+### sending_video(chat_id):
 https://dev.tamtam.chat/#operation/sendAction   
 Отправка уведомления от бота в чат - 'отправка видео...'  
 **:param chat_id:** чат куда необходимо отправить уведомление  
 **:return:**
 
-### send_sending_audio(chat_id):
+### sending_audio(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
 Отправка уведомления от бота в чат - 'отправка аудио...'  
 **:param chat_id:** чат куда необходимо отправить уведомление  
 **:return:**
 
-### send_sending_photo(chat_id):
+### sending_photo(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
 Отправка уведомления от бота в чат - 'отправка фото ...'  
 **:param chat_id:** чат куда необходимо отправить уведомление  
 **:return:**
 
-### send_sending_image(chat_id):
+### sending_image(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
 Отправка уведомления от бота в чат - 'отправка фото ...'  
 **:param chat_id:** чат куда необходимо отправить уведомление  
 **:return:**
 
-### send_sending_file(chat_id):
+### sending_file(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  
 Отправка уведомления от бота в чат - 'отправка файла...'    
 **:param chat_id:** чат куда необходимо отправить уведомление      
