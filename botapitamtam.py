@@ -19,8 +19,9 @@ class BotHandler:
     def __init__(self, token):
         self.token = token
         self.url = 'https://botapi.tamtam.chat/'
+        self.marker = None
 
-    def get_updates(self, marker=None, limit=100, timeout=30):
+    def get_updates(self, limit=1, timeout=45):
         """
         Основная функция опроса состояния (событий) бота методом long polling
         This method is used to get updates from bot via get request. It is based on long polling.
@@ -29,7 +30,7 @@ class BotHandler:
         """
         method = 'updates'
         params = {
-            "marker": marker,
+            "marker": self.marker,
             "limit": limit,
             "timeout": timeout,
             "types": None,
@@ -48,6 +49,8 @@ class BotHandler:
                 update = None
         else:
             update = None
+        if update:
+            self.marker = self.get_marker(update)
         return update
 
     def get_subscriptions(self):

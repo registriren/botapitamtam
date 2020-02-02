@@ -1,23 +1,23 @@
 from botapitamtam import BotHandler
 import time
 
-token = 'access_token_primebot' # токен, полученный при создании бота в @PrimeBot
+token = 'access_token_primebot'  # токен, полученный при создании бота в @PrimeBot
 
 bot = BotHandler(token)
 
+
 def main():
-    marker = None
     chat_id = bot.get_chat_id()
     bot.send_message("Напишите любое сообщение", chat_id)
-    while True: # цикл ожидания взаимодействия с ботом
-        update = bot.get_updates(marker) # получаем внутреннее представление сообщения (контента) отправленного боту (сформированного ботом)
+    while True:  # цикл ожидания взаимодействия с ботом
+        update = bot.get_updates()  # получаем внутреннее представление сообщения (контента) отправленного боту (сформированного ботом)
         # тут можно вставить любые действия которые должны выполняться во время ожидания события
-        if update == None:  # проверка на пустое событие, если пусто - возврат к началу цикла
-            continue
-        marker = bot.get_marker(update) # получение маркера очередного сообщения
-        chat_id = bot.get_chat_id(update) # получаем chat_id диалога с ботом
-        bot.send_message("привет, я бот", chat_id)  # отправляем текстовое сообщение в чат (диалог)
- 
+        if update:  # проверка на пустое событие, если пусто - возврат к началу цикла
+            chat_id = bot.get_chat_id(update)  # получаем chat_id диалога с ботом
+            bot.send_message("привет, я бот", chat_id)  # отправляем текстовое сообщение в чат (диалог)
+        continue
+
+
 if __name__ == '__main__':
     try:
         main()
