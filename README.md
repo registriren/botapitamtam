@@ -36,7 +36,6 @@ def main():
             bot.send_message(text, chat_id)
         continue
 
-
 if __name__ == '__main__':
     try:
         main()
