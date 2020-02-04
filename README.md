@@ -103,6 +103,10 @@ if __name__ == '__main__':
 - [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.
 - [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.
 - [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.
+### Методы работы с режимом конструктора
+- [get_construct_text](#get_construct_textupdate) - получает текст набранный пользователем в режиме конструктора.  
+- [get_session_id](#get_session_idupdate) - получает значение session_id в режиме конструктора.  
+- [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат  
 ### Методы обслуживания ботов и чатов
 - [edit_bot_info](#edit_bot_infoname-username-description-commands-photo-photo_urlnone) - редактирует информацию о текущем боте.
 - [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
@@ -595,7 +599,7 @@ https://dev.tamtam.chat/#operation/getUpdates
         
 ### send_construct_message(session_id, hint, text=None, attachments=None, link=None, notify=None, allow_user_input=True, data=None, buttons=None, placeholder=None):
 https://dev.tamtam.chat/#operation/construct  
-Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.  
+Метод отправки результата работы конструктора в чат.  
 **:param session_id:** параметр, соответствующий вызванному конструктору  
 **:param hint:** сообщение пользователю, вызвавшему конструктор  
 **:param text:** текстовое сообщение, которое будет отправлено в результате в чат  
