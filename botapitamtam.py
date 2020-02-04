@@ -712,18 +712,22 @@ class BotHandler:
                 logger.error("Error connect get chat id: %s.", e)
                 chat_id = None
         else:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            if 'message_id' in upd.keys():
+            try:
+                if 'updates' in update.keys():
+                    upd = update['updates'][0]
+                else:
+                    upd = update
+                if 'message_id' in upd.keys():
+                    chat_id = None
+                elif 'chat_id' in upd.keys():
+                    chat_id = upd.get('chat_id')
+                elif 'message' in upd.keys():
+                    upd = upd.get('message')
+                    if 'recipient' in upd.keys():
+                        chat_id = upd.get('recipient').get('chat_id')
+            except Exception as e:
+                logger.error("Error get_chat_id recipient.chat_id - None?: %s.", e)
                 chat_id = None
-            elif 'chat_id' in upd.keys():
-                chat_id = upd.get('chat_id')
-            elif 'message' in upd.keys():
-                upd = upd.get('message')
-                if 'recipient' in upd.keys():
-                    chat_id = upd.get('recipient').get('chat_id')
         return chat_id
 
     def get_link_chat_id(self, update):
@@ -887,6 +891,23 @@ class BotHandler:
                     callback_id = upd.get('callback_id')
         return callback_id
 
+    def get_session_id(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        Метод получения значения session_id в режиме конструктора.
+        :param update: результат работы метода get_updates
+        :return: возвращает session_id для дальнейшей работы с данным сеансом конструктора.
+        """
+        session_id = None
+        if update is not None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            if 'session_id' in upd.keys():
+                session_id = upd.get('session_id')
+        return session_id
+
     def get_message_id(self, update):
         """
         Получение message_id отправленного или пересланного боту
@@ -907,6 +928,30 @@ class BotHandler:
                 if 'message' in upd.keys():
                     mid = upd.get('message').get('body').get('mid')
         return mid
+
+    def get_construct_text(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        Получение текста набранного пользователем в режиме конструктора.
+        :param update = результат работы метода get_updates
+        :return: возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора
+        """
+        text = None
+        if update != None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_construction_request':
+                upd = upd.get('input')
+                if upd.get('input_type') == 'message':
+                    upd = upd.get('messages')
+                    print(upd)
+                    if upd:
+                        upd = upd[0]
+                        text = upd.get('text')
+        return text
 
     def edit_message(self, message_id, text, attachments=None, link=None, notify=True):
         """
@@ -968,7 +1013,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "mark_seen"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error connect in mark_seen: %s.", e)
 
     def sending_video(self, chat_id):
         """
@@ -1091,8 +1139,8 @@ class BotHandler:
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
         button = {"type": 'link',
-                   "text": text,
-                   "url": url}
+                  "text": text,
+                  "url": url}
         return button
 
     def button_contact(self, text):
@@ -1102,7 +1150,7 @@ class BotHandler:
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
         button = {"type": 'request_contact',
-                   "text": text}
+                  "text": text}
         return button
 
     def button_location(self, text, quick=False):
@@ -1113,8 +1161,8 @@ class BotHandler:
         :return: возвращает подготовленную кнопку для последующего формирования массива
         """
         button = {"type": 'request_geo_location',
-                   "text": text,
-                   "quick": quick}
+                  "text": text,
+                  "quick": quick}
         return button
 
     def send_buttons(self, text, buttons, chat_id):
@@ -1467,5 +1515,65 @@ class BotHandler:
             update = response.json()
         else:
             logger.error("Error answer callback: {}".format(response.status_code))
+            update = None
+        return update
+
+    def send_construct_message(self, session_id, hint, text=None, attachments=None, link=None, notify=None,
+                               allow_user_input=True, data=None, buttons=None, placeholder=None):
+        """
+        https://dev.tamtam.chat/#operation/construct
+        Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может
+        быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.
+        :param session_id: параметр, соответствующий вызванному конструктору
+        :param hint: сообщение пользователю, вызвавшему конструктор
+        :param text: текстовое сообщение, которое будет отправлено в результате в чат
+        :param attachments: контент (изображения, видео, кнопки и т.д.), который будет отправлен в результате в чат
+        :param link: цитируемое сообщение
+        :param notify: если false, то участники чата не получат уведомление (по умолчанию true)
+        :param allow_user_input: если True, у пользователя будет возможность набирать текст, иначе только технические кнопки.
+        :param data: любые данные в технических целях
+        :param buttons: технические кнопки для произвольных действий
+        :param placeholder: текст над техническими кнопками
+        :return результат POST запроса
+        """
+        method = 'answers/constructor'
+        params = (
+            ('access_token', self.token),
+            ('session_id', session_id),
+        )
+        message = [{"text": text,
+                   "attachments": attachments,
+                   "link": link,
+                   "notify": notify
+                   }]
+        if text is None:
+            message = []
+        if buttons is None:
+            buttons = []
+        keyboard = {"buttons": buttons}
+
+        datas = {
+            "messages": message,
+            "allow_user_input": allow_user_input,
+            "hint": hint,
+            "data": data,
+            "keyboard": keyboard,
+            "placeholder": placeholder
+        }
+        flag = 'attachment.not.ready'
+        while flag == 'attachment.not.ready':
+            response = requests.post(self.url + method, params=params, data=json.dumps(datas))
+            print(response.json())
+            upd = response.json()
+            if 'code' in upd.keys():
+                flag = upd.get('code')
+                logger.info('ждем 5 сек...')
+                time.sleep(5)
+            else:
+                flag = None
+        if response.status_code == 200:
+            update = response.json()
+        else:
+            logger.error("Error construct_message: {}".format(response.status_code))
             update = None
         return update

@@ -581,3 +581,30 @@ https://dev.tamtam.chat/#operation/answerOnCallback
 **:param notify:** если false, то участники чата не получат уведомление (по умолчанию true)  
 **:return update:** результат POST запроса  
 
+### get_construct_text(update):
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение текста набранного пользователем в режиме конструктора.  
+**:param update:** результат работы метода get_updates  
+**:return:** возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора  
+        
+### get_session_id(update):
+https://dev.tamtam.chat/#operation/getUpdates  
+Метод получения значения session_id в режиме конструктора.  
+**:param update:** результат работы метода get_updates  
+**:return:** возвращает session_id для дальнейшей работы с данным сеансом конструктора  
+        
+### send_construct_message(session_id, hint, text=None, attachments=None, link=None, notify=None, allow_user_input=True, data=None, buttons=None, placeholder=None):
+https://dev.tamtam.chat/#operation/construct  
+Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может быть обновленное сообщение или/и кратковременное всплывающее уведомление пользователя.  
+**:param session_id:** параметр, соответствующий вызванному конструктору  
+**:param hint:** сообщение пользователю, вызвавшему конструктор  
+**:param text:** текстовое сообщение, которое будет отправлено в результате в чат  
+**:param attachments:** контент (изображения, видео, кнопки и т.д.), который будет отправлен в результате в чат  
+**:param link:** цитируемое сообщение  
+**:param notify:** если false, то участники чата не получат уведомление (по умолчанию true)  
+**:param allow_user_input:** если True, у пользователя будет возможность набирать текст, иначе только технические кнопки  
+**:param data:** любые данные в технических целях  
+**:param buttons:** технические кнопки для произвольных действий  
+**:param placeholder:** текст над техническими кнопками  
+**:return:** результат POST запроса  
+
