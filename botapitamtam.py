@@ -1474,7 +1474,7 @@ class BotHandler:
             update = None
         return update
 
-    def send_answer_callback(self, callback_id, notification, text=None, attachments=None, link=None, notify=None):
+    def send_answer_callback(self, callback_id, notification, text=None, attachments=None, link=None, notify=True):
         """
         https://dev.tamtam.chat/#operation/answerOnCallback
         Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может
@@ -1497,6 +1497,8 @@ class BotHandler:
                    "link": link,
                    "notify": notify
                    }
+        if text is None and attachments is None and link is None:
+            message = None
         data = {
             "message": message,
             "notification": notification
@@ -1542,10 +1544,10 @@ class BotHandler:
             ('session_id', session_id),
         )
         message = [{"text": text,
-                   "attachments": attachments,
-                   "link": link,
-                   "notify": notify
-                   }]
+                    "attachments": attachments,
+                    "link": link,
+                    "notify": notify
+                    }]
         if text is None:
             message = []
         if buttons is None:
