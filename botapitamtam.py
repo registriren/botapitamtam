@@ -964,6 +964,7 @@ class BotHandler:
         :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
         :return update: Возвращает результат PUT запроса
         """
+        update = None
         method = 'messages'
         params = (
             ('access_token', self.token),
@@ -977,20 +978,21 @@ class BotHandler:
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
-            response = requests.put(self.url + method, params=params, data=json.dumps(data))
-            upd = response.json()
-            if 'code' in upd.keys():
-                flag = upd.get('code')
-                logger.info('ждем 5 сек...')
-                time.sleep(5)
-            else:
-                flag = None
-        # response = requests.put(self.url + method, params=params, data=json.dumps(data))
-        if response.status_code == 200:
-            update = response.json()
-        else:
-            logger.error("Error edit message: {}".format(response.status_code))
-            update = None
+            try:
+                response = requests.put(self.url + method, params=params, data=json.dumps(data))
+                upd = response.json()
+                if 'code' in upd.keys():
+                    flag = upd.get('code')
+                    logger.info('ждем 5 сек...')
+                    time.sleep(5)
+                else:
+                    flag = None
+                    if response.status_code == 200:
+                        update = response.json()
+                    else:
+                        logger.error("Error edit message: {}".format(response.status_code))
+            except Exception as e:
+                logger.error("Error edit_message: %s.", e)
         return update
 
     def typing_on(self, chat_id):
@@ -1002,7 +1004,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "typing_on"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error typing_on: %s.", e)
 
     def mark_seen(self, chat_id):
         """
@@ -1027,7 +1032,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "sending_video"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error sending_video: %s.", e)
 
     def sending_audio(self, chat_id):
         """
@@ -1038,7 +1046,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "sending_audio"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error sending_audio: %s.", e)
 
     def sending_photo(self, chat_id):
         """
@@ -1049,7 +1060,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "sending_photo"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error sending_photo: %s.", e)
 
     def sending_image(self, chat_id):
         """
@@ -1060,7 +1074,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "sending_image"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error sending_image: %s.", e)
 
     def sending_file(self, chat_id):
         """
@@ -1071,7 +1088,10 @@ class BotHandler:
         """
         method_ntf = 'chats/{}'.format(chat_id) + '/actions?access_token='
         params = {"action": "sending_file"}
-        requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        try:
+            requests.post(self.url + method_ntf + self.token, data=json.dumps(params))
+        except Exception as e:
+            logger.error("Error sending_file: %s.", e)
 
     def delete_message(self, message_id):
         """
@@ -1085,9 +1105,10 @@ class BotHandler:
             "message_id": message_id,
             "access_token": self.token
         }
-        response = requests.delete(self.url + method, params=params)
-        if response.status_code != 200:
-            logger.error("Error delete message: {}".format(response.status_code))
+        try:
+            requests.delete(self.url + method, params=params)
+        except Exception as e:
+            logger.error("Error delete_message: %s.", e)
 
     def attach_buttons(self, buttons):
         """
@@ -1186,17 +1207,19 @@ class BotHandler:
         :param type: тип контента ('audio', 'video', 'file', 'photo')
         :return: URL на который будет отправляться контент
         """
+        url = None
         method = 'uploads'
         params = (
             ('access_token', self.token),
             ('type', type),
         )
-        response = requests.post(self.url + method, params=params)
-        if response.status_code == 200:
-            update = response.json()
-            url = update.get('url')
-        else:
-            url = None
+        try:
+            response = requests.post(self.url + method, params=params)
+            if response.status_code == 200:
+                update = response.json()
+                url = update.get('url')
+        except Exception as e:
+            logger.error("Error upload_url: %s.", e)
         return url
 
     def attach_file(self, content, content_name=None):
@@ -1413,21 +1436,20 @@ class BotHandler:
         :param content_name: Имя с которым будет загружен файл
         :return: update: результат работы POST запроса отправки файла
         """
+        token = None
         url = self.upload_url(type)
-        response = 400
         if content_name is None:
             content_name = os.path.basename(content)
         try:
             content = open(content, 'rb')
-        except Exception:
-            logger.error("Error upload file (no such file)")
-        response = requests.post(url, files={
-            'files': (content_name, content, 'multipart/form-data')})
-        if response.status_code == 200:
-            token = response.json()
-        else:
-            logger.error("Error sending message")
-            token = None
+        except Exception as e:
+            logger.error("Error upload file (no such file): %s", e)
+        try:
+            response = requests.post(url, files={'files': (content_name, content, 'multipart/form-data')})
+            if response.status_code == 200:
+                token = response.json()
+        except Exception as e:
+            logger.error("Error token_upload_content: %s.", e)
         return token
 
     def send_message(self, text, chat_id, user_id=None, attachments=None, link=None, notify=True, dislinkprev=False):
@@ -1444,6 +1466,7 @@ class BotHandler:
         :return update: Возвращает результат POST запроса
         """
         self.typing_on(chat_id)
+        update = None
         method = 'messages'
         params = (
             ('access_token', self.token),
@@ -1459,19 +1482,21 @@ class BotHandler:
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
-            response = requests.post(self.url + method, params=params, data=json.dumps(data))
-            upd = response.json()
-            if 'code' in upd.keys():
-                flag = upd.get('code')
-                logger.info('ждем 5 сек...')
-                time.sleep(5)
-            else:
-                flag = None
-        if response.status_code == 200:
-            update = response.json()
-        else:
-            logger.error("Error sending message: {}".format(response.status_code))
-            update = None
+            try:
+                response = requests.post(self.url + method, params=params, data=json.dumps(data))
+                upd = response.json()
+                if 'code' in upd.keys():
+                    flag = upd.get('code')
+                    logger.info('ждем 5 сек...')
+                    time.sleep(5)
+                else:
+                    flag = None
+                    if response.status_code == 200:
+                        update = response.json()
+                    else:
+                        logger.error("Error sending message: {}".format(response.status_code))
+            except Exception as e:
+                logger.error("Error send_message: %s.", e)
         return update
 
     def send_answer_callback(self, callback_id, notification, text=None, attachments=None, link=None, notify=True):
@@ -1487,6 +1512,7 @@ class BotHandler:
         :param notify: если false, то участники чата не получат уведомление (по умолчанию true)
         :return update: результат POST запроса
         """
+        update = None
         method = 'answers'
         params = (
             ('access_token', self.token),
@@ -1505,19 +1531,21 @@ class BotHandler:
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
-            response = requests.post(self.url + method, params=params, data=json.dumps(data))
-            upd = response.json()
-            if 'code' in upd.keys():
-                flag = upd.get('code')
-                logger.info('ждем 5 сек...')
-                time.sleep(5)
-            else:
-                flag = None
-        if response.status_code == 200:
-            update = response.json()
-        else:
-            logger.error("Error answer callback: {}".format(response.status_code))
-            update = None
+            try:
+                response = requests.post(self.url + method, params=params, data=json.dumps(data))
+                upd = response.json()
+                if 'code' in upd.keys():
+                    flag = upd.get('code')
+                    logger.info('ждем 5 сек...')
+                    time.sleep(5)
+                else:
+                    flag = None
+                    if response.status_code == 200:
+                        update = response.json()
+                    else:
+                        logger.error("Error answer callback: {}".format(response.status_code))
+            except Exception as e:
+                logger.error("Error answer_callback: %s.", e)
         return update
 
     def send_construct_message(self, session_id, hint, text=None, attachments=None, link=None, notify=None,
@@ -1538,6 +1566,7 @@ class BotHandler:
         :param placeholder: текст над техническими кнопками
         :return результат POST запроса
         """
+        update = None
         method = 'answers/constructor'
         params = (
             ('access_token', self.token),
@@ -1564,18 +1593,20 @@ class BotHandler:
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
-            response = requests.post(self.url + method, params=params, data=json.dumps(datas))
-            print(response.json())
-            upd = response.json()
-            if 'code' in upd.keys():
-                flag = upd.get('code')
-                logger.info('ждем 5 сек...')
-                time.sleep(5)
-            else:
-                flag = None
-        if response.status_code == 200:
-            update = response.json()
-        else:
-            logger.error("Error construct_message: {}".format(response.status_code))
-            update = None
+            try:
+                response = requests.post(self.url + method, params=params, data=json.dumps(datas))
+                print(response.json())
+                upd = response.json()
+                if 'code' in upd.keys():
+                    flag = upd.get('code')
+                    logger.info('ждем 5 сек...')
+                    time.sleep(5)
+                else:
+                    flag = None
+                    if response.status_code == 200:
+                        update = response.json()
+                    else:
+                        logger.error("Error construct_message: {}".format(response.status_code))
+            except Exception as e:
+                logger.error("Error construct_message: %s.", e)
         return update
