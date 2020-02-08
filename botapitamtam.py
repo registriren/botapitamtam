@@ -243,6 +243,14 @@ class BotHandler:
         if 'description' in bot:
             description = bot['description']
             return description
+        
+    def command(self, name, description):
+        """
+        Вспомогательный метод для создания команд.
+        :return: Возвращает dict команд.
+        """
+        com = {"name": "/{}".format(name), "description": description}
+        return com
 
     def edit_bot_info(self, name, username, description, commands, photo=None, photo_url=None):
         """
