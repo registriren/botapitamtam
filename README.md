@@ -255,7 +255,7 @@ Returns information about chats that bot participated in: a result list and mark
         
 ### get_chat_admins(chat_id):
 https://dev.tamtam.chat/#operation/getAdmins  
-Возвращает пользователей, участвовавших в чате.  
+Возвращает сведения об администраторах чата и их правах.  
 Returns users participated in chat.  
 **:param chat_id:** идентификатор чата  
 **:return chat_admins:** возвращает список администраторов чата  
