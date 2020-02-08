@@ -182,7 +182,7 @@ Method returns bot identifier, name and avatar (if any).
 **:return:** bot_info: возвращает информацию о боте.  
 
 ### get_bot_user_id():
-Возвращает айди текущего бота.  
+Возвращает идентификатор текущего бота.  
 Returns the ID of the current bot.  
 
 ### get_bot_name():
