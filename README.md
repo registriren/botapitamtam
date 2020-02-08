@@ -75,6 +75,13 @@ if __name__ == '__main__':
 - [get_members](#get_memberschat_id-user_ids-markernone-count20) - получает информацию о пользователях участвующих в чате.
 - [get_all_chats](#get_all_chatscount50-markernone) - получает информацию о чатах, в которых участвовал бот.
 - [get_bot_info](#get_bot_info) - получает информацию о текущем боте.
+    - [get_bot_user_id](#get_bot_user_id) - возвращает идентификатор текущего бота.
+    - [get_bot_name](#get_bot_name) - возращает имя текущего бота.
+    - [get_bot_username](#get_bot_username) - возвращает username текущего бота.
+    - [get_bot_avatar_url](#get_bot_avatar_url) - возвращает ссылку на аватар текущего бота.
+    - [get_bot_full_avatar_url](#get_bot_full_avatar_url) - возвращает ссылку на аватар большого размера текущего бота.
+    - [get_bot_commands](#get_bot_commands) - возвращает список команд текущего бота.
+    - [get_bot_description](#get_bot_description) - возвращает описание текущего бота.
 - [get_subscriptions](#get_subscriptions) - возвращает список подписок на WebHook.
 - [add_members](#add_memberschat_id-user_ids) - добавляет пользователя в чат.
 ### Подготовка контента (фото, видео, файл, кнопки) к совместной отправке в чат через параметр `attachments=`
