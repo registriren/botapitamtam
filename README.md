@@ -180,7 +180,7 @@ https://dev.tamtam.chat/#operation/getMyInfo
 identified by access token. Method returns bot identifier, name and avatar (if any)
 **:return:** bot_info: возвращает информацию о боте.  
        
-### edit_bot_info(name, username, description, commands, photo, photo_url=None):
+### edit_bot_info(name, username, description, commands, photo=None, photo_url=None):
 https://dev.tamtam.chat/#operation/editMyInfo  
 Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные поля останутся нетронутыми.  
 Edits current bot info. Fill only the fields you want to update. All remaining fields will stay untouched  
