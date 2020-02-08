@@ -175,7 +175,7 @@ notifications about new events. Notification via the long-poll API becomes avail
        
 ### get_bot_info():
 https://dev.tamtam.chat/#operation/getMyInfo  
-Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. 
+Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа.  
 Метод возвращает идентификатор бота, имя и аватар (если есть).  
 Returns info about current bot. Current bot can be identified by access token.  
 Method returns bot identifier, name and avatar (if any).  
