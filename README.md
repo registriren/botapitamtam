@@ -227,6 +227,12 @@ Edits current bot info. Fill only the fields you want to update. All remaining f
 [{"name": '/команда_1', "description": "Описание команды 1"},  
  {"name": '/команда_2', "description": "Описание команды 2"}]  
 ```
+или
+```
+com = [bot.command('test1', 'test command'),
+       bot.command('test2', 'test command2'),
+       bot.command('test3', 'test command3')]
+```
 **:param photo:** файл с изображением бота  
 **:param photo_url:** ссылка на изображение бота  
 **:return edit_bot_info:** возвращает результат PATCH запроса.  
