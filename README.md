@@ -75,6 +75,13 @@ if __name__ == '__main__':
 - [get_members](#get_memberschat_id-user_ids-markernone-count20) - получает информацию о пользователях участвующих в чате.
 - [get_all_chats](#get_all_chatscount50-markernone) - получает информацию о чатах, в которых участвовал бот.
 - [get_bot_info](#get_bot_info) - получает информацию о текущем боте.
+    - [get_bot_user_id](#get_bot_user_id) - возвращает идентификатор текущего бота.
+    - [get_bot_name](#get_bot_name) - возращает имя текущего бота.
+    - [get_bot_username](#get_bot_username) - возвращает username текущего бота.
+    - [get_bot_avatar_url](#get_bot_avatar_url) - возвращает ссылку на аватар текущего бота.
+    - [get_bot_full_avatar_url](#get_bot_full_avatar_url) - возвращает ссылку на аватар большого размера текущего бота.
+    - [get_bot_commands](#get_bot_commands) - возвращает список команд текущего бота.
+    - [get_bot_description](#get_bot_description) - возвращает описание текущего бота.
 - [get_subscriptions](#get_subscriptions) - возвращает список подписок на WebHook.
 - [add_members](#add_memberschat_id-user_ids) - добавляет пользователя в чат.
 ### Подготовка контента (фото, видео, файл, кнопки) к совместной отправке в чат через параметр `attachments=`
@@ -175,10 +182,39 @@ notifications about new events. Notification via the long-poll API becomes avail
        
 ### get_bot_info():
 https://dev.tamtam.chat/#operation/getMyInfo  
-Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод
-возвращает идентификатор бота, имя и аватар (если есть) Returns info about current bot. Current bot can be
-identified by access token. Method returns bot identifier, name and avatar (if any)
+Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа.  
+Метод возвращает идентификатор бота, имя и аватар (если есть).  
+Returns info about current bot. Current bot can be identified by access token.  
+Method returns bot identifier, name and avatar (if any).  
 **:return:** bot_info: возвращает информацию о боте.  
+
+### get_bot_user_id():
+Возвращает идентификатор текущего бота.  
+Returns the ID of the current bot.  
+
+### get_bot_name():
+Возвращает имя текущего бота.  
+Returns the name of the current bot.  
+
+### get_bot_username():
+Возвращает username текущего бота.  
+Returns username of the current bot.  
+
+### get_bot_avatar_url():
+Возвращает ссылку на аватар текущего бота.  
+Returns a link to the avatar of the current bot.  
+
+### get_bot_full_avatar_url():
+Возвращает ссылку на аватар большого размера текущего бота.  
+Returns a link to a large-sized avatar of the current bot.  
+
+### get_bot_commands():
+Возвращает список команд текущего бота.  
+Returns the list of commands of the current bot.  
+
+### get_bot_description():
+Возвращает описание текущего бота.  
+Returns a description of the current bot.  
        
 ### edit_bot_info(name, username, description, commands, photo=None, photo_url=None):
 https://dev.tamtam.chat/#operation/editMyInfo  
