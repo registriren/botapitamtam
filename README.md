@@ -183,24 +183,31 @@ Method returns bot identifier, name and avatar (if any).
 
 ### get_bot_user_id():
 Возвращает айди текущего бота.  
+Returns the ID of the current bot.  
 
 ### get_bot_name():
 Возвращает имя текущего бота.  
+Returns the name of the current bot.  
 
 ### get_bot_username():
 Возвращает username текущего бота.  
+Returns username of the current bot.  
 
 ### get_bot_avatar_url():
 Возвращает ссылку на аватар текущего бота.  
+Returns a link to the avatar of the current bot.  
 
 ### get_bot_full_avatar_url():
 Возвращает ссылку на аватар большого размера текущего бота.  
+Returns a link to a large-sized avatar of the current bot.  
 
 ### get_bot_commands():
 Возвращает список команд текущего бота.  
+Returns the list of commands of the current bot.  
 
 ### get_bot_description():
 Возвращает описание текущего бота.  
+Returns a description of the current bot.  
        
 ### edit_bot_info(name, username, description, commands, photo=None, photo_url=None):
 https://dev.tamtam.chat/#operation/editMyInfo  
