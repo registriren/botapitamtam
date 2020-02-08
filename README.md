@@ -229,9 +229,9 @@ Edits current bot info. Fill only the fields you want to update. All remaining f
 ```
 или
 ```
-[bot.command('/', 'команда_1', 'Описание команды 1'),
- bot.command('!', 'команда_2', 'Описание команды 2'),
- bot.command('$', 'команда_3', 'Описание команды 3')]
+[bot.command('команда_1', 'Описание команды 1'),
+ bot.command('команда_2', 'Описание команды 2'),
+ bot.command('команда_3', 'Описание команды 3')]
 ```
 **:param photo:** файл с изображением бота  
 **:param photo_url:** ссылка на изображение бота  
