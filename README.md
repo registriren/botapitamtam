@@ -175,10 +175,32 @@ notifications about new events. Notification via the long-poll API becomes avail
        
 ### get_bot_info():
 https://dev.tamtam.chat/#operation/getMyInfo  
-Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. Метод
-возвращает идентификатор бота, имя и аватар (если есть) Returns info about current bot. Current bot can be
-identified by access token. Method returns bot identifier, name and avatar (if any)
+Возвращает информацию о текущем боте. Текущий бот может быть идентифицирован по токену доступа. 
+Метод возвращает идентификатор бота, имя и аватар (если есть).  
+Returns info about current bot. Current bot can be identified by access token.  
+Method returns bot identifier, name and avatar (if any).  
 **:return:** bot_info: возвращает информацию о боте.  
+
+### get_bot_user_id():
+Возвращает айди текущего бота.  
+
+### get_bot_name():
+Возвращает имя текущего бота.  
+
+### get_bot_username():
+Возвращает username текущего бота.  
+
+### get_bot_avatar_url():
+Возвращает ссылку на аватар текущего бота.  
+
+### get_bot_full_avatar_url():
+Возвращает ссылку на аватар большого размера текущего бота.  
+
+### get_bot_commands():
+Возвращает список команд текущего бота.  
+
+### get_bot_description():
+Возвращает описание текущего бота.  
        
 ### edit_bot_info(name, username, description, commands, photo=None, photo_url=None):
 https://dev.tamtam.chat/#operation/editMyInfo  
