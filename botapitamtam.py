@@ -177,7 +177,7 @@ class BotHandler:
             bot_info = None
         return bot_info
 
-    def bot_user_id(self):
+    def get_bot_user_id(self):
         """
         Возвращает айди текущего бота.
         :return:
@@ -186,7 +186,7 @@ class BotHandler:
         bot_user_id = bot['user_id']
         return bot_user_id
 
-    def bot_name(self):
+    def get_bot_name(self):
         """
         Возвращает имя текущего бота
         :return:
@@ -195,7 +195,7 @@ class BotHandler:
         name = bot['name']
         return name
 
-    def bot_username(self):
+    def get_bot_username(self):
         """
         Возвращает username текущего бота.
         :return:
@@ -204,7 +204,7 @@ class BotHandler:
         username = bot['username']
         return username
 
-    def bot_avatar_url(self):
+    def get_bot_avatar_url(self):
         """
         Возвращает ссылку на аватар текущего бота.
         :return:
@@ -214,7 +214,7 @@ class BotHandler:
             avatar_url = bot['avatar_url']
             return avatar_url
 
-    def bot_full_avatar_url(self):
+    def get_bot_full_avatar_url(self):
         """
         Возвращает ссылку на аватар большого размера текущего бота.
         :return:
@@ -224,7 +224,7 @@ class BotHandler:
             full_avatar_url = bot['full_avatar_url']
             return full_avatar_url
 
-    def bot_commands(self):
+    def get_bot_commands(self):
         """
         Возвращает список команд текущего бота.
         :return:
@@ -234,7 +234,7 @@ class BotHandler:
             commands = bot['commands']
             return commands
 
-    def bot_description(self):
+    def get_bot_description(self):
         """
         Возвращает описание текущего бота.
         :return:
