@@ -34,7 +34,6 @@ def main():
             chat_id = bot.get_chat_id(upd)
             text = bot.get_text(upd)
             bot.send_message(text, chat_id)
-        continue
 
 if __name__ == '__main__':
     try:
