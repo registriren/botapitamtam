@@ -215,7 +215,7 @@ Returns the list of commands of the current bot.
 Возвращает описание текущего бота.  
 Returns a description of the current bot.  
        
-### edit_bot_info(name, username, description, commands, photo=None, photo_url=None):
+### edit_bot_info(name, username, description=None, commands=None, photo=None, photo_url=None):
 https://dev.tamtam.chat/#operation/editMyInfo  
 Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные поля останутся нетронутыми.  
 Edits current bot info. Fill only the fields you want to update. All remaining fields will stay untouched  
@@ -227,9 +227,11 @@ Edits current bot info. Fill only the fields you want to update. All remaining f
 [{"name": '/команда_1', "description": "Описание команды 1"},  
  {"name": '/команда_2', "description": "Описание команды 2"}]  
 ```
+или используем вспомогательный метод `command(name, description)`  
 **:param photo:** файл с изображением бота  
 **:param photo_url:** ссылка на изображение бота  
 **:return edit_bot_info:** возвращает результат PATCH запроса.  
+подробнее в [Examples](examples/edit_bot_info.py)  
 
 
 ### get_chat(chat_id):

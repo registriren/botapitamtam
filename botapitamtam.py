@@ -243,8 +243,18 @@ class BotHandler:
         if 'description' in bot:
             description = bot['description']
             return description
+        
+    def command(self, name, description):
+        """
+        Вспомогательный метод для подготовки описаний команд бота и использования в методе edit_bot_info.
+        :param name: название команды (например для команды /help => 'help')
+        :param description: описание команды
+        :return: Возвращает dict команд.
+        """
+        com = {"name": "/{}".format(name), "description": description}
+        return com
 
-    def edit_bot_info(self, name, username, description, commands, photo=None, photo_url=None):
+    def edit_bot_info(self, name, username, description=None, commands=None, photo=None, photo_url=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
         поля останутся нетронутыми.
