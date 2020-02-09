@@ -832,6 +832,8 @@ class BotHandler:
                 name = upd['user']['name']
             elif 'callback' in upd.keys():
                 name = upd['callback']['user']['name']
+            elif 'user' in upd.keys():
+                name = upd['user']['name']
             else:
                 upd = upd['message']
                 if 'sender' in upd.keys():
