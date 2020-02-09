@@ -247,6 +247,8 @@ class BotHandler:
     def command(self, name, description):
         """
         Вспомогательный метод для создания команд.
+        :param name: название команды (например для команды /help => 'help')
+        :param description: описание команды
         :return: Возвращает dict команд.
         """
         com = {"name": "/{}".format(name), "description": description}
