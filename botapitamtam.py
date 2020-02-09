@@ -254,7 +254,7 @@ class BotHandler:
         com = {"name": "/{}".format(name), "description": description}
         return com
 
-    def edit_bot_info(self, name, username, description, commands, photo=None, photo_url=None):
+    def edit_bot_info(self, name, username, description=None, commands=None, photo=None, photo_url=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
         поля останутся нетронутыми.
