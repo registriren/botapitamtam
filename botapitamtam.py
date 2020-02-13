@@ -949,7 +949,7 @@ class BotHandler:
         :return: возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора
         """
         text = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -959,7 +959,6 @@ class BotHandler:
                 upd = upd.get('input')
                 if upd.get('input_type') == 'message':
                     upd = upd.get('messages')
-                    print(upd)
                     if upd:
                         upd = upd[0]
                         text = upd.get('text')
@@ -1607,7 +1606,6 @@ class BotHandler:
         while flag == 'attachment.not.ready':
             try:
                 response = requests.post(self.url + method, params=params, data=json.dumps(datas))
-                print(response.json())
                 upd = response.json()
                 if 'code' in upd.keys():
                     flag = upd.get('code')
