@@ -243,7 +243,7 @@ class BotHandler:
         if 'description' in bot:
             description = bot['description']
             return description
-        
+
     def command(self, name, description):
         """
         Вспомогательный метод для подготовки описаний команд бота и использования в методе edit_bot_info.
@@ -638,7 +638,7 @@ class BotHandler:
                  из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
         """
         text = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -666,7 +666,7 @@ class BotHandler:
                  из 'body' или 'link' соответственно, при неудаче 'url' = None
         """
         url = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -693,6 +693,40 @@ class BotHandler:
                                     if 'url' in upd1.keys():
                                         url = upd1.get('url')
         return url
+
+    def get_attach_type(self, update):
+        """
+        Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту
+        API = subscriptions/Get updates/[updates][0][message][link][message][attachment][type]
+           или = subscriptions/Get updates/[updates][0][message][body][attachment][type]
+        :param update: результат работы метода get_updates
+        :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
+                 из 'body' или 'link' соответственно, при неудаче 'type' = None
+        """
+        att_type = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_created':
+                upd1 = upd.get('message').get('body')
+                if 'attachments' in upd1.keys():
+                    upd1 = upd1['attachments'][0]
+                    if 'type' in upd1.keys():
+                        att_type = upd1.get('type')
+                else:
+                    upd1 = upd.get('message')
+                    if 'link' in upd1.keys():
+                        upd1 = upd1.get('link')
+                        if 'message' in upd1.keys():
+                            upd1 = upd1.get('message')
+                            if 'attachments' in upd1.keys():
+                                upd1 = upd1['attachments'][0]
+                                if 'type' in upd1.keys():
+                                    att_type = upd1.get('type')
+        return att_type
 
     def get_chat_id(self, update=None):
         """
@@ -871,7 +905,7 @@ class BotHandler:
         :return: возвращает результат нажатия кнопки или None
         """
         payload = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -892,7 +926,7 @@ class BotHandler:
         """
         callback_id = None
         type = self.get_update_type(update)
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:

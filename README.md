@@ -647,5 +647,15 @@ https://dev.tamtam.chat/#operation/construct
 **:param data:** любые данные в технических целях  
 **:param buttons:** технические кнопки для произвольных действий  
 **:param placeholder:** текст над техническими кнопками  
-**:return:** результат POST запроса  
+**:return:** результат POST запроса   
 
+### get_attach_type(update):
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
+```
+API = subscriptions/Get updates/[updates][0][message][link][message][attachment][type]
+или = subscriptions/Get updates/[updates][0][message][body][attachment][type]
+```
+**:param update:** результат работы метода get_updates  
+**:return att_type:** возвращает, если это возможно, значение поля 'type' созданного или пересланного контента из 'body' или 'link' соответственно, при неудаче 'type' = None  
+   
