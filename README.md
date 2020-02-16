@@ -1,4 +1,7 @@
-# botapitamtam (новая версия, часть синтаксиса изменена, старая версия: [botapitamtam v.0.1.10.1](https://github.com/registriren/botapitamtam/releases/tag/ver_0.1.10.1))
+# botapitamtam   
+*(новая версия, часть синтаксиса изменена, старая версия: [botapitamtam v.0.1.10.1](https://github.com/registriren/botapitamtam/releases/tag/ver_0.1.10.1))*  
+
+
 Попытка создать набор простых инструментов для написания ботов на базе API мессенджера TamTam. Набор содержит базовый функционал взаимодействия бота с пользователями и предназначен для начинающих программистов. Синтаксис методов позволяет легко их модифицировать или создавать на их базе новые методы используя официальную документацию https://dev.tamtam.chat/ .
 
 Примеры реализации ботов с использованем библиотеки:   
@@ -71,6 +74,7 @@ if __name__ == '__main__':
   - [get_link_user_id](#get_link_user_idupdate) - получает идентификатор пользователя пересланного сообщения.
   - [get_link_chat_id](#get_link_chat_idupdate) - получает идентификатор чата пересланного сообщения.
   - [get_chat_type](#get_chat_typeupdate) - получает значение поля chat_type (диалог, чат, канал).
+  - [get_attach_type](#get_attach_typeupdate) - получает тип вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
 - [get_members](#get_memberschat_id-user_ids-markernone-count20) - получает информацию о пользователях участвующих в чате.
 - [get_all_chats](#get_all_chatscount50-markernone) - получает информацию о чатах, в которых участвовал бот.
 - [get_bot_info](#get_bot_info) - получает информацию о текущем боте.
