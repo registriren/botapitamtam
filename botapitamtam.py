@@ -396,7 +396,7 @@ class BotHandler:
             if response.status_code == 200:
                 chat_admins = response.json()
             else:
-                logger.error("Error chat admins: {}".format(response.status_code))
+                # logger.error("Error chat admins: {}".format(response.status_code))
                 chat_admins = None
         except Exception as e:
             logger.error("Error connect chat admins: %s.", e)
