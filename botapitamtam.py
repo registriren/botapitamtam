@@ -1162,7 +1162,7 @@ class BotHandler:
             button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
-        self.typing_on(self.get_chat_id())
+        #self.typing_on(self.get_chat_id())
         attach = None
         if isinstance(buttons, list):
             try:
