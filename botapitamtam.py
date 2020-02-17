@@ -1240,7 +1240,7 @@ class BotHandler:
         :param buttons: массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.
         :return update: результат POST запроса на отправку кнопок
         """
-        self.typing_on(chat_id)
+        # self.typing_on(chat_id)
         attach = self.attach_buttons(buttons)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1428,7 +1428,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на POST message в соответствии с API
         """
-        self.typing_on(chat_id)
+        # self.typing_on(chat_id)
         link = self.link_forward(mid)
         update = self.send_message(text, chat_id, link=link)
         return update
@@ -1467,7 +1467,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на POST запрос в соответствии с API
         """
-        self.typing_on(chat_id)
+        # self.typing_on(chat_id)
         link = self.link_reply(mid)
         update = self.send_message(text, chat_id, link=link)
         return update
