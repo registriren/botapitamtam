@@ -335,7 +335,7 @@ https://botapi.tamtam.chat/updates
 Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
 API = subscriptions/Get updates/[updates][0][message][link][message][attachment]  
 или = subscriptions/Get updates/[updates][0][message][body][attachment]  
-**:param update:** результат работы метода get_updates
+**:param update:** результат работы метода get_updates  
 **:return attachments:** возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента, при неудаче 'attachments' = None 
                
 
