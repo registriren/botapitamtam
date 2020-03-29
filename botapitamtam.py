@@ -1,4 +1,4 @@
-# Version 0.2.0.2
+# Version 0.2.0.3
 
 import json
 import logging
@@ -656,6 +656,36 @@ class BotHandler:
                             text = None
         return text
 
+    def get_attachments(self, update):
+        """
+        Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту
+        API = subscriptions/Get updates/[updates][0][message][link][message][attachment]
+           или = subscriptions/Get updates/[updates][0][message][body][attachment]
+        :param update: результат работы метода get_updates
+        :return attachments: возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента
+                 из 'body' или 'link' соответственно, при неудаче 'attachments' = None
+        """
+        attachments = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_created':
+                upd1 = upd.get('message').get('body')
+                if 'attachments' in upd1.keys():
+                    attachments = upd1['attachments']
+                else:
+                    upd1 = upd.get('message')
+                    if 'link' in upd1.keys():
+                        upd1 = upd1.get('link')
+                        if 'message' in upd1.keys():
+                            upd1 = upd1.get('message')
+                            if 'attachments' in upd1.keys():
+                                attachments = upd1['attachments']
+        return attachments
+
     def get_url(self, update):
         """
         Получение ссылки отправленного или пересланного боту файла
@@ -666,32 +696,12 @@ class BotHandler:
                  из 'body' или 'link' соответственно, при неудаче 'url' = None
         """
         url = None
-        if update:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            type = self.get_update_type(update)
-            if type == 'message_created':
-                upd1 = upd.get('message').get('body')
-                if 'attachments' in upd1.keys():
-                    upd1 = upd1['attachments'][0]
-                    if 'payload' in upd1.keys():
-                        upd1 = upd1.get('payload')
-                        if 'url' in upd1.keys():
-                            url = upd1.get('url')
-                else:
-                    upd1 = upd.get('message')
-                    if 'link' in upd1.keys():
-                        upd1 = upd1.get('link')
-                        if 'message' in upd1.keys():
-                            upd1 = upd1.get('message')
-                            if 'attachments' in upd1.keys():
-                                upd1 = upd1['attachments'][0]
-                                if 'payload' in upd1.keys():
-                                    upd1 = upd1.get('payload')
-                                    if 'url' in upd1.keys():
-                                        url = upd1.get('url')
+        attach = self.get_attachments(update)
+        attach = attach[0]
+        if 'payload' in attach.keys():
+            attach = attach.get('payload')
+            if 'url' in attach.keys():
+                url = attach.get('url')
         return url
 
     def get_attach_type(self, update):
@@ -704,28 +714,10 @@ class BotHandler:
                  из 'body' или 'link' соответственно, при неудаче 'type' = None
         """
         att_type = None
-        if update:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            type = self.get_update_type(update)
-            if type == 'message_created':
-                upd1 = upd.get('message').get('body')
-                if 'attachments' in upd1.keys():
-                    upd1 = upd1['attachments'][0]
-                    if 'type' in upd1.keys():
-                        att_type = upd1.get('type')
-                else:
-                    upd1 = upd.get('message')
-                    if 'link' in upd1.keys():
-                        upd1 = upd1.get('link')
-                        if 'message' in upd1.keys():
-                            upd1 = upd1.get('message')
-                            if 'attachments' in upd1.keys():
-                                upd1 = upd1['attachments'][0]
-                                if 'type' in upd1.keys():
-                                    att_type = upd1.get('type')
+        attach = self.get_attachments(update)
+        attach = attach[0]
+        if 'type' in attach.keys():
+            att_type = attach.get('type')
         return att_type
 
     def get_chat_id(self, update=None):
