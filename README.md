@@ -69,6 +69,7 @@ if __name__ == '__main__':
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
   - [get_update_type](#get_update_typeupdate) - получает тип события (например bot_started), произошедшего с ботом.
+  - [get_attachments](#get_attachmentsupdate) - получает весь прикрепленный к сообщению контент в различном сочетании (например несколько фото, видео).  
   - [get_url](#get_urlupdate) - получает значение поля URL полученного сообщения (события). 
   - [get_link_name](#get_link_nameupdate) - получает имя пользователя пересланного сообщения.
   - [get_link_user_id](#get_link_user_idupdate) - получает идентификатор пользователя пересланного сообщения.
@@ -328,7 +329,16 @@ https://botapi.tamtam.chat/updates
 Получение текста отправленного или пересланного боту  
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None    
-        
+
+### get_attachments(update):
+https://botapi.tamtam.chat/updates  
+Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
+API = subscriptions/Get updates/[updates][0][message][link][message][attachment]  
+или = subscriptions/Get updates/[updates][0][message][body][attachment]  
+**:param update:** результат работы метода get_updates
+**:return attachments:** возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента, при неудаче 'attachments' = None 
+               
+
 ### get_url(update):
 https://botapi.tamtam.chat/updates  
 Получение ссылки отправленного или пересланного боту файла  
