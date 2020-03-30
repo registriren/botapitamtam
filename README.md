@@ -70,6 +70,7 @@ if __name__ == '__main__':
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
   - [get_update_type](#get_update_typeupdate) - получает тип события (например bot_started), произошедшего с ботом.
   - [get_attachments](#get_attachmentsupdate) - получает весь прикрепленный к сообщению контент в различном сочетании (например несколько фото, видео).  
+  - [get_username](#get_usernameupdate) - получает username пользователя.  
   - [get_url](#get_urlupdate) - получает значение поля URL полученного сообщения (события). 
   - [get_link_name](#get_link_nameupdate) - получает имя пользователя пересланного сообщения.
   - [get_link_user_id](#get_link_user_idupdate) - получает идентификатор пользователя пересланного сообщения.
@@ -368,6 +369,13 @@ https://botapi.tamtam.chat/updates
 Получения идентификатора пользователя пересланного сообщения  
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'user_id' пересланного боту сообщения (от кого)  
+
+### get_username(update):
+https://botapi.tamtam.chat/updates  
+Получение username пользователя.
+API = subscriptions/Get updates/[updates][0][message]
+:param update = результат работы метода get_updates
+:return: возвращает, если это возможно, значение поля 'username'.  
 
 ### get_name(update):
 https://botapi.tamtam.chat/updates  
