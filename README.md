@@ -1,4 +1,7 @@
-# botapitamtam (новая версия, часть синтаксиса изменена, старая версия: [botapitamtam v.0.1.10.1](https://github.com/registriren/botapitamtam/releases/tag/ver_0.1.10.1))
+# botapitamtam   
+*(новая версия, часть синтаксиса изменена, старая версия: [botapitamtam v.0.1.10.1](https://github.com/registriren/botapitamtam/releases/tag/ver_0.1.10.1))*  
+
+
 Попытка создать набор простых инструментов для написания ботов на базе API мессенджера TamTam. Набор содержит базовый функционал взаимодействия бота с пользователями и предназначен для начинающих программистов. Синтаксис методов позволяет легко их модифицировать или создавать на их базе новые методы используя официальную документацию https://dev.tamtam.chat/ .
 
 Примеры реализации ботов с использованем библиотеки:   
@@ -51,7 +54,7 @@ if __name__ == '__main__':
   - Можно сочетать вышеуказанные правила или просто сложить подготавливаемые кнопки `key_res = key_str + key_stb`
   - Теперь можно отправить кнопки в бот методом `send_buttons(text, key_res, chat_id)` или сделать их частью `attachments` для совместной отправки с другим контентом (фото, видео и т.п.) при помощи соответствующих методов (`send_message, send_answer_callback, edit_message и др.`), содержащих в качестве параметра `attachments=`
   - Примеры в разделе [Examples](examples/)
-## Описание методов (в разработке, смотрите в основном коде):
+## Описание методов (также смотрите в основном коде):
 ### Получение информации о событиях в чате с ботом
 - **[get_updates](#get_updatesmarkernone-limit100-timeout30) - получение событий, произошедших в чате с ботом (боту отправлено текстовое сообщение, картинка, видео, нажата кнопка и т.д.) С результатом работы, помещенным в переменную (например *update*) этого метода, работают нижеперечисленные методы:**  
   - [get_marker](#get_markerupdate) - получает маркер (порядковый номер) следующего события, необходим в технических целях.
@@ -66,11 +69,13 @@ if __name__ == '__main__':
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
   - [get_update_type](#get_update_typeupdate) - получает тип события (например bot_started), произошедшего с ботом.
+  - [get_attachments](#get_attachmentsupdate) - получает весь прикрепленный к сообщению контент в различном сочетании (например несколько фото, видео).  
   - [get_url](#get_urlupdate) - получает значение поля URL полученного сообщения (события). 
   - [get_link_name](#get_link_nameupdate) - получает имя пользователя пересланного сообщения.
   - [get_link_user_id](#get_link_user_idupdate) - получает идентификатор пользователя пересланного сообщения.
   - [get_link_chat_id](#get_link_chat_idupdate) - получает идентификатор чата пересланного сообщения.
   - [get_chat_type](#get_chat_typeupdate) - получает значение поля chat_type (диалог, чат, канал).
+  - [get_attach_type](#get_attach_typeupdate) - получает тип вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
 - [get_members](#get_memberschat_id-user_ids-markernone-count20) - получает информацию о пользователях участвующих в чате.
 - [get_all_chats](#get_all_chatscount50-markernone) - получает информацию о чатах, в которых участвовал бот.
 - [get_bot_info](#get_bot_info) - получает информацию о текущем боте.
@@ -324,7 +329,16 @@ https://botapi.tamtam.chat/updates
 Получение текста отправленного или пересланного боту  
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None    
-        
+
+### get_attachments(update):
+https://botapi.tamtam.chat/updates  
+Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
+API = subscriptions/Get updates/[updates][0][message][link][message][attachment]  
+или = subscriptions/Get updates/[updates][0][message][body][attachment]  
+**:param update:** результат работы метода get_updates  
+**:return attachments:** возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента, при неудаче 'attachments' = None 
+               
+
 ### get_url(update):
 https://botapi.tamtam.chat/updates  
 Получение ссылки отправленного или пересланного боту файла  
@@ -647,5 +661,15 @@ https://dev.tamtam.chat/#operation/construct
 **:param data:** любые данные в технических целях  
 **:param buttons:** технические кнопки для произвольных действий  
 **:param placeholder:** текст над техническими кнопками  
-**:return:** результат POST запроса  
+**:return:** результат POST запроса   
 
+### get_attach_type(update):
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
+```
+API = subscriptions/Get updates/[updates][0][message][link][message][attachment][type]
+или = subscriptions/Get updates/[updates][0][message][body][attachment][type]
+```
+**:param update:** результат работы метода get_updates  
+**:return att_type:** возвращает, если это возможно, значение поля 'type' созданного или пересланного контента из 'body' или 'link' соответственно, при неудаче 'type' = None  
+   

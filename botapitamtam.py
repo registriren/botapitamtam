@@ -1,4 +1,4 @@
-# Version 0.2.0.2
+# Version 0.2.0.3
 
 import json
 import logging
@@ -243,7 +243,7 @@ class BotHandler:
         if 'description' in bot:
             description = bot['description']
             return description
-        
+
     def command(self, name, description):
         """
         Вспомогательный метод для подготовки описаний команд бота и использования в методе edit_bot_info.
@@ -396,7 +396,7 @@ class BotHandler:
             if response.status_code == 200:
                 chat_admins = response.json()
             else:
-                logger.error("Error chat admins: {}".format(response.status_code))
+                # logger.error("Error chat admins: {}".format(response.status_code))
                 chat_admins = None
         except Exception as e:
             logger.error("Error connect chat admins: %s.", e)
@@ -638,7 +638,7 @@ class BotHandler:
                  из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
         """
         text = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -656,6 +656,36 @@ class BotHandler:
                             text = None
         return text
 
+    def get_attachments(self, update):
+        """
+        Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту
+        API = subscriptions/Get updates/[updates][0][message][link][message][attachment]
+           или = subscriptions/Get updates/[updates][0][message][body][attachment]
+        :param update: результат работы метода get_updates
+        :return attachments: возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента
+                 из 'body' или 'link' соответственно, при неудаче 'attachments' = None
+        """
+        attachments = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_created':
+                upd1 = upd.get('message').get('body')
+                if 'attachments' in upd1.keys():
+                    attachments = upd1['attachments']
+                else:
+                    upd1 = upd.get('message')
+                    if 'link' in upd1.keys():
+                        upd1 = upd1.get('link')
+                        if 'message' in upd1.keys():
+                            upd1 = upd1.get('message')
+                            if 'attachments' in upd1.keys():
+                                attachments = upd1['attachments']
+        return attachments
+
     def get_url(self, update):
         """
         Получение ссылки отправленного или пересланного боту файла
@@ -666,33 +696,29 @@ class BotHandler:
                  из 'body' или 'link' соответственно, при неудаче 'url' = None
         """
         url = None
-        if update != None:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            type = self.get_update_type(update)
-            if type == 'message_created':
-                upd1 = upd.get('message').get('body')
-                if 'attachments' in upd1.keys():
-                    upd1 = upd1['attachments'][0]
-                    if 'payload' in upd1.keys():
-                        upd1 = upd1.get('payload')
-                        if 'url' in upd1.keys():
-                            url = upd1.get('url')
-                else:
-                    upd1 = upd.get('message')
-                    if 'link' in upd1.keys():
-                        upd1 = upd1.get('link')
-                        if 'message' in upd1.keys():
-                            upd1 = upd1.get('message')
-                            if 'attachments' in upd1.keys():
-                                upd1 = upd1['attachments'][0]
-                                if 'payload' in upd1.keys():
-                                    upd1 = upd1.get('payload')
-                                    if 'url' in upd1.keys():
-                                        url = upd1.get('url')
+        attach = self.get_attachments(update)
+        attach = attach[0]
+        if 'payload' in attach.keys():
+            attach = attach.get('payload')
+            if 'url' in attach.keys():
+                url = attach.get('url')
         return url
+
+    def get_attach_type(self, update):
+        """
+        Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту
+        API = subscriptions/Get updates/[updates][0][message][link][message][attachment][type]
+           или = subscriptions/Get updates/[updates][0][message][body][attachment][type]
+        :param update: результат работы метода get_updates
+        :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
+                 из 'body' или 'link' соответственно, при неудаче 'type' = None
+        """
+        att_type = None
+        attach = self.get_attachments(update)
+        attach = attach[0]
+        if 'type' in attach.keys():
+            att_type = attach.get('type')
+        return att_type
 
     def get_chat_id(self, update=None):
         """
@@ -871,7 +897,7 @@ class BotHandler:
         :return: возвращает результат нажатия кнопки или None
         """
         payload = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -892,7 +918,7 @@ class BotHandler:
         """
         callback_id = None
         type = self.get_update_type(update)
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -949,7 +975,7 @@ class BotHandler:
         :return: возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора
         """
         text = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -959,7 +985,6 @@ class BotHandler:
                 upd = upd.get('input')
                 if upd.get('input_type') == 'message':
                     upd = upd.get('messages')
-                    print(upd)
                     if upd:
                         upd = upd[0]
                         text = upd.get('text')
@@ -1129,7 +1154,7 @@ class BotHandler:
             button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
-        self.typing_on(self.get_chat_id())
+        #self.typing_on(self.get_chat_id())
         attach = None
         if isinstance(buttons, list):
             try:
@@ -1207,7 +1232,7 @@ class BotHandler:
         :param buttons: массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.
         :return update: результат POST запроса на отправку кнопок
         """
-        self.typing_on(chat_id)
+        # self.typing_on(chat_id)
         attach = self.attach_buttons(buttons)
         update = self.send_message(text, chat_id, attachments=attach)
         return update
@@ -1395,7 +1420,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на POST message в соответствии с API
         """
-        self.typing_on(chat_id)
+        # self.typing_on(chat_id)
         link = self.link_forward(mid)
         update = self.send_message(text, chat_id, link=link)
         return update
@@ -1434,7 +1459,7 @@ class BotHandler:
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :return update: response | ответ на POST запрос в соответствии с API
         """
-        self.typing_on(chat_id)
+        # self.typing_on(chat_id)
         link = self.link_reply(mid)
         update = self.send_message(text, chat_id, link=link)
         return update
@@ -1607,7 +1632,6 @@ class BotHandler:
         while flag == 'attachment.not.ready':
             try:
                 response = requests.post(self.url + method, params=params, data=json.dumps(datas))
-                print(response.json())
                 upd = response.json()
                 if 'code' in upd.keys():
                     flag = upd.get('code')
