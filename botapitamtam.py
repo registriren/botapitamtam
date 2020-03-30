@@ -826,7 +826,7 @@ class BotHandler:
         :return: возвращает, если это возможно, значение поля 'user_id' пересланного боту сообщения (от кого)
         """
         user_id = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -841,33 +841,29 @@ class BotHandler:
 
     def get_name(self, update):
         """
-        Получение имени пользователя, инициировавшего событие
-        API = subscriptions/Get updates/[updates][0][user][user_id]
-           или = subscriptions/Get updates/[updates][0][message][sender][user_id]
-        :param update = результат работы метода get_update
+        Получение имени пользователя, инициировавшего событие, в том числе нажатие кнопки
+        :param update: результат работы метода get_update
         :return: возвращает, если это возможно, значение поля 'name' не зависимо от события, произошедшего с ботом
                  если событие - "удаление сообщения", то name = None
         """
         name = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
                 upd = update
-            if 'message_id' in upd.keys():
-                name = None
-            elif 'chat_id' in upd.keys():
+            if 'user' in upd.keys():
                 name = upd['user']['name']
             elif 'callback' in upd.keys():
                 name = upd['callback']['user']['name']
-            elif 'user' in upd.keys():
-                name = upd['user']['name']
-            else:
+            elif 'chat' in upd.keys():
+                upd = upd['chat']
+                if 'dialog_with_user' in upd.keys():
+                    name = upd['dialog_with_user']['name']
+            elif 'message' in upd.keys():
                 upd = upd['message']
                 if 'sender' in upd.keys():
                     name = upd['sender']['name']
-                else:
-                    name = None
         return name
 
     def get_link_name(self, update):
@@ -878,7 +874,7 @@ class BotHandler:
         :return: возвращает, если это возможно, значение поля 'name' пересланного боту сообщения (от кого)
         """
         name = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -890,6 +886,66 @@ class BotHandler:
                     if 'sender' in upd.keys():
                         name = upd['sender']['name']
         return name
+
+    def get_username(self, update):
+        """
+        Получение username пользователя (если оно есть), инициировавшего событие, в том числе нажатие кнопки
+        API = subscriptions/Get updates/[updates][0][user][user_id]
+           или = subscriptions/Get updates/[updates][0][message][sender][user_id]
+        :param update = результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'name' не зависимо от события, произошедшего с ботом
+                 если событие - "удаление сообщения", то name = None
+        """
+        username = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            if 'user' in upd.keys():
+                upd = upd['user']
+                if 'username' in upd.keys():
+                    username = upd['username']
+            elif 'callback' in upd.keys():
+                upd = upd['callback']['user']
+                if 'username' in upd.keys():
+                    username = upd['username']
+            elif 'chat' in upd.keys():
+                upd = upd['chat']
+                if 'dialog_with_user' in upd.keys():
+                    upd = upd['dialog_with_user']
+                    if 'username' in upd.keys():
+                        username = upd['username']
+            elif 'message' in upd.keys():
+                upd = upd['message']
+                if 'sender' in upd.keys():
+                    upd = upd['sender']
+                    if 'username' in upd.keys():
+                        username = upd['username']
+        return username
+
+    def get_link_username(self, update):
+        """
+        Получение username пользователя пересланного сообщения
+        API = subscriptions/Get updates/[updates][0][message][link][sender][username]
+        :param update: результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'name' пересланного боту сообщения (от кого)
+        """
+        username = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            if 'message' in upd.keys():
+                upd = upd['message']
+                if 'link' in upd.keys():
+                    upd = upd['link']
+                    if 'sender' in upd.keys():
+                        upd = upd['sender']
+                        if 'username' in upd.keys():
+                            username = upd['username']
+        return username
 
     def get_payload(self, update):
         """
