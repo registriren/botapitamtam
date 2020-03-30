@@ -373,8 +373,8 @@ https://botapi.tamtam.chat/updates
 ### get_username(update):
 https://botapi.tamtam.chat/updates  
 Получение username пользователя  
-**:param update** = результат работы метода get_updates
-**:return:** возвращает, если это возможно, значение поля 'username'.  
+**:param update** = результат работы метода get_updates  
+**:return:** возвращает, если это возможно, значение поля 'username'  
 
 ### get_name(update):
 https://botapi.tamtam.chat/updates  
