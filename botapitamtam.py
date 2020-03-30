@@ -697,11 +697,12 @@ class BotHandler:
         """
         url = None
         attach = self.get_attachments(update)
-        attach = attach[0]
-        if 'payload' in attach.keys():
-            attach = attach.get('payload')
-            if 'url' in attach.keys():
-                url = attach.get('url')
+        if attach:
+            attach = attach[0]
+            if 'payload' in attach.keys():
+                attach = attach.get('payload')
+                if 'url' in attach.keys():
+                    url = attach.get('url')
         return url
 
     def get_attach_type(self, update):
@@ -715,9 +716,10 @@ class BotHandler:
         """
         att_type = None
         attach = self.get_attachments(update)
-        attach = attach[0]
-        if 'type' in attach.keys():
-            att_type = attach.get('type')
+        if attach:
+            attach = attach[0]
+            if 'type' in attach.keys():
+                att_type = attach.get('type')
         return att_type
 
     def get_chat_id(self, update=None):
