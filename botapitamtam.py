@@ -836,6 +836,33 @@ class BotHandler:
                     if 'sender' in upd.keys():
                         user_id = upd['sender']['user_id']
         return user_id
+    
+    def get_username(self, update):
+        """
+        Получение username пользователя.
+        API = subscriptions/Get updates/[updates][0][message]
+        :param update = результат работы метода get_updates
+        :return: возвращает, если это возможно, значение поля 'username'.
+        """
+        username = None
+        if update != None:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            if 'message' in upd.keys():
+                upd = upd.get('message')
+                if 'link' in upd.keys():
+                    upd1 = upd.get('link')
+                    if 'sender' in upd1.keys():
+                        upd1 = upd1.get('sender')
+                        if 'username' in upd1:
+                            username = upd1.get('username')
+                elif 'sender' in upd.keys():
+                    upd = upd.get('sender')
+                    if 'username' in upd:
+                        username = upd.get('username')
+        return username
 
     def get_name(self, update):
         """
