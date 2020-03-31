@@ -68,10 +68,12 @@ if __name__ == '__main__':
   - [get_text](#get_textupdate) - получает значение поля text полученного сообщения (события).
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
+  - [get_username](#get_usernameupdate) - получает username пользователя, сформировавшего событие.  
   - [get_update_type](#get_update_typeupdate) - получает тип события (например bot_started), произошедшего с ботом.
   - [get_attachments](#get_attachmentsupdate) - получает весь прикрепленный к сообщению контент в различном сочетании (например несколько фото, видео).  
   - [get_url](#get_urlupdate) - получает значение поля URL полученного сообщения (события). 
-  - [get_link_name](#get_link_nameupdate) - получает имя пользователя пересланного сообщения.
+  - [get_link_name](#get_link_nameupdate) - получает имя пользователя пересланного сообщения.  
+  - [get_link_username](#get_link_usernameupdate) - получает username пользователя пересланного сообщения.  
   - [get_link_user_id](#get_link_user_idupdate) - получает идентификатор пользователя пересланного сообщения.
   - [get_link_chat_id](#get_link_chat_idupdate) - получает идентификатор чата пересланного сообщения.
   - [get_chat_type](#get_chat_typeupdate) - получает значение поля chat_type (диалог, чат, канал).
