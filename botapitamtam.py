@@ -891,8 +891,7 @@ class BotHandler:
         """
         Получение username пользователя (если оно есть), инициировавшего событие, в том числе нажатие кнопки
         :param update: результат работы метода get_update
-        :return: возвращает, если это возможно, значение поля 'name' не зависимо от события, произошедшего с ботом
-                 если событие - "удаление сообщения", то name = None
+        :return: возвращает, если это возможно, значение поля 'username'
         """
         username = None
         if update:
@@ -927,7 +926,7 @@ class BotHandler:
         Получение username пользователя пересланного сообщения
         API = subscriptions/Get updates/[updates][0][message][link][sender][username]
         :param update: результат работы метода get_update
-        :return: возвращает, если это возможно, значение поля 'name' пересланного боту сообщения (от кого)
+        :return: возвращает, если это возможно, значение поля 'username' пересланного боту сообщения (от кого)
         """
         username = None
         if update:

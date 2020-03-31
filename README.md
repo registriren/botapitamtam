@@ -375,11 +375,23 @@ https://botapi.tamtam.chat/updates
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'name' не зависимо от события, произошедшего с ботом если событие - "удаление сообщения", то name = None  
 
+### get_username(update):
+https://botapi.tamtam.chat/updates  
+Получение username пользователя (если оно есть), инициировавшего событие, в том числе нажатие кнопки    
+**:param update:** результат работы метода get_update  
+**:return:** возвращает, если это возможно, значение поля 'username'
+
 ### get_link_name(update):
 https://botapi.tamtam.chat/updates  
 Получение имени пользователя пересланного сообщения  
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'name' пересланного боту сообщения (от кого)  
+
+### get_link_username(update):
+https://botapi.tamtam.chat/updates  
+Получение username пользователя пересланного сообщения  
+**:param update:** результат работы метода get_update  
+**:return:** возвращает, если это возможно, значение поля 'username' пересланного боту сообщения (от кого)  
 
 ### get_payload(update):
 https://botapi.tamtam.chat/updates  
@@ -396,7 +408,7 @@ https://botapi.tamtam.chat/updates
 ### get_message_id(update):
 https://botapi.tamtam.chat/updates  
 Получение message_id отправленного или пересланного боту  
-**:param update:** = результат работы метода get_update  
+**:param update:**результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'mid'  
 
 ### edit_message(message_id, text, attachments=None, link=None, notify=True):
