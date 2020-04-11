@@ -105,7 +105,9 @@ if __name__ == '__main__':
 ### Формирование (отправка, изменение) событий в чатах с ботом
 - [delete_message](#delete_messagemessage_id) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [edit_message](#edit_messagemessage_id-text-attachmentsnone-linknone-notifytrue) - изменяет контент по его идентификатору и сформированному аттач.
-- [pin_message](#pin_messagechat_id-message_id-notifytrue) - закрепляет сообщение в верху чата.  
+- [pin_message](#pin_messagechat_id-message_id-notifytrue) - закрепляет сообщение в верху чата. 
+- [unpin_message](#unpin_messagechat_id) - открепляет сообщение в чате.  
+- [get_pinned_message](#get_pinned_messagechat_id) - получает закрепленное сообщение в чате.  
 - [send_answer_callback](#send_answer_callbackcallback_id-notification-textnone-attachmentsnone-linknone-notifynone) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](#send_audiocontent-chat_id-textnone) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](#send_buttonstext-buttons-chat_id) - отправляет текст с кнопками в чат.
@@ -436,7 +438,18 @@ https://dev.tamtam.chat/#operation/pinMessage
 **:param chat_id:** Идентификатор чата
 **:param message_id:** Идентификатор сообщения, которое будет закреплено
 **:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены
-**:return update:** Возвращает результат PUT запроса
+**:return update:** Возвращает результат PUT запроса  
+
+### unpin_message(chat_id):  
+https://dev.tamtam.chat/#operation/unpinMessage  
+Метод открепления сообщения в чате  
+**:param chat_id:** Идентификатор чата  
+
+### get_pinned_message(chat_id):  
+https://dev.tamtam.chat/#operation/getPinnedMessage  
+Метод получения закрепленного собщения в чате  
+**:param chat_id:** Идентификатор чата  
+**:return message:** Возвращает закрепленное сообщение, с ним можно работать привычными методами, например get_text(message)  
 
 ### typing_on(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  

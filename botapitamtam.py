@@ -643,8 +643,7 @@ class BotHandler:
                 upd = update['updates'][0]
             else:
                 upd = update
-            type = self.get_update_type(update)
-            if type == 'message_created' or type == 'message_edited':
+            if 'message' in upd.keys():
                 upd = upd.get('message')
                 text = upd.get('body').get('text')
                 if 'link' in upd.keys():
@@ -1124,10 +1123,7 @@ class BotHandler:
         """
         update = None
         method = 'chats/{}'.format(chat_id) + '/pin'
-        params = (
-            ('access_token', self.token),
-            ('chat_id', chat_id),
-        )
+        params = (('access_token', self.token),)
         data = {
             "message_id": message_id,
             "notify": notify
@@ -1144,6 +1140,45 @@ class BotHandler:
         except Exception as e:
             logger.error("Error pin_message: %s.", e)
         return update
+
+    def unpin_message(self, chat_id):
+        """
+        https://dev.tamtam.chat/#operation/unpinMessage
+        Метод открепления сообщения в чате
+        :param chat_id: Идентификатор чата
+        """
+        method = 'chats/{}'.format(chat_id) + '/pin'
+        params = {
+            "access_token": self.token
+        }
+        try:
+            requests.delete(self.url + method, params=params)
+        except Exception as e:
+            logger.error("Error unpin_message: %s.", e)
+
+    def get_pinned_message(self, chat_id):
+        """
+        https://dev.tamtam.chat/#operation/getPinnedMessage
+        Метод получения закрепленного собщения в чате
+        :param chat_id: Идентификатор чата
+        :return message: Возвращает закрепленное сообщение, с ним можно работать привычными методами, например get_text(message)
+        """
+        method = 'chats/{}'.format(chat_id) + '/pin'
+        params = {
+            "access_token": self.token
+        }
+        try:
+            response = requests.get(self.url + method, params)
+            if response.status_code == 200:
+                message = response.json()
+            else:
+                logger.error("Error get pinned message: {}".format(response.status_code))
+                message = None
+        except Exception as e:
+            logger.error("Error connect get pinned message: %s.", e)
+            message = None
+        return message
+
 
     def typing_on(self, chat_id):
         """
