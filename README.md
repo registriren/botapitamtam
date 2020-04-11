@@ -386,11 +386,11 @@ https://botapi.tamtam.chat/updates
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'username'
 
-### get_is_bot(update):
-https://botapi.tamtam.chat/updates    
-Проверка на принадлежность к боту участника, инициировавшего событие, в том числе нажатие кнопки  
-**:param update:** результат работы метода get_update  
-**:return:** возвращает, если это возможно, значение поля 'is_bot' (True, False) или None при неудаче  
+### get_is_bot(update):  
+https://botapi.tamtam.chat/updates      
+Проверка на принадлежность к боту участника, инициировавшего событие, в том числе нажатие кнопки    
+**:param update:** результат работы метода get_update   
+**:return:** возвращает, если это возможно, значение поля 'is_bot' (True, False) или None при неудаче    
 
 ### get_link_name(update):
 https://botapi.tamtam.chat/updates  
@@ -432,13 +432,13 @@ https://dev.tamtam.chat/#operation/editMessage
 **:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
 **:return update:** Возвращает результат PUT запроса  
 
-### pin_message(chat_id, message_id, notify=True):
-https://dev.tamtam.chat/#operation/pinMessage
-Метод закрепления сообщений в чате
-**:param chat_id:** Идентификатор чата
-**:param message_id:** Идентификатор сообщения, которое будет закреплено
-**:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены
-**:return update:** Возвращает результат PUT запроса  
+### pin_message(chat_id, message_id, notify=True):  
+https://dev.tamtam.chat/#operation/pinMessage  
+Метод закрепления сообщений в чате  
+**:param chat_id:** Идентификатор чата  
+**:param message_id:** Идентификатор сообщения, которое будет закреплено  
+**:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
+**:return update:** Возвращает результат PUT запроса    
 
 ### unpin_message(chat_id):  
 https://dev.tamtam.chat/#operation/unpinMessage  
