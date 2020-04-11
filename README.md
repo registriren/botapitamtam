@@ -69,6 +69,7 @@ if __name__ == '__main__':
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
   - [get_username](#get_usernameupdate) - получает username пользователя, сформировавшего событие.  
+  - [get_is_bot](#get_is_botupdate) - позволяет отличить пользователя от бота.  
   - [get_update_type](#get_update_typeupdate) - получает тип события (например bot_started), произошедшего с ботом.
   - [get_attachments](#get_attachmentsupdate) - получает весь прикрепленный к сообщению контент в различном сочетании (например несколько фото, видео).  
   - [get_url](#get_urlupdate) - получает значение поля URL полученного сообщения (события). 
@@ -104,6 +105,7 @@ if __name__ == '__main__':
 ### Формирование (отправка, изменение) событий в чатах с ботом
 - [delete_message](#delete_messagemessage_id) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [edit_message](#edit_messagemessage_id-text-attachmentsnone-linknone-notifytrue) - изменяет контент по его идентификатору и сформированному аттач.
+- [pin_message](#pin_messagechat_id-message_id-notifytrue) - закрепляет сообщение в верху чата.  
 - [send_answer_callback](#send_answer_callbackcallback_id-notification-textnone-attachmentsnone-linknone-notifynone) - отправляет уведомление (реакцию) после нажатия кнопки.
 - [send_audio](#send_audiocontent-chat_id-textnone) - отправляет аудиофайл с преобразованием в формат ТамТам.
 - [send_buttons](#send_buttonstext-buttons-chat_id) - отправляет текст с кнопками в чат.
@@ -340,7 +342,6 @@ API = subscriptions/Get updates/[updates][0][message][link][message][attachment]
 **:param update:** результат работы метода get_updates  
 **:return attachments:** возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента, при неудаче 'attachments' = None 
                
-
 ### get_url(update):
 https://botapi.tamtam.chat/updates  
 Получение ссылки отправленного или пересланного боту файла  
@@ -378,10 +379,16 @@ https://botapi.tamtam.chat/updates
 **:return:** возвращает, если это возможно, значение поля 'name' не зависимо от события, произошедшего с ботом если событие - "удаление сообщения", то name = None  
 
 ### get_username(update):
-https://botapi.tamtam.chat/updates  
+https://botapi.tamtam.chat/updates    
 Получение username пользователя (если оно есть), инициировавшего событие, в том числе нажатие кнопки    
 **:param update:** результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'username'
+
+### get_is_bot(update):
+https://botapi.tamtam.chat/updates    
+Проверка на принадлежность к боту участника, инициировавшего событие, в том числе нажатие кнопки  
+**:param update:** результат работы метода get_update  
+**:return:** возвращает, если это возможно, значение поля 'is_bot' (True, False) или None при неудаче  
 
 ### get_link_name(update):
 https://botapi.tamtam.chat/updates  
@@ -422,6 +429,14 @@ https://dev.tamtam.chat/#operation/editMessage
 **:param link:** Обновленное пересылаемые (цитируемые) сообщение  
 **:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
 **:return update:** Возвращает результат PUT запроса  
+
+### pin_message(chat_id, message_id, notify=True):
+https://dev.tamtam.chat/#operation/pinMessage
+Метод закрепления сообщений в чате
+**:param chat_id:** Идентификатор чата
+**:param message_id:** Идентификатор сообщения, которое будет закреплено
+**:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены
+**:return update:** Возвращает результат PUT запроса
 
 ### typing_on(chat_id):
 https://dev.tamtam.chat/#operation/sendAction  

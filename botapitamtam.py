@@ -1,4 +1,4 @@
-# Version 0.2.0.3
+# Version 0.3.0.1
 
 import json
 import logging
@@ -866,6 +866,32 @@ class BotHandler:
                     name = upd['sender']['name']
         return name
 
+    def get_is_bot(self, update):
+        """
+        Проверка на принадлежность к боту участника, инициировавшего событие, в том числе нажатие кнопки
+        :param update: результат работы метода get_update
+        :return: возвращает, если это возможно, значение поля 'is_bot' (True, False) или None при неудаче
+        """
+        is_bot = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            if 'user' in upd.keys():
+                is_bot = upd['user']['is_bot']
+            elif 'callback' in upd.keys():
+                is_bot = upd['callback']['user']['is_bot']
+            elif 'chat' in upd.keys():
+                upd = upd['chat']
+                if 'dialog_with_user' in upd.keys():
+                    is_bot = upd['dialog_with_user']['is_bot']
+            elif 'message' in upd.keys():
+                upd = upd['message']
+                if 'sender' in upd.keys():
+                    is_bot = upd['sender']['is_bot']
+        return is_bot
+
     def get_link_name(self, update):
         """
         Получение имени пользователя пересланного сообщения
@@ -1085,6 +1111,38 @@ class BotHandler:
                         logger.error("Error edit message: {}".format(response.status_code))
             except Exception as e:
                 logger.error("Error edit_message: %s.", e)
+        return update
+
+    def pin_message(self, chat_id, message_id, notify=True):
+        """
+        https://dev.tamtam.chat/#operation/pinMessage
+        Метод закрепления сообщений в чате
+        :param chat_id: Идентификатор чата
+        :param message_id: Идентификатор сообщения, которое будет закреплено
+        :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
+        :return update: Возвращает результат PUT запроса
+        """
+        update = None
+        method = 'chats/{}'.format(chat_id) + '/pin'
+        params = (
+            ('access_token', self.token),
+            ('chat_id', chat_id),
+        )
+        data = {
+            "message_id": message_id,
+            "notify": notify
+        }
+        try:
+            response = requests.put(self.url + method, params=params, data=json.dumps(data))
+            upd = response.json()
+            if response.status_code == 200:
+                update = response.json()
+            elif 'message' in upd.keys():
+                logger.error("Error pin message: {}".format(upd.get('message')))
+            else:
+                logger.error("Error pin message: {}".format(response.status_code))
+        except Exception as e:
+            logger.error("Error pin_message: %s.", e)
         return update
 
     def typing_on(self, chat_id):
