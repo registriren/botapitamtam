@@ -1,4 +1,4 @@
-# Version 0.3.0.1
+# Version 0.3.0.2
 
 import json
 import logging
@@ -1131,12 +1131,10 @@ class BotHandler:
         try:
             response = requests.put(self.url + method, params=params, data=json.dumps(data))
             upd = response.json()
-            if response.status_code == 200:
-                update = response.json()
-            elif 'message' in upd.keys():
-                logger.error("Error pin message: {}".format(upd.get('message')))
-            else:
-                logger.error("Error pin message: {}".format(response.status_code))
+            if 'message' in upd.keys():
+                logger.info("pin impossible: {}".format(upd.get('message')))
+            if 'success' in upd.keys():
+                update = upd.get('success')
         except Exception as e:
             logger.error("Error pin_message: %s.", e)
         return update
@@ -1147,14 +1145,21 @@ class BotHandler:
         Метод открепления сообщения в чате
         :param chat_id: Идентификатор чата
         """
+        res = None
         method = 'chats/{}'.format(chat_id) + '/pin'
         params = {
             "access_token": self.token
         }
         try:
-            requests.delete(self.url + method, params=params)
+            res = requests.delete(self.url + method, params=params)
+            res = res.json()
+            if 'message' in res.keys():
+                logger.info("unpin impossible: {}".format(res.get('message')))
+            if 'success' in res.keys():
+                res = res.get('success')
         except Exception as e:
             logger.error("Error unpin_message: %s.", e)
+        return res
 
     def get_pinned_message(self, chat_id):
         """
@@ -1163,20 +1168,16 @@ class BotHandler:
         :param chat_id: Идентификатор чата
         :return message: Возвращает закрепленное сообщение, с ним можно работать привычными методами, например get_text(message)
         """
+        message = None
         method = 'chats/{}'.format(chat_id) + '/pin'
         params = {
             "access_token": self.token
         }
         try:
             response = requests.get(self.url + method, params)
-            if response.status_code == 200:
-                message = response.json()
-            else:
-                logger.error("Error get pinned message: {}".format(response.status_code))
-                message = None
+            message = response.json()
         except Exception as e:
             logger.error("Error connect get pinned message: %s.", e)
-            message = None
         return message
 
 
