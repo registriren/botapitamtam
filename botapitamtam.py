@@ -798,7 +798,7 @@ class BotHandler:
                  если событие - "удаление сообщения", то user_id = None
         """
         user_id = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -1598,7 +1598,7 @@ class BotHandler:
                 }
         return link
 
-    def send_reply_message(self, text, mid, chat_id):
+    def send_reply_message(self, text, mid, chat_id, dislinkprev=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Send reply message specific chat_id by post request
@@ -1610,7 +1610,7 @@ class BotHandler:
         """
         # self.typing_on(chat_id)
         link = self.link_reply(mid)
-        update = self.send_message(text, chat_id, link=link)
+        update = self.send_message(text, chat_id, link=link, dislinkprev=dislinkprev)
         return update
 
     def token_upload_content(self, type, content, content_name=None):
