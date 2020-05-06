@@ -640,19 +640,16 @@ class BotHandler:
         text = None
         if update:
             if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            if 'message' in upd.keys():
-                upd = upd.get('message')
-                text = upd.get('body').get('text')
-                if 'link' in upd.keys():
-                    if upd.get('link').get('type') == 'forward':
-                        try:
-                            text = upd.get('link').get('message').get('text')
-                        except Exception as e:
-                            logger.error("Error: %s.", e)
-                            text = None
+                update = update['updates'][0]
+            try:
+                text = update['message']['body']['text']
+            except Exception as e:
+                logger.error("Error: %s.", e)
+            if not text:
+                try:
+                    text = update['message']['link']['message']['text']
+                except Exception:
+                    pass
         return text
 
     def get_attachments(self, update):
@@ -666,23 +663,17 @@ class BotHandler:
         """
         attachments = None
         if update:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
             type = self.get_update_type(update)
+            if 'updates' in update.keys():
+                update = update['updates'][0]
             if type == 'message_created':
-                upd1 = upd.get('message').get('body')
-                if 'attachments' in upd1.keys():
-                    attachments = upd1['attachments']
-                else:
-                    upd1 = upd.get('message')
-                    if 'link' in upd1.keys():
-                        upd1 = upd1.get('link')
-                        if 'message' in upd1.keys():
-                            upd1 = upd1.get('message')
-                            if 'attachments' in upd1.keys():
-                                attachments = upd1['attachments']
+                try:
+                    attachments = update['message']['body']['attachments']
+                except Exception:
+                    try:
+                        attachments = update['message']['link']['message']['attachments']
+                    except Exception:
+                        pass
         return attachments
 
     def get_url(self, update):
@@ -713,12 +704,12 @@ class BotHandler:
         :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
                  из 'body' или 'link' соответственно, при неудаче 'type' = None
         """
-        att_type = None
+        #att_type = None
         attach = self.get_attachments(update)
-        if attach:
-            attach = attach[0]
-            if 'type' in attach.keys():
-                att_type = attach.get('type')
+        try:
+            att_type = attach[0]['type']
+        except Exception:
+            att_type = None
         return att_type
 
     def get_chat_id(self, update=None):
