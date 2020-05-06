@@ -1664,12 +1664,13 @@ class BotHandler:
                 upd = response.json()
                 if 'code' in upd.keys():
                     flag = upd.get('code')
-                    logger.info('ждем 5 сек...')
+                    logger.info('send_message: ждем 5 сек...')
                     time.sleep(5)
                 else:
                     flag = None
                     if response.status_code == 200:
                         update = response.json()
+                        logger.info('send_message: OK')
                     else:
                         logger.error("Error sending message: {}".format(response.status_code))
             except Exception as e:
@@ -1775,12 +1776,13 @@ class BotHandler:
                 upd = response.json()
                 if 'code' in upd.keys():
                     flag = upd.get('code')
-                    logger.info('ждем 5 сек...')
+                    logger.info('send_construct_message: ждем 5 сек...')
                     time.sleep(5)
                 else:
                     flag = None
                     if response.status_code == 200:
                         update = response.json()
+                        logger.info('send_construct_message: OK')
                     else:
                         logger.error("Error construct_message: {}".format(response.status_code))
             except Exception as e:
