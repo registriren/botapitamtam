@@ -644,7 +644,7 @@ class BotHandler:
             try:
                 text = update['message']['body']['text']
             except Exception as e:
-                logger.info("get_text not key: %s.", e)
+                logger.info("get_text None, may be your code is not optimized, not key: %s.", e)
             if not text:
                 try:
                     text = update['message']['link']['message']['text']
