@@ -12,7 +12,7 @@ import json
 import logging
 from flask import Flask, request, jsonify  # для webhook
 
-config = 'config.json'
+config = 'config.json' # файл, содержащий токен доступа к боту в формате json, размещается в каталоге с ботом
 with open(config, 'r', encoding='utf-8') as c:
     conf = json.load(c)
     token = conf['access_token']
