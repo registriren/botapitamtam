@@ -14,6 +14,10 @@ import logging
 from flask import Flask, request, jsonify  # для webhook
 
 config = 'config.json' # файл, содержащий токен доступа к боту в формате json, размещается в каталоге с ботом
+# токен получаем через @primebot, формат файла config.json :
+# {
+# "access_token": "vIhiiW6OX2qYfbwoKyatxqiXDdjeqRgxgj56v-8Ixxx"
+# }
 with open(config, 'r', encoding='utf-8') as c:
     conf = json.load(c)
     token = conf['access_token']
