@@ -708,10 +708,6 @@ https://dev.tamtam.chat/#operation/construct
 ### get_attach_type(update):
 https://dev.tamtam.chat/#operation/getUpdates  
 Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
-```
-API = subscriptions/Get updates/[updates][0][message][link][message][attachment][type]
-или = subscriptions/Get updates/[updates][0][message][body][attachment][type]
-```
 **:param update:** результат работы метода get_updates  
 **:return att_type:** возвращает, если это возможно, значение поля 'type' созданного или пересланного контента из 'body' или 'link' соответственно, при неудаче 'type' = None  
    
