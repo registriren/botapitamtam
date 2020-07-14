@@ -620,7 +620,7 @@ class BotHandler:
         :return: возвращает значение поля 'update_type', при неудаче = None
         """
         upd_type = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -1030,7 +1030,7 @@ class BotHandler:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
                 type = self.get_update_type(update)
-                if type == 'message_created' or type == 'message_callback':
+                if type == 'message_created' or 'message_callback' or 'message_constructed':
                     mid = upd.get('message').get('body').get('mid')
             else:
                 upd = update
@@ -1060,6 +1060,26 @@ class BotHandler:
                         upd = upd[0]
                         text = upd.get('text')
         return text
+
+    def get_construct_payload(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        Получение значения кнопки нажатой пользователем в режиме конструктора.
+        :param update = результат работы метода get_updates
+        :return: возвращает, если это возможно, значение поля 'payload' в режиме конструктора
+        """
+        payload = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_construction_request':
+                upd = upd.get('input')
+                if upd.get('input_type') == 'callback':
+                    payload = upd.get('payload')
+        return payload
 
     def edit_message(self, message_id, text, attachments=None, link=None, notify=True):
         """
