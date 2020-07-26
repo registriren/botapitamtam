@@ -124,6 +124,7 @@ if __name__ == '__main__':
 - [get_construct_text](#get_construct_textupdate) - получает текст набранный пользователем в режиме конструктора.  
 - [get_session_id](#get_session_idupdate) - получает значение session_id в режиме конструктора.  
 - [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
+- [get_construct_payload](#get_construct_payloadupdate) - получает значение нажатой кнопки в режиме конструктора.  
 ### Методы обслуживания ботов и чатов
 - [edit_bot_info](#edit_bot_infoname-username-description-commands-photo-photo_urlnone) - редактирует информацию о текущем боте.
 - [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
@@ -711,3 +712,8 @@ https://dev.tamtam.chat/#operation/getUpdates
 **:param update:** результат работы метода get_updates  
 **:return att_type:** возвращает, если это возможно, значение поля 'type' созданного или пересланного контента из 'body' или 'link' соответственно, при неудаче 'type' = None  
    
+### get_construct_payload(update):  
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение значения кнопки нажатой пользователем в режиме конструктора  
+**:param update:** результат работы метода get_updates  
+**:return:** возвращает, если это возможно, значение поля 'payload' в режиме конструктора  

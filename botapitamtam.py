@@ -1026,11 +1026,11 @@ class BotHandler:
         :return: возвращает, если это возможно, значение поля 'mid'
         """
         mid = None
-        if update != None:
+        if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
                 type = self.get_update_type(update)
-                if type == 'message_created' or 'message_callback' or 'message_constructed':
+                if type == 'message_created' or type == 'message_callback' or type == 'message_constructed':
                     mid = upd.get('message').get('body').get('mid')
             else:
                 upd = update
@@ -1684,8 +1684,7 @@ class BotHandler:
                 upd = response.json()
                 if 'code' in upd.keys():
                     flag = upd.get('code')
-                    logger.info('send_message: ждем 5 сек...')
-                    time.sleep(5)
+                    logger.info('send_message: attach not ready, wait 5s')
                 else:
                     flag = None
                     if response.status_code == 200:
