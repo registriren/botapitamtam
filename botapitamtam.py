@@ -704,7 +704,7 @@ class BotHandler:
         :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
                  из 'body' или 'link' соответственно, при неудаче 'type' = None
         """
-        #att_type = None
+        # att_type = None
         attach = self.get_attachments(update)
         try:
             att_type = attach[0]['type']
@@ -1061,6 +1061,29 @@ class BotHandler:
                         text = upd.get('text')
         return text
 
+    def get_construct_attach(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        Получение дополнительного контента (фото, видео и т.п.) к сообщению набранному пользователем в режиме конструктора.
+        :param update = результат работы метода get_updates
+        :return: возвращает, если это возможно, значение поля 'attachments', сообщения набранного пользователем в режиме конструктора
+        """
+        attach = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_construction_request':
+                upd = upd.get('input')
+                if upd.get('input_type') == 'message':
+                    upd = upd.get('messages')
+                    if upd:
+                        upd = upd[0]
+                        attach = upd.get('attachments')
+        return attach
+
     def get_construct_payload(self, update):
         """
         https://dev.tamtam.chat/#operation/getUpdates
@@ -1191,7 +1214,6 @@ class BotHandler:
             logger.error("Error connect get pinned message: %s.", e)
         return message
 
-
     def typing_on(self, chat_id):
         """
         Отправка уведомления от бота в чат - 'печатает...'
@@ -1314,7 +1336,7 @@ class BotHandler:
             button_callback, button_contact, button_link, button_location и т.д.
         :return attach: подготовленный контент
         """
-        #self.typing_on(self.get_chat_id())
+        # self.typing_on(self.get_chat_id())
         attach = None
         if isinstance(buttons, list):
             try:
