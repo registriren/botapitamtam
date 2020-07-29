@@ -1405,6 +1405,24 @@ class BotHandler:
                   "quick": quick}
         return button
 
+    def button_chat(self, text, chat_title, chat_description=None, start_payload=None, uuid=None):
+        """
+        Подготавливает кнопку с реакцией callback
+        :param text: подпись кнопки
+        :param chat_title: название создаваемого чата
+        :param chat_description: описание чата
+        :param start_payload: начальная полезная нагрузка будет отправлена боту сразу же после создания чата
+        :param uuid: Уникальный идентификатор кнопки для всех кнопок чата на клавиатуре. Если uuid изменен, то новый чат будет создан при следующем щелчке мыши. Сервер сгенерирует его в тот момент, когда кнопка будет изначально размещена. Повторно используйте его при редактировании сообщения.'
+        :return: возвращает подготовленную кнопку для последующего формирования массива
+        """
+        button = {"type": 'chat',
+                  "text": text,
+                  "chat_title": chat_title,
+                  "chat_description": chat_description,
+                  "start_payload": start_payload,
+                  "uuid": uuid}
+        return button
+
     def send_buttons(self, text, buttons, chat_id):
         """
         Send buttons to specific chat_id by post request
