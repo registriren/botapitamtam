@@ -1084,6 +1084,21 @@ class BotHandler:
                         attach = upd.get('attachments')
         return attach
 
+    def get_construct_attach_type(self, update):
+        """
+        Получение типа вложения (file, contact, share и т.п.) к сообщению формируемому в боте-конструкторе
+        :param update: результат работы метода get_updates
+        :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
+                 из 'body' или 'link' соответственно, при неудаче 'type' = None
+        """
+        # att_type = None
+        attach = self.get_construct_attach(update)
+        try:
+            att_type = attach[0]['type']
+        except Exception:
+            att_type = None
+        return att_type
+
     def get_construct_payload(self, update):
         """
         https://dev.tamtam.chat/#operation/getUpdates
