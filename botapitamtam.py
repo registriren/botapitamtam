@@ -1,4 +1,4 @@
-# Version 0.3.0.2
+# Version 0.3.0.3
 
 import json
 import logging
@@ -147,7 +147,7 @@ class BotHandler:
         :return: возвращает значение поля 'marker', при неудаче = None
         """
         marker = None
-        if update != None:
+        if update is not None:
             marker = update['marker']
         return marker
 
@@ -336,7 +336,7 @@ class BotHandler:
         :return: возвращает значение поля chat_type.
         """
         chat_type = None
-        if update != None:
+        if update is not None:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -469,7 +469,7 @@ class BotHandler:
         params = {
             "access_token": self.token
         }
-        if icon != None:
+        if icon is not None:
             icon = self.token_upload_content('image', icon)
         else:
             icon = {}
@@ -648,7 +648,8 @@ class BotHandler:
             if not text:
                 try:
                     text = update['message']['link']['message']['text']
-                except Exception:
+                except Exception as e:
+                    logger.error('get_text: %s', e)
                     pass
         return text
 
@@ -669,10 +670,12 @@ class BotHandler:
             if type == 'message_created':
                 try:
                     attachments = update['message']['body']['attachments']
-                except Exception:
+                except Exception as e:
+                    logger.info('get_attachments: %s', e)
                     try:
                         attachments = update['message']['link']['message']['attachments']
-                    except Exception:
+                    except Exception as e:
+                        logger.error('get_attachments: %s', e)
                         pass
         return attachments
 
@@ -708,7 +711,8 @@ class BotHandler:
         attach = self.get_attachments(update)
         try:
             att_type = attach[0]['type']
-        except Exception:
+        except Exception as e:
+            logger.error('get_attach_type: %s', e)
             att_type = None
         return att_type
 
@@ -722,7 +726,7 @@ class BotHandler:
                  если событие - "удаление сообщения", то chat_id = None
         """
         chat_id = None
-        if update == None:
+        if update is None:
             method = 'chats'
             params = {
                 "access_token": self.token
@@ -766,7 +770,7 @@ class BotHandler:
         :return: возвращает, если это возможно, значение поля 'chat_id' пересланного боту сообщения (от кого)
         """
         chat_id = None
-        if update != None:
+        if update is not None:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -1088,14 +1092,14 @@ class BotHandler:
         """
         Получение типа вложения (file, contact, share и т.п.) к сообщению формируемому в боте-конструкторе
         :param update: результат работы метода get_updates
-        :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
-                 из 'body' или 'link' соответственно, при неудаче 'type' = None
+        :return: возвращает, если это возможно, значение поля 'type' первого контента переданного боту в режиме коструктора
         """
         # att_type = None
         attach = self.get_construct_attach(update)
         try:
             att_type = attach[0]['type']
-        except Exception:
+        except Exception as e:
+            logger.error('get_construct_attach_type: %s', e)
             att_type = None
         return att_type
 
@@ -1360,11 +1364,12 @@ class BotHandler:
                                "payload": {"buttons": buttons}
                                }
                               ]
-            except:
+            except Exception as e:
                 attach = [{"type": "inline_keyboard",
                            "payload": {"buttons": [buttons]}
                            }
                           ]
+                logger.info('atach_button is list, except (%s)', e)
         else:
             attach = [{"type": "inline_keyboard",
                        "payload": {"buttons": [[buttons]]}

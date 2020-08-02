@@ -53,7 +53,7 @@ if __name__ == '__main__':
   - Если необходимо объединить кнопки в столбец `key_stb = [[key4], [key5]]`
   - Можно сочетать вышеуказанные правила или просто сложить подготавливаемые кнопки `key_res = key_str + key_stb`
   - Теперь можно отправить кнопки в бот методом `send_buttons(text, key_res, chat_id)` или сделать их частью `attachments` для совместной отправки с другим контентом (фото, видео и т.п.) при помощи соответствующих методов (`send_message, send_answer_callback, edit_message и др.`), содержащих в качестве параметра `attachments=`
-  - Примеры в разделе [Examples](examples/)
+  - Примеры в разделе [Examples](examples)
 ## Описание методов (также смотрите в основном коде):
 ### Получение информации о событиях в чате с ботом
 - **[get_updates](#get_updatesmarkernone-limit100-timeout30) - получение событий, произошедших в чате с ботом (боту отправлено текстовое сообщение, картинка, видео, нажата кнопка и т.д.) С результатом работы, помещенным в переменную (например *update*) этого метода, работают нижеперечисленные методы:**  
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     - [get_chat_admins](#get_chat_adminschat_id) - получает информацию об администраторах чата.
     - [get_chat_membership](#get_chat_membershipchat_id) - получает информацию о членстве в чате для текущего бота.
   - [get_user_id](#get_user_idupdate) - получает идентификатор пользователя полученного сообщения.
-  - [get_callback_id](#get_callback_idupdate) - получает значение callback_id (идентификатора клавиатуры), предназначенного для создания реакции на факт нажатия кнопки с помощью метода [send_answer_callback](doc/send_answer_callback).
+  - [get_callback_id](#get_callback_idupdate) - получает значение callback_id (идентификатора клавиатуры), предназначенного для создания реакции на факт нажатия кнопки с помощью метода [send_answer_callback](#send_answer_callbackcallback_id-notification-textnone-attachmentsnone-linknone-notifynone).
   - [get_payload](#get_payloadupdate) - получает payload (текстовое значение, не путать с наименованием кнопки) нажатой кнопки.
   - [get_text](#get_textupdate) - получает значение поля text полученного сообщения (события).
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
@@ -101,7 +101,8 @@ if __name__ == '__main__':
   - [button_callback](#button_callbacktext-payload-intentdefault) - готовит кнопку с реакцией callback для дальнейшего формирования в массив.
   - [button_contact](#button_contacttext) - готовит кнопку запроса контакта пользователя для дальнейшего формирования в массив.
   - [button_link](#button_linktext-url) - готовит кнопку со ссылкой на URL для дальнейшего формирования в массив.
-  - [button_location](#button_locationtext-quickfalse) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.
+  - [button_location](#button_locationtext-quickfalse) - готовит кнопку запроса местоположения для дальнейшего формирования в массив.  
+  - [button_chat](#button_chattext-chat_title-chat_descriptionnone-start_payloadnone-uuidnone) - готовит кнопку для создания нового чата, например чата для обсуждения.    
 ### Формирование (отправка, изменение) событий в чатах с ботом
 - [delete_message](#delete_messagemessage_id) - удаляет сообщение (контент) по его идентификатору (message_id).
 - [edit_message](#edit_messagemessage_id-text-attachmentsnone-linknone-notifytrue) - изменяет контент по его идентификатору и сформированному аттач.
@@ -115,18 +116,20 @@ if __name__ == '__main__':
 - [send_message](#send_messagetext-chat_id-user_idnone-attachmentsnone-linknone-notifytrue-dislinkprevfalse) - отправляет текстовое сообщение и любой контент по сформированному attachments.
   - [link_forward](#link_forwardmid) - формирует параметр `link` пересылаемого сообщения для отправки через `send_message`.
   - [link_reply](#link_replymid) - формирует параметр `link` цитируемого сообщения для отправки через `send_message`.
-- [send_image](#send_imagecontent-chat_id-textnone) - отправляет изображение (несколько изображений) из локального файла.
-- [send_image_url](#send_image_urlurl-chat_id-textnone) - отправляет изображение из URL.
-- [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.
-- [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.
-- [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.
+- [send_image](#send_imagecontent-chat_id-textnone) - отправляет изображение (несколько изображений) из локального файла.  
+- [send_image_url](#send_image_urlurl-chat_id-textnone) - отправляет изображение из URL.  
+- [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.  
+- [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.  
+- [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.  
 ### Методы работы с режимом конструктора
-- [get_construct_text](#get_construct_textupdate) - получает текст набранный пользователем в режиме конструктора.  
 - [get_session_id](#get_session_idupdate) - получает значение session_id в режиме конструктора.  
-- [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
+- [get_construct_text](#get_construct_textupdate) - получает текст набранный пользователем в режиме конструктора.  
 - [get_construct_payload](#get_construct_payloadupdate) - получает значение нажатой кнопки в режиме конструктора.  
+- [get_construct_attach](#get_construct_attachupdate) - получает контент (фото, видео и т.п.) добавленный пользователем к сообщению в режиме конструктора.  
+- [get_construct_attach_type](#get_construct_attach_typeupdate) - получает тип первого контента (фото, видео и т.п.) добавленного пользователем к сообщению в режиме конструктора.  
+- [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
 ### Методы обслуживания ботов и чатов
-- [edit_bot_info](#edit_bot_infoname-username-description-commands-photo-photo_urlnone) - редактирует информацию о текущем боте.
+- [edit_bot_info](#edit_bot_infoname-username-descriptionnone-commandsnone-photonone-photo_urlnone) - редактирует информацию о текущем боте.
 - [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
 - [leave_chat](#leave_chatchat_id) - удаляет бота из текущего чата.
 - [remove_member](#remove_memberchat_id-user_id) - удаляет пользователя из чата.
@@ -528,6 +531,15 @@ Delete message to specific chat_id by post request
 **:param quick:** если true, отправляет местоположение без запроса подтверждения пользователя    
 **:return:** возвращает подготовленную кнопку для последующего формирования массива  
 
+### button_chat(text, chat_title, chat_description=None, start_payload=None, uuid=None):  
+Подготавливает кнопку, создающую новый чат (например, чат для комментариев)  
+**:param text:** подпись кнопки  
+**:param chat_title:** название создаваемого чата  
+**:param chat_description:** описание чата  
+**:param start_payload:** начальная полезная нагрузка будет отправлена боту сразу же после создания чата  
+**:param uuid:** Уникальный идентификатор кнопки для всех кнопок чата на клавиатуре. Если uuid изменен, то новый чат будет создан при следующем щелчке мыши. Сервер сгенерирует его в тот момент, когда кнопка будет изначально размещена. Повторно используйте его при редактировании сообщения.    
+**:return:** возвращает подготовленную кнопку для последующего формирования массива    
+
 ### send_buttons(text, buttons, chat_id):
 Send buttons to specific chat_id by post request  
 Отправляет кнопки (количество, рядность и функционал определяются параметром buttons) в соответствующий чат  
@@ -649,7 +661,7 @@ Send reply message specific chat_id by post request
 
 ### token_upload_content(type, content, content_name=None):
 https://dev.tamtam.chat/#operation/sendMessage  
-Вспомогательная функция получения Tokena для загрузки контента в ТамТам  
+Вспомогательная функция получения токена для загрузки контента в ТамТам  
 **:param type:** тип контента ('audio', 'video', 'file', 'photo')  
 **:param content:** имя файла или полный путь доступный боту на машине где он запущен (например 'movie.mp4')  
 **:param content_name:** Имя с которым будет загружен файл  
@@ -679,18 +691,41 @@ https://dev.tamtam.chat/#operation/answerOnCallback
 **:param notify:** если false, то участники чата не получат уведомление (по умолчанию true)  
 **:return update:** результат POST запроса  
 
+### get_attach_type(update):
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
+**:param update:** результат работы метода get_updates  
+**:return att_type:** возвращает, если это возможно, значение поля 'type' созданного или пересланного контента из 'body' или 'link' соответственно, при неудаче 'type' = None  
+
+### get_session_id(update):
+https://dev.tamtam.chat/#operation/getUpdates  
+Метод получения значения session_id в режиме конструктора.  
+**:param update:** результат работы метода get_updates  
+**:return:** возвращает session_id для дальнейшей работы с данным сеансом конструктора    
+
 ### get_construct_text(update):
 https://dev.tamtam.chat/#operation/getUpdates  
 Получение текста набранного пользователем в режиме конструктора.  
 **:param update:** результат работы метода get_updates  
 **:return:** возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора  
         
-### get_session_id(update):
+### get_construct_payload(update):  
 https://dev.tamtam.chat/#operation/getUpdates  
-Метод получения значения session_id в режиме конструктора.  
+Получение значения кнопки нажатой пользователем в режиме конструктора  
 **:param update:** результат работы метода get_updates  
-**:return:** возвращает session_id для дальнейшей работы с данным сеансом конструктора  
-        
+**:return:** возвращает, если это возможно, значение поля 'payload' в режиме конструктора  
+
+### get_construct_attach(update):  
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение дополнительного контента (фото, видео и т.п.) к сообщению набранному пользователем в режиме конструктора  
+**:param update:** результат работы метода get_updates  
+**:return:** возвращает, если это возможно, значение поля 'attachments', сообщения набранного пользователем в режиме конструктора  
+
+### get_construct_attach_type(update):  
+Получение типа вложения (file, contact, share и т.п.) к сообщению формируемому в боте-конструкторе  
+**:param update:** результат работы метода get_updates  
+**:return:** возвращает, если это возможно, значение поля 'type' первого контента переданного боту в режиме коструктора  
+
 ### send_construct_message(session_id, hint, text=None, attachments=None, link=None, notify=None, allow_user_input=True, data=None, buttons=None, placeholder=None):
 https://dev.tamtam.chat/#operation/construct  
 Метод отправки результата работы конструктора в чат.  
@@ -706,14 +741,3 @@ https://dev.tamtam.chat/#operation/construct
 **:param placeholder:** текст над техническими кнопками  
 **:return:** результат POST запроса   
 
-### get_attach_type(update):
-https://dev.tamtam.chat/#operation/getUpdates  
-Получение типа вложения (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
-**:param update:** результат работы метода get_updates  
-**:return att_type:** возвращает, если это возможно, значение поля 'type' созданного или пересланного контента из 'body' или 'link' соответственно, при неудаче 'type' = None  
-   
-### get_construct_payload(update):  
-https://dev.tamtam.chat/#operation/getUpdates  
-Получение значения кнопки нажатой пользователем в режиме конструктора  
-**:param update:** результат работы метода get_updates  
-**:return:** возвращает, если это возможно, значение поля 'payload' в режиме конструктора  
