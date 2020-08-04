@@ -1154,7 +1154,6 @@ class BotHandler:
                 if 'code' in upd.keys():
                     flag = upd.get('code')
                     logger.info('ждем 5 сек...')
-                    time.sleep(5)
                 else:
                     flag = None
                     if response.status_code == 200:
