@@ -793,7 +793,7 @@ class BotHandler:
                  если событие - "удаление сообщения", то user_id = None
         """
         user_id = None
-        if update:
+        """if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
             else:
@@ -804,12 +804,42 @@ class BotHandler:
                 user_id = upd['user']['user_id']
             elif 'callback' in upd.keys():
                 user_id = upd['callback']['user']['user_id']
+            elif 'session_id' in upd.keys():
+                user_id = upd['user']['user_id']
             else:
                 upd = upd['message']
                 if 'sender' in upd.keys():
                     user_id = upd['sender']['user_id']
                 else:
                     user_id = upd['recipient']['user_id']
+        """
+        if update:
+            type = self.get_update_type(update)
+            if 'updates' in update.keys():
+                update = update['updates'][0]
+            if type == 'message_chat_created':
+                user_id = None
+            elif type == 'message_edited':
+                try:
+                    user_id = update['message']['sender']['user_id']
+                except Exception as e:
+                    logger.info('get_user_id (message_edited) sender is None: %s', e)
+            elif type == 'message_constructed':
+                try:
+                    user_id = update['message']['sender']['user_id']
+                except Exception as e:
+                    logger.info('get_user_id (message_constracted) is None: %s', e)
+            elif type == 'message_removed':
+                user_id = update[user_id]
+            elif type == 'message_callback':
+                user_id = update['callback']['user']['user_id']
+            elif type:
+            # if type == 'message_created' or type == 'message_construction_request' or type == 'bot_added' or type
+            # == 'bot_removed' or type == 'user_added' or type == 'user_removed' or type == '':
+                try:
+                    user_id = update['user']['user_id']
+                except Exception as e:
+                    logger.error('get_user_id: %s', e)
         return user_id
 
     def get_link_user_id(self, update):
