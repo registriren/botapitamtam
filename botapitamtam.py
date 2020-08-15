@@ -656,35 +656,40 @@ class BotHandler:
     def get_attachments(self, update):
         """
         Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту
-        API = subscriptions/Get updates/[updates][0][message][link][message][attachment]
-           или = subscriptions/Get updates/[updates][0][message][body][attachment]
         :param update: результат работы метода get_updates
-        :return attachments: возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента
-                 из 'body' или 'link' соответственно, при неудаче 'attachments' = None
+        :return attachments: возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента,
+        при неудаче 'attachments' = None
         """
         attachments = None
         if update:
             type = self.get_update_type(update)
             if 'updates' in update.keys():
                 update = update['updates'][0]
-            if type == 'message_created':
+            if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
                     attachments = update['message']['body']['attachments']
                 except Exception as e:
-                    logger.info('get_attachments: %s', e)
+                    #logger.info('get_attachments cod: %s', e)
                     try:
                         attachments = update['message']['link']['message']['attachments']
                     except Exception as e:
                         logger.error('get_attachments: %s', e)
                         pass
+            elif type == 'message_construction_request':
+                try:
+                    upd = update['input']
+                    if 'messages' in upd.keys():
+                        if len(upd['messages']) >> 0:
+                            attachments = upd['messages'][0]['attachments']
+                except Exception as e:
+                    logger.error('get_attachments in construct: %s', e)
+                    pass
         return attachments
 
     def get_url(self, update):
         """
-        Получение ссылки отправленного или пересланного боту файла
-        API = subscriptions/Get updates/[updates][0][message][link][message][attachment][url]
-           или = subscriptions/Get updates/[updates][0][message][body][attachment][url]
-        :param update = результат работы метода get_update
+        Получение ссылки отправленного или пересланного боту файла или готовой ссылки
+        :param update: = результат работы метода get_update
         :return: возвращает, если это возможно, значение поля 'url' созданного или пересланного файла
                  из 'body' или 'link' соответственно, при неудаче 'url' = None
         """
@@ -739,27 +744,30 @@ class BotHandler:
                         update = update['chats'][0]
                         chat_id = update.get('chat_id')
                 else:
-                    logger.error("Error get chat_id: {}".format(response.status_code))
+                    logger.error("Error get_chat_id: {}".format(response.status_code))
             except Exception as e:
-                logger.error("Error connect get chat id: %s.", e)
+                logger.error("Error connect get_chat_id: %s.", e)
                 chat_id = None
         else:
-            try:
-                if 'updates' in update.keys():
-                    upd = update['updates'][0]
-                else:
-                    upd = update
-                if 'message_id' in upd.keys():
-                    chat_id = None
-                elif 'chat_id' in upd.keys():
-                    chat_id = upd.get('chat_id')
-                elif 'message' in upd.keys():
-                    upd = upd.get('message')
-                    if 'recipient' in upd.keys():
-                        chat_id = upd.get('recipient').get('chat_id')
-            except Exception as e:
-                logger.error("Error get_chat_id recipient.chat_id - None?: %s.", e)
+            type = self.get_update_type(update)
+            if 'updates' in update.keys():
+                update = update['updates'][0]
+            if type == 'message_edited' or type == 'message_callback' or type == 'message_created':
+                try:
+                    chat_id = update['message']['recipient']['chat_id']
+                except Exception as e:
+                    logger.info('get_chat_id (message_edited) sender is None: %s', e)
+            elif type == 'message_chat_created':
+                chat_id = update['chat']['chat_id']
+            elif type == 'message_constructed' or type == 'message_construction_request':
                 chat_id = None
+            elif type:
+                try:
+                    chat_id = update[chat_id]
+                except Exception as e:
+                    logger.error('get_chat_id: %s', e)
+                # if type == 'message_created' or type == 'message_construction_request' or type == 'bot_added' or type
+                # == 'bot_removed' or type == 'user_added' or type == 'user_removed' or type == '':
         return chat_id
 
     def get_link_chat_id(self, update):
@@ -1053,6 +1061,7 @@ class BotHandler:
 
     def get_message_id(self, update):
         """
+        https://dev.tamtam.chat/#operation/getUpdates
         Получение message_id отправленного или пересланного боту
         API = subscriptions/Get updates/[updates][0][message][link][message][mid] (type = 'forward')
            или = subscriptions/Get updates/[updates][0][message][body][mid]
@@ -1063,14 +1072,32 @@ class BotHandler:
         if update:
             if 'updates' in update.keys():
                 upd = update['updates'][0]
-                type = self.get_update_type(update)
-                if type == 'message_created' or type == 'message_callback' or type == 'message_constructed':
-                    mid = upd.get('message').get('body').get('mid')
             else:
                 upd = update
-                if 'message' in upd.keys():
-                    mid = upd.get('message').get('body').get('mid')
+            type = self.get_update_type(update)
+            if type == 'message_created' or type == 'message_callback' or type == 'message_constructed':
+                mid = upd.get('message').get('body').get('mid')
+            elif type == 'message_chat_created' or type == 'message_removed':
+                mid = upd['message_id']
         return mid
+
+    def get_start_payload(self, update):
+        """
+        https://dev.tamtam.chat/#operation/getUpdates
+        Получение начальной полезной нагрузки при открытии чата, созданого ботом в режиме конструтора
+        :param update: результат работы метода get_updates()
+        :return: возвращает, если это возможно, значение поля 'start_payload'
+        """
+        st_payload = None
+        if update:
+            if 'updates' in update.keys():
+                upd = update['updates'][0]
+            else:
+                upd = update
+            type = self.get_update_type(update)
+            if type == 'message_chat_created':
+                st_payload = upd['start_payload']
+        return st_payload
 
     def get_construct_text(self, update):
         """
