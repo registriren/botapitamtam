@@ -123,10 +123,7 @@ if __name__ == '__main__':
 - [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.  
 ### Методы работы с режимом конструктора
 - [get_session_id](#get_session_idupdate) - получает значение session_id в режиме конструктора.  
-- [get_construct_text](#get_construct_textupdate) - получает текст набранный пользователем в режиме конструктора.  
-- [get_construct_payload](#get_construct_payloadupdate) - получает значение нажатой кнопки в режиме конструктора.  
-- [get_construct_attach](#get_construct_attachupdate) - получает контент (фото, видео и т.п.) добавленный пользователем к сообщению в режиме конструктора.  
-- [get_construct_attach_type](#get_construct_attach_typeupdate) - получает тип первого контента (фото, видео и т.п.) добавленного пользователем к сообщению в режиме конструктора.  
+- [get_start_payload](#get_start_payloadupdate) - получает данные для использования в чате, созданном ботом в режиме конструктора.  
 - [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
 ### Методы обслуживания ботов и чатов
 - [edit_bot_info](#edit_bot_infoname-username-descriptionnone-commandsnone-photonone-photo_urlnone) - редактирует информацию о текущем боте.
@@ -343,8 +340,6 @@ https://botapi.tamtam.chat/updates
 ### get_attachments(update):
 https://botapi.tamtam.chat/updates  
 Получение всех вложений (file, contact, share и т.п.) к сообщению отправленному или пересланному боту  
-API = subscriptions/Get updates/[updates][0][message][link][message][attachment]  
-или = subscriptions/Get updates/[updates][0][message][body][attachment]  
 **:param update:** результат работы метода get_updates  
 **:return attachments:** возвращает, если это возможно, значение поля 'attachments' созданного или пересланного контента, при неудаче 'attachments' = None 
                
@@ -705,26 +700,37 @@ https://dev.tamtam.chat/#operation/getUpdates
 
 ### get_construct_text(update):
 https://dev.tamtam.chat/#operation/getUpdates  
+(Метод устарел, необходимо использовать [get_text()](#get_textupdate))  
 Получение текста набранного пользователем в режиме конструктора.  
 **:param update:** результат работы метода get_updates  
 **:return:** возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора  
         
 ### get_construct_payload(update):  
 https://dev.tamtam.chat/#operation/getUpdates  
+(Метод устарел, необходимо использовать [get_payload()](#get_payloadupdate))  
 Получение значения кнопки нажатой пользователем в режиме конструктора  
 **:param update:** результат работы метода get_updates  
 **:return:** возвращает, если это возможно, значение поля 'payload' в режиме конструктора  
 
 ### get_construct_attach(update):  
+(Метод устарел, необходимо использовать [get_attachments()](#get_attachmentsupdate))  
 https://dev.tamtam.chat/#operation/getUpdates  
 Получение дополнительного контента (фото, видео и т.п.) к сообщению набранному пользователем в режиме конструктора  
 **:param update:** результат работы метода get_updates  
 **:return:** возвращает, если это возможно, значение поля 'attachments', сообщения набранного пользователем в режиме конструктора  
 
 ### get_construct_attach_type(update):  
+(Метод устарел, необходимо использовать [get_attach_type()](#get_attach_typeupdate))  
+https://dev.tamtam.chat/#operation/getUpdates  
 Получение типа вложения (file, contact, share и т.п.) к сообщению формируемому в боте-конструкторе  
 **:param update:** результат работы метода get_updates  
 **:return:** возвращает, если это возможно, значение поля 'type' первого контента переданного боту в режиме коструктора  
+
+### get_start_payload(update):  
+https://dev.tamtam.chat/#operation/getUpdates  
+Получение начальной полезной нагрузки при открытии чата, созданого ботом в режиме конструтора. С помощью данного метода можно передать данные боту, которые он сможет получить после активации чата (тип message_chat_created), созданного в режиме конструктора  
+**:param update:** результат работы метода get_updates()  
+**:return:** возвращает, если это возможно, значение поля 'start_payload'  
 
 ### send_construct_message(session_id, hint, text=None, attachments=None, link=None, notify=None, allow_user_input=True, data=None, buttons=None, placeholder=None):
 https://dev.tamtam.chat/#operation/construct  

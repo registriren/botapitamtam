@@ -630,27 +630,47 @@ class BotHandler:
 
     def get_text(self, update):
         """
-        Получение текста отправленного или пересланного боту
-        API = subscriptions/Get updates/[updates][0][message][link][message][text] (type = 'forward')
-           или = subscriptions/Get updates/[updates][0][message][body][text]
-        :param update = результат работы метода get_update
+        Получение текста отправленного или пересланного боту в том числе в режиме конструктора
+        :param update: результат работы метода get_updates()
         :return: возвращает, если это возможно, значение поля 'text' созданного или пересланного сообщения
                  из 'body' или 'link'-'forward' соответственно, при неудаче 'text' = None
         """
         text = None
         if update:
+            type = self.get_update_type(update)
             if 'updates' in update.keys():
                 update = update['updates'][0]
-            try:
-                text = update['message']['body']['text']
-            except Exception as e:
-                logger.info("get_text None, may be your code is not optimized, not key: %s.", e)
-            if not text:
+            if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
-                    text = update['message']['link']['message']['text']
+                    text = update['message']['body']['text']
+                except Exception:
+                    # logger.info('get_attachments cod: %s', e)
+                    try:
+                        text = update['message']['link']['message']['text']
+                    except Exception as e:
+                        logger.error('get_text None: %s', e)
+                        pass
+            elif type == 'message_construction_request':
+                try:
+                    upd = update['input']
+                    if 'messages' in upd.keys():
+                        if len(upd['messages']) >> 0:
+                            text = upd['messages'][0]['text']
                 except Exception as e:
-                    logger.error('get_text: %s', e)
+                    logger.error('get_text in construct: %s', e)
                     pass
+            elif type == 'message_chat_created':
+                upd = update['chat']
+                if 'pinned_message' in upd.keys():
+                    try:
+                        text = upd['pinned_message']['body']['text']
+                    except Exception:
+                        # logger.info('get_attachments cod: %s', e)
+                        try:
+                            text = upd['pinned_message']['link']['message']['text']
+                        except Exception as e:
+                            logger.error('get_text pinned_messsage None: %s', e)
+                            pass
         return text
 
     def get_attachments(self, update):
@@ -668,12 +688,12 @@ class BotHandler:
             if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
                     attachments = update['message']['body']['attachments']
-                except Exception as e:
+                except Exception:
                     #logger.info('get_attachments cod: %s', e)
                     try:
                         attachments = update['message']['link']['message']['attachments']
                     except Exception as e:
-                        logger.error('get_attachments: %s', e)
+                        logger.error('get_attachments None: %s', e)
                         pass
             elif type == 'message_construction_request':
                 try:
@@ -1004,8 +1024,7 @@ class BotHandler:
 
     def get_payload(self, update):
         """
-        Метод получения значения нажатой кнопки, заданного в send_buttons
-        API = subscriptions/Get updates/[updates][0][callback][payload]
+        Метод получения значения нажатой кнопки, заданного в send_buttons, в том числе кнопок в режиме конструктора
         :param update: результат работы метода get_update
         :return: возвращает результат нажатия кнопки или None
         """
@@ -1019,6 +1038,10 @@ class BotHandler:
             if type == 'message_callback':
                 upd = upd.get('callback')
                 if 'payload' in upd.keys():
+                    payload = upd.get('payload')
+            elif type == 'message_construction_request':
+                upd = upd.get('input')
+                if upd.get('input_type') == 'callback':
                     payload = upd.get('payload')
         return payload
 
@@ -1100,84 +1123,19 @@ class BotHandler:
         return st_payload
 
     def get_construct_text(self, update):
-        """
-        https://dev.tamtam.chat/#operation/getUpdates
-        Получение текста набранного пользователем в режиме конструктора.
-        :param update = результат работы метода get_updates
-        :return: возвращает, если это возможно, значение поля 'text', сообщения набранного пользователем в режиме конструктора
-        """
-        text = None
-        if update:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            type = self.get_update_type(update)
-            if type == 'message_construction_request':
-                upd = upd.get('input')
-                if upd.get('input_type') == 'message':
-                    upd = upd.get('messages')
-                    if upd:
-                        upd = upd[0]
-                        text = upd.get('text')
+        text = self.get_text(update)
         return text
 
     def get_construct_attach(self, update):
-        """
-        https://dev.tamtam.chat/#operation/getUpdates
-        Получение дополнительного контента (фото, видео и т.п.) к сообщению набранному пользователем в режиме конструктора.
-        :param update = результат работы метода get_updates
-        :return: возвращает, если это возможно, значение поля 'attachments', сообщения набранного пользователем в режиме конструктора
-        """
-        attach = None
-        if update:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            type = self.get_update_type(update)
-            if type == 'message_construction_request':
-                upd = upd.get('input')
-                if upd.get('input_type') == 'message':
-                    upd = upd.get('messages')
-                    if upd:
-                        upd = upd[0]
-                        attach = upd.get('attachments')
+        attach = self.get_attachments(update)
         return attach
 
     def get_construct_attach_type(self, update):
-        """
-        Получение типа вложения (file, contact, share и т.п.) к сообщению формируемому в боте-конструкторе
-        :param update: результат работы метода get_updates
-        :return: возвращает, если это возможно, значение поля 'type' первого контента переданного боту в режиме коструктора
-        """
-        # att_type = None
-        attach = self.get_construct_attach(update)
-        try:
-            att_type = attach[0]['type']
-        except Exception as e:
-            logger.error('get_construct_attach_type: %s', e)
-            att_type = None
+        att_type = self.get_attach_type(update)
         return att_type
 
     def get_construct_payload(self, update):
-        """
-        https://dev.tamtam.chat/#operation/getUpdates
-        Получение значения кнопки нажатой пользователем в режиме конструктора.
-        :param update = результат работы метода get_updates
-        :return: возвращает, если это возможно, значение поля 'payload' в режиме конструктора
-        """
-        payload = None
-        if update:
-            if 'updates' in update.keys():
-                upd = update['updates'][0]
-            else:
-                upd = update
-            type = self.get_update_type(update)
-            if type == 'message_construction_request':
-                upd = upd.get('input')
-                if upd.get('input_type') == 'callback':
-                    payload = upd.get('payload')
+        payload = self.get_payload(update)
         return payload
 
     def edit_message(self, message_id, text, attachments=None, link=None, notify=True):
