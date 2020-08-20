@@ -644,7 +644,9 @@ class BotHandler:
                 try:
                     text = update['message']['body']['text']
                 except Exception:
-                    # logger.info('get_attachments cod: %s', e)
+                    pass
+                    # logger.info('get_text none: %s', e)
+                if not text:
                     try:
                         text = update['message']['link']['message']['text']
                     except Exception as e:
@@ -665,7 +667,9 @@ class BotHandler:
                     try:
                         text = upd['pinned_message']['body']['text']
                     except Exception:
-                        # logger.info('get_attachments cod: %s', e)
+                        pass
+                        # logger.info('get_text: %s', e)
+                    if not text:
                         try:
                             text = upd['pinned_message']['link']['message']['text']
                         except Exception as e:
@@ -693,7 +697,7 @@ class BotHandler:
                     try:
                         attachments = update['message']['link']['message']['attachments']
                     except Exception as e:
-                        logger.error('get_attachments None: %s', e)
+                        logger.info('get_attachments None: %s', e)
                         pass
             elif type == 'message_construction_request':
                 try:
@@ -732,13 +736,14 @@ class BotHandler:
         :return att_type: возвращает, если это возможно, значение поля 'type' созданного или пересланного контента
                  из 'body' или 'link' соответственно, при неудаче 'type' = None
         """
-        # att_type = None
+        att_type = None
         attach = self.get_attachments(update)
-        try:
-            att_type = attach[0]['type']
-        except Exception as e:
-            logger.error('get_attach_type: %s', e)
-            att_type = None
+        if attach:
+            try:
+                att_type = attach[0]['type']
+            except Exception as e:
+                logger.error('get_attach_type: %s', e)
+                att_type = None
         return att_type
 
     def get_chat_id(self, update=None):
