@@ -28,6 +28,7 @@ class BotHandler:
         https://dev.tamtam.chat/#operation/getUpdates
         API = subscriptions/Get updates/
         """
+        update = {}
         method = 'updates'
         params = {
             "marker": self.marker,
@@ -37,11 +38,15 @@ class BotHandler:
             "access_token": self.token
         }
         try:
-            response = requests.get(self.url + method, params)
+            response = requests.get(self.url + method, params, timeout=60)
             update = response.json()
-        except Exception as e:
-            logger.error("Error get updates: %s.", e)
-            update = {}
+        except requests.exceptions.ReadTimeout:
+            logger.info('get_updates ReadTimeout')
+        except requests.exceptions.ConnectionError:
+            logger.error('get_updates ConnectionError')
+            time.sleep(1)
+        except requests.exceptions.RequestException as e:
+            logger.error('get_updates General Error: {}'.format(e))
         if 'updates' in update.keys():
             if len(update['updates']) != 0:
                 self.mark_seen(chat_id=self.get_chat_id(update))
