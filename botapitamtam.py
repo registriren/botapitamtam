@@ -788,7 +788,7 @@ class BotHandler:
                 chat_id = None
             elif type:
                 try:
-                    chat_id = update[chat_id]
+                    chat_id = update['chat_id']
                 except Exception as e:
                     logger.error('get_chat_id: %s', e)
                 # if type == 'message_created' or type == 'message_construction_request' or type == 'bot_added' or type
@@ -861,9 +861,9 @@ class BotHandler:
                 try:
                     user_id = update['message']['sender']['user_id']
                 except Exception as e:
-                    logger.info('get_user_id (message_constracted) is None: %s', e)
+                    logger.info('get_user_id (message_constructed) is None: %s', e)
             elif type == 'message_removed':
-                user_id = update[user_id]
+                user_id = update['user_id']
             elif type == 'message_callback':
                 user_id = update['callback']['user']['user_id']
             elif type:
