@@ -1,4 +1,4 @@
-# Version 0.3.0.4
+# Version 0.3.0.5
 
 import json
 import logging
@@ -857,23 +857,26 @@ class BotHandler:
                 update = update['updates'][0]
             if type == 'message_chat_created':
                 user_id = None
-            elif type == 'message_edited':
+            elif type == 'message_edited' or type == 'message_created' or type == 'message_constructed':
                 try:
                     user_id = update['message']['sender']['user_id']
                 except Exception as e:
-                    logger.info('get_user_id (message_edited) sender is None: %s', e)
-            elif type == 'message_constructed':
+                    logger.info('get_user_id (message_created...) sender is None: %s', e)
+            elif type == 'message_chat_created':
                 try:
-                    user_id = update['message']['sender']['user_id']
+                    user_id = update['chat']['dialog_with_user']['user_id']
                 except Exception as e:
-                    logger.info('get_user_id (message_constructed) is None: %s', e)
+                    logger.info('get_user_id (message_chat_created) is None: %s', e)
+                if not user_id:
+                    try:
+                        user_id = update['chat']['pinned_message']['sender']['user_id']
+                    except Exception as e:
+                        logger.info('get_user_id (message_chat_created - pinned) is None: %s', e)
             elif type == 'message_removed':
                 user_id = update['user_id']
             elif type == 'message_callback':
                 user_id = update['callback']['user']['user_id']
             elif type:
-            # if type == 'message_created' or type == 'message_construction_request' or type == 'bot_added' or type
-            # == 'bot_removed' or type == 'user_added' or type == 'user_removed' or type == '':
                 try:
                     user_id = update['user']['user_id']
                 except Exception as e:
