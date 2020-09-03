@@ -1657,7 +1657,7 @@ class BotHandler:
         update = self.send_message(text, chat_id, attachments=attach)
         return update
 
-    def send_forward_message(self, text, mid, chat_id):
+    def send_forward_message(self, text, mid, chat_id, user_id=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Send forward message specific chat_id by post request
@@ -1665,11 +1665,12 @@ class BotHandler:
         :param text: текст к пересылаемому сообщению или None
         :param mid: message_id пересылаемого сообщения
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
+        :param user_id: id пользователя, которому пересылается сообщение
         :return update: response | ответ на POST message в соответствии с API
         """
         # self.typing_on(chat_id)
         link = self.link_forward(mid)
-        update = self.send_message(text, chat_id, link=link)
+        update = self.send_message(text, chat_id, user_id, link=link)
         return update
 
     def link_reply(self, mid):
