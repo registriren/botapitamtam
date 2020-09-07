@@ -1111,7 +1111,7 @@ class BotHandler:
             else:
                 upd = update
             type = self.get_update_type(update)
-            if type == 'message_created' or type == 'message_callback' or type == 'message_constructed':
+            if type == None or type == 'message_created' or type == 'message_callback' or type == 'message_constructed':
                 mid = upd.get('message').get('body').get('mid')
             elif type == 'message_chat_created' or type == 'message_removed':
                 mid = upd['message_id']
