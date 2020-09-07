@@ -1115,6 +1115,7 @@ class BotHandler:
                 mid = upd.get('message').get('body').get('mid')
             elif type == 'message_chat_created' or type == 'message_removed':
                 mid = upd['message_id']
+        logger.info('mid for type - {}'.format(type))
         return mid
 
     def get_start_payload(self, update):
