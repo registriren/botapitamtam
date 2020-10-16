@@ -1,4 +1,4 @@
-# Version 0.3.0.5
+# Version 0.3.0.6
 
 import json
 import logging
@@ -1111,9 +1111,13 @@ class BotHandler:
             else:
                 upd = update
             type = self.get_update_type(update)
-            if type == 'message_created' or type == 'message_callback' or type == 'message_constructed':
-                mid = upd.get('message').get('body').get('mid')
-            elif type == 'message_chat_created' or type == 'message_removed':
+            #if type == 'message_created' or type == 'message_callback' or type == 'message_edited' or type == 'message_constructed':
+            if 'message' in upd.keys():
+                try:
+                    mid = upd.get('message').get('body').get('mid')
+                except Exception as e:
+                    logger.info('get_message_id: {}'.format(e))
+            elif 'message_id' in upd.keys(): # type == 'message_chat_created' or type == 'message_removed':
                 mid = upd['message_id']
         return mid
 
