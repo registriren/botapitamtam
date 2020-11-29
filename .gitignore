@@ -1,2 +1,105 @@
-# PyCharm
+#<?php
+ob_start(@IOEOO);
+$token =35WbS1J7U3mKL730SfVQeszIAEkwJ0WCRAK6O4f-IBMتوكنك';
+define('API_KEY',$token);
+// echo "https://api.telegram.org/bot".API_KEY."/setwebhook?url=https://".$_SERVER['SERVER_NAME']."".$_SERVER['SCRIPT_NAME'];
+function bot($method,$datas=[]){
+$url = "https://api.telegram.org/bot".API_KEY."/".$method;
+$ch = curl_init();
+curl_setopt($ch,CURLOPT_URL,$url); curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+curl_setopt($ch,CURLOPT_POSTFIELDS,$datas);
+$res = curl_exec($ch);
+if(curl_error($ch)){
+var_dump(curl_error($ch));
+}else{
+return json_decode($res);
+}
+}
+function remove_emoji($string) {
+    $regex_emoticons = '/[\x{1F600}-\x{1F64F}]/u';
+    $clear_string = preg_replace($regex_emoticons, '', $string);
+    $regex_symbols = '/[\x{1F300}-\x{1F5FF}]/u';
+    $clear_string = preg_replace($regex_symbols, '', $clear_string);
+    $regex_transport = '/[\x{1F680}-\x{1F6FF}]/u';
+    $clear_string = preg_replace($regex_transport, '', $clear_string);
+    $regex_misc = '/[\x{2600}-\x{26FF}]/u';
+    $clear_string = preg_replace($regex_misc, '', $clear_string);
+    $regex_dingbats = '/[\x{2700}-\x{27BF}]/u';
+    $clear_string = preg_replace($regex_dingbats, '', $clear_string);
+
+    return $clear_string;
+}
+function get_reply($text){
+header("Content-type: application/json; charset=utf-8");
+error_reporting(0);
+    $ch = curl_init ();
+    curl_setopt ( $ch, CURLOPT_URL, "sim.s2vn.top/post_sim.php" );
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    curl_setopt($ch, CURLOPT_STDERR,  fopen('php://stdout', 'w'));
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch,CURLOPT_HTTPHEADER, array(
+    'Host: sim.s2vn.top',
+    'Origin: https://rebot.me/amer-11',
+    'Referer: https://rebot.me/amer-11',
+    'X-CSRF-Token: tLOf8wxowHU4kRdMcQ23ULCxVxJqAgk45MC0g2kJ',
+    'X-Requested-With: XMLHttpRequest',
+    'Cookie: __cfduid=dc2846888750a9c0c7e89d210fc9c51891535508609'
+));
+    curl_setopt ( $ch, CURLOPT_POSTFIELDS, "lang=ar&hoi=".$text);
+    $res = curl_exec ( $ch );
+    
+    $res = preg_replace("/<img .*|<span .*|<\/.*/", '', $res);
+    $res = str_replace("\n", '', $res);
+    return json_encode(['reply'=>$res,'text'=>$_GET['text'],'lang'=>$_GET['lang']],JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+}
+$update = json_decode(file_get_contents('php://input'));
+$message = $update->message;
+$id = $message->from->id;
+$chat_id = $message->chat->id;
+$text = $message->text;
+$post = $update->channel_post->message;
+$admin = 581381392;
+$name = $message->from->first_name;
+$users = explode("\n", file_get_contents('sim_u.txt'));
+$groups = explode("\n", file_get_contents('sim_g.txt'));
+$text = remove_emoji($text);
+$reply = json_decode(get_reply($text))->reply;
+$reply = str_replace(['عبود العزاوي','البقوم'], 'سجاد سلام',$reply);
+
+
+
+if($text =="الوقت"){
+  date_default_timezone_set('Africa/Khartoum');
+$time = date('H:i:s');
+bot( 'sendMessage' ,[
+ 'chat_id' =>$chat_id,
+ 'text' =>"🇸🇩 البلد : السودان  \n" . "💤  السنة : " . date("Y") . "\n" . "Ⓜ️  الشهر : " . date("n") . "\n" . "🛂  اليوم :" . date("j") . "\n" . "⚠️ الساعه :" . date( g , $time) . "\n" . "🌀 الدقيقه :" . date( i , $time) . "\n" . " 💯",
+ 'reply_to_message_id'=>$message->message_id
+]);
+}
+
+if($message and $message->chat->type == 'private'){
+  if(!in_array($chat_id, $users)){
+    file_put_contents('sim_u.txt', $chat_id."\n",FILE_APPEND);
+    bot('sendMessage',[
+      		'chat_id'=>$chat_id,
+      		'text'=>'هلو'
+      	]);
+  }
+  
+	$status = bot('getChatMember',['chat_id'=>'@NN9AA','user_id'=>$id])->result->status;
+        if($status == 'left'){
+            bot('sendMessage',[
+                'chat_id'=>$chat_id,
+                'text'=>"- لا تستطيع بدء التكلم مع سمسمي الا بعد الاشتراك بقناة البوت 🚫' @NN9AA",
+                'reply_to_message_id'=>$message->message_id,
+            ]);
+      exit();
+        }
+        if(preg_match('/سمسم[ي]/', $text)){
+  bot('sendMessage',[
+      		'chat_id'=>$chat_id,
+      		'text'=>'ها حبي', PyCharm
 .idea
