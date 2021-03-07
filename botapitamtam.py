@@ -1,4 +1,4 @@
-# Version 0.3.0.6
+# Version 0.3.0.7
 
 import json
 import logging
@@ -46,7 +46,9 @@ class BotHandler:
             logger.error('get_updates ConnectionError')
             time.sleep(1)
         except requests.exceptions.RequestException as e:
-            logger.error('get_updates General Error: {}'.format(e))
+            logger.error('get_updates Request Error: {}'.format(e))
+        except Exception as e:
+            logger.error(('get_updates General Error: {}'.format(e)))
         if 'updates' in update.keys():
             if len(update['updates']) != 0:
                 self.mark_seen(chat_id=self.get_chat_id(update))
@@ -1458,7 +1460,7 @@ class BotHandler:
 
     def button_chat(self, text, chat_title, chat_description=None, start_payload=None, uuid=None):
         """
-        Подготавливает кнопку с реакцией callback
+        Подготавливает кнопку создания чата в режиме конструктора
         :param text: подпись кнопки
         :param chat_title: название создаваемого чата
         :param chat_description: описание чата
