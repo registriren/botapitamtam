@@ -20,6 +20,6 @@ bot.edit_bot_info(name='Супер бот',  # если для имени не �
                   username='superbot01',
                   description='Описание бота',
                   commands=commands,
-                  photo=photo,
-                  photo_url=None)
+                  photo=photo
+                  )
 

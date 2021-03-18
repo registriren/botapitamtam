@@ -127,7 +127,7 @@ if __name__ == '__main__':
 - [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
 ### Методы обслуживания ботов и чатов
 - [edit_bot_info](#edit_bot_infoname-username-descriptionnone-commandsnone-photonone-photo_urlnone) - редактирует информацию о текущем боте.
-- [edit_chat_info](#edit_chat_infochat_id-icon-title-icon_urlnone) - редактирует информацию о чате.
+- [edit_chat_info](#edit_chat_infochat_id-iconnone-icon_urlnone-titlenone-pinnone-notifytrue) - редактирует информацию о чате.
 - [leave_chat](#leave_chatchat_id) - удаляет бота из текущего чата.
 - [remove_member](#remove_memberchat_id-user_id) - удаляет пользователя из чата.
 ### Вспомогательные методы
@@ -289,14 +289,16 @@ Removes bot from chat members.
 **:return:** возвращает результат DELETE запроса
 
 
-### edit_chat_info(chat_id, icon, title, icon_url=None):
+### edit_chat_info(chat_id, icon=None, icon_url=None, title=None, pin=None, notify=True):
 https://dev.tamtam.chat/#operation/editChat  
 Редактирование информации чата: заголовок и значок  
-Edits chat info: title, icon  
+Edits chat info: title, icon, pin  
 **:param chat_id:** идентификатор изменяемого чата    
 **:param icon:** файл значка    
 **:param icon_url:** ссылка на изображение  
 **:param title:** заголовок    
+**:param pin:** указать message_id закрепляемого сообщения  
+**:param notify:** уведомление участников об изменениях в информации чата  
 **:return:** возвращает информацию о параметрах измененного чата  
        
 ### get_members(chat_id, user_ids, marker=None, count=20):

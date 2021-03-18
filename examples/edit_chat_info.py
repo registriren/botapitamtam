@@ -17,8 +17,8 @@ def main():
                     updates):  # формируем цикл на случай если updates вернул список из нескольких событий
                 chat_id = bot.get_chat_id(last_update)
                 icon = 'icon.jpg'  # путь до файла.
-                icon_url = ''  # ссылка на изображение.
-                bot.edit_chat_info(chat_id, icon=icon, title='Заголовок!', icon_url=None)
+                #icon_url = 'http://picture.ru/image45.jpg'  # ссылка на изображение.
+                bot.edit_chat_info(chat_id, icon=icon, title='Заголовок!')
         continue
 
 

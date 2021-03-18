@@ -1,4 +1,4 @@
-# Version 0.3.0.7
+# Version 0.3.0.8
 
 import json
 import logging
@@ -261,7 +261,7 @@ class BotHandler:
         com = {"name": "/{}".format(name), "description": description}
         return com
 
-    def edit_bot_info(self, name, username, description=None, commands=None, photo=None, photo_url=None):
+    def edit_bot_info(self, name, username=None, description=None, commands=None, photo=None, photo_url=None):
         """
         Редактирует текущую информацию о боте. Заполните только те поля, которые вы хотите обновить. Все остальные
         поля останутся нетронутыми.
@@ -279,17 +279,13 @@ class BotHandler:
         :return edit_bot_info: возвращает результат PATCH запроса.
         """
         method = 'me'
-        params = {
-            "access_token": self.token
-        }
-        if photo is not None:
+        params = {"access_token": self.token}
+        photo_res = None
+        if photo:
             photo = self.token_upload_content('image', photo)
-        else:
-            photo = {}
-        photo_res = {
-            "url": photo_url
-        }
-        photo_res.update(photo)
+            photo_res = {"url": photo}
+        elif photo_url:
+            photo_res = {"url": photo_url}
         data = {
             "name": name,
             "username": username,
@@ -403,7 +399,7 @@ class BotHandler:
             if response.status_code == 200:
                 chat_admins = response.json()
             else:
-                # logger.error("Error chat admins: {}".format(response.status_code))
+                logger.error("Error chat admins: {}".format(response.status_code))
                 chat_admins = None
         except Exception as e:
             logger.error("Error connect chat admins: %s.", e)
@@ -460,34 +456,38 @@ class BotHandler:
             leave_chat = None
         return leave_chat
 
-    def edit_chat_info(self, chat_id, icon=None, title=None, icon_url=None):
+    def edit_chat_info(self, chat_id, icon=None, icon_url=None, title=None, pin=None, notify=True):
         """
         https://dev.tamtam.chat/#operation/editChat
-        Редактирование информации чата: заголовок и значок, бот должен иметь соответствующие разрешения
-        Edits chat info: title, icon
+        Редактирование информации чата: заголовок и значок, закреп сообщения, бот должен иметь соответствующие разрешения
+        Edits chat info: title, icon, pin
         API = chats/{chatId}
         :param chat_id: идентификатор изменяемого чата
         :param icon: файл значка
         :param icon_url: ссылка на изображение (имеет приоритет перед файлом значка)
         :param title: заголовок
+        :param pin: указать message_id закрепляемого сообщения
+        :param notify: уведомление об измененииях в информации чата
         :return: возвращает информацию о параметрах измененного чата
         """
         method = 'chats/{}'.format(chat_id)
-        params = {
+        auth = {
             "access_token": self.token
         }
-        if icon is not None:
+        icon_res = None
+        if icon:
             icon = self.token_upload_content('image', icon)
-        else:
-            icon = {}
-        icon_res = {"url": icon_url}
-        icon_res.update(icon)
+            icon_res = {"url": icon}
+        elif icon_url:
+            icon_res = {"url": icon_url}
         data = {
             "icon": icon_res,
-            "title": title
+            "title": title,
+            "pin": pin,
+            "notify": notify
         }
         try:
-            response = requests.patch(self.url + method, params=params, data=json.dumps(data))
+            response = requests.patch(self.url + method, params=auth, data=json.dumps(data))
             if response.status_code == 200:
                 chat_info = response.json()
             else:
@@ -650,15 +650,13 @@ class BotHandler:
             if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
                     text = update['message']['body']['text']
-                except Exception:
-                    pass
-                    # logger.info('get_text none: %s', e)
-                if not text:
+                except Exception as e:
+                    logger.debug('get_text body none: %s', e)
                     try:
                         text = update['message']['link']['message']['text']
                     except Exception as e:
-                        logger.error('get_text None: %s', e)
-                        pass
+                        logger.debug('get_text link none: %s', e)
+                        text = None
             elif type == 'message_construction_request':
                 try:
                     upd = update['input']
@@ -666,22 +664,20 @@ class BotHandler:
                         if len(upd['messages']) >> 0:
                             text = upd['messages'][0]['text']
                 except Exception as e:
-                    logger.error('get_text in construct: %s', e)
-                    pass
+                    logger.debug('get_text in construct none: %s', e)
+                    text = None
             elif type == 'message_chat_created':
                 upd = update['chat']
                 if 'pinned_message' in upd.keys():
                     try:
                         text = upd['pinned_message']['body']['text']
-                    except Exception:
-                        pass
-                        # logger.info('get_text: %s', e)
-                    if not text:
+                    except Exception as e:
+                        logger.debug('get_text pinned_message none: %s', e)
                         try:
                             text = upd['pinned_message']['link']['message']['text']
                         except Exception as e:
-                            logger.error('get_text pinned_messsage None: %s', e)
-                            pass
+                            logger.debug('get_text pinned_messsage link none: %s', e)
+                            text = None
         return text
 
     def get_attachments(self, update):
@@ -699,13 +695,13 @@ class BotHandler:
             if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
                     attachments = update['message']['body']['attachments']
-                except Exception:
-                    #logger.info('get_attachments cod: %s', e)
+                except Exception as e:
+                    logger.debug('get_attachments body none: %s', e)
                     try:
                         attachments = update['message']['link']['message']['attachments']
                     except Exception as e:
-                        logger.info('get_attachments None: %s', e)
-                        pass
+                        logger.debug('get_attachments link None: %s', e)
+                        attachments = None
             elif type == 'message_construction_request':
                 try:
                     upd = update['input']
@@ -713,8 +709,8 @@ class BotHandler:
                         if len(upd['messages']) >> 0:
                             attachments = upd['messages'][0]['attachments']
                 except Exception as e:
-                    logger.error('get_attachments in construct: %s', e)
-                    pass
+                    logger.debug('get_attachments in construct: %s', e)
+                    attachments = None
         return attachments
 
     def get_url(self, update):
