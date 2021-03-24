@@ -1,4 +1,4 @@
-# Version 0.3.0.8
+# Version 0.3.0.9
 
 import json
 import logging
@@ -383,8 +383,8 @@ class BotHandler:
 
     def get_chat_admins(self, chat_id):
         """
-        Возвращает пользователей, участвовавших в чате.
-        Returns users participated in chat.
+        Возвращает всех администраторов чата. Бот должен быть администратором в запрошенной чате.
+        Returns all chat administrators. Bot must be administrator in requested chat.
         https://dev.tamtam.chat/#operation/getAdmins
         API = chats/{chatId}/members
         :param chat_id: идентификатор чата
@@ -399,10 +399,10 @@ class BotHandler:
             if response.status_code == 200:
                 chat_admins = response.json()
             else:
-                logger.error("Error chat admins: {}".format(response.status_code))
+                logger.info("It's not a chat or the bot is not an administrator. Chat_id: {}".format(chat_id))
                 chat_admins = None
         except Exception as e:
-            logger.error("Error connect chat admins: %s.", e)
+            logger.error("Error connect get_chat_admins: %s.", e)
             chat_admins = None
         return chat_admins
 
