@@ -1,4 +1,4 @@
-# Version 0.3.0.9
+# Version 0.3.0.10
 
 import json
 import logging
@@ -649,7 +649,10 @@ class BotHandler:
                 update = update['updates'][0]
             if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
-                    text = update['message']['body']['text']
+                    if update['message']['body']['text']:
+                        text = update['message']['body']['text']
+                    else:
+                        text = update['message']['link']['message']['text']
                 except Exception as e:
                     logger.debug('get_text body none: %s', e)
                     try:
