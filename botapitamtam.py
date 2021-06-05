@@ -1,4 +1,4 @@
-# Version 0.3.0.10
+# Version 0.5.2.1
 
 import json
 import logging
@@ -154,7 +154,7 @@ class BotHandler:
         :return: возвращает значение поля 'marker', при неудаче = None
         """
         marker = None
-        if update is not None:
+        if update:
             marker = update['marker']
         return marker
 
@@ -645,14 +645,12 @@ class BotHandler:
         text = None
         if update:
             type = self.get_update_type(update)
+            logger.info(type)
             if 'updates' in update.keys():
                 update = update['updates'][0]
             if type == 'message_edited' or type == 'message_callback' or type == 'message_created' or type == 'message_constructed':
                 try:
-                    if update['message']['body']['text']:
-                        text = update['message']['body']['text']
-                    else:
-                        text = update['message']['link']['message']['text']
+                    text = update['message']['body']['text']
                 except Exception as e:
                     logger.debug('get_text body none: %s', e)
                     try:
@@ -1118,7 +1116,7 @@ class BotHandler:
                     mid = upd.get('message').get('body').get('mid')
                 except Exception as e:
                     logger.info('get_message_id: {}'.format(e))
-            elif 'message_id' in upd.keys(): # type == 'message_chat_created' or type == 'message_removed':
+            elif 'message_id' in upd.keys():  # type == 'message_chat_created' or type == 'message_removed':
                 mid = upd['message_id']
         return mid
 
@@ -1156,7 +1154,7 @@ class BotHandler:
         payload = self.get_payload(update)
         return payload
 
-    def edit_message(self, message_id, text, attachments=None, link=None, notify=True):
+    def edit_message(self, message_id, text, attachments=None, link=None, notify=True, format=None):
         """
         https://dev.tamtam.chat/#operation/editMessage
         Метод  изменения (обновления) любого контента по его идентификатору
@@ -1165,6 +1163,7 @@ class BotHandler:
         :param text: Обновленное текстовое сообщение
         :param link: Обновленное пересылаемые (цитируемые) сообщение
         :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return update: Возвращает результат PUT запроса
         """
         update = None
@@ -1177,7 +1176,8 @@ class BotHandler:
             "text": text,
             "attachments": attachments,
             "link": link,
-            "notify": notify
+            "notify": notify,
+            "format": format
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
@@ -1475,18 +1475,19 @@ class BotHandler:
                   "uuid": uuid}
         return button
 
-    def send_buttons(self, text, buttons, chat_id):
+    def send_buttons(self, text, buttons, chat_id, format=None):
         """
         Send buttons to specific chat_id by post request
         Отправляет кнопки (количество, рядность и функционал определяются параметром buttons) в соответствующий чат
         :param text: Текст выводимый над блоком кнопок
         :param chat_id: integer, chat id of user / чат где будут созданы кнопки
         :param buttons: массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return update: результат POST запроса на отправку кнопок
         """
         # self.typing_on(chat_id)
         attach = self.attach_buttons(buttons)
-        update = self.send_message(text, chat_id, attachments=attach)
+        update = self.send_message(text, chat_id, attachments=attach, format=format)
         return update
 
     def upload_url(self, type):
@@ -1511,6 +1512,19 @@ class BotHandler:
             logger.error("Error upload_url: %s.", e)
         return url
 
+    def markup(self, type, from_posit, length):
+        """
+        Подготавливает формат для модификации фрагмента текста
+        :param type: тип формата
+        :param from_posit: позиция в тексте откуда нужно начать форматирование
+        :param length: длина форматируемого фрагмента текста
+        :return: возвращает подготовленный формат для применения в методе send_construct_message
+        """
+        markup = [{"type": type,
+                  "from": from_posit,
+                  "length": length}]
+        return markup
+
     def attach_file(self, content, content_name=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
@@ -1524,7 +1538,7 @@ class BotHandler:
         attach = [{"type": "file", "payload": token}]
         return attach
 
-    def send_file(self, content, chat_id, text=None, content_name=None):
+    def send_file(self, content, chat_id, text=None, content_name=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки файла в указанный чат (файлы загружаются только по одному)
@@ -1532,11 +1546,12 @@ class BotHandler:
         :param chat_id: чат куда будет загружен файл
         :param text: сопровождающий текст к отправляемому файлу
         :param content_name: имя с которым будет загружен файл
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return: update: результат работы POST запроса отправки файла
         """
         self.sending_file(chat_id)
         attach = self.attach_file(content, content_name)
-        update = self.send_message(text, chat_id, attachments=attach)
+        update = self.send_message(text, chat_id, attachments=attach, format=format)
         return update
 
     def attach_image(self, content):
@@ -1557,18 +1572,19 @@ class BotHandler:
                 attach.append({"type": "image", "payload": token})
         return attach
 
-    def send_image(self, content, chat_id, text=None):
+    def send_image(self, content, chat_id, text=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки фoто (нескольких фото) в указанный чат
         :param content: имя файла или список имен файлов с изображениями
         :param chat_id: чат куда будут загружены изображения
         :param text: Сопровождающий текст к отправляемому контенту
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return: update: результат работы POST запроса отправки файла
         """
         self.sending_photo(chat_id)
         attach = self.attach_image(content)
-        update = self.send_message(text, chat_id, attachments=attach)
+        update = self.send_message(text, chat_id, attachments=attach, format=format)
         return update
 
     def attach_image_url(self, url):
@@ -1587,18 +1603,19 @@ class BotHandler:
                 attach.append({"type": "image", "payload": {'url': cont}})
         return attach
 
-    def send_image_url(self, url, chat_id, text=None):
+    def send_image_url(self, url, chat_id, text=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки фото (нескольких фото) в указанный чат по url
         :param url: http адрес или список адресов с изображениями
         :param chat_id: чат куда будут загружены изображения
         :param text: сопровождающий текст к отправляемому контенту
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return: update: результат работы POST запроса отправки фото
         """
         self.sending_photo(chat_id)
         attach = self.attach_image_url(url)
-        update = self.send_message(text, chat_id, attachments=attach)
+        update = self.send_message(text, chat_id, attachments=attach, format=format)
         return update
 
     def attach_video(self, content):
@@ -1620,7 +1637,7 @@ class BotHandler:
                 attach.append({"type": "video", "payload": token})
         return attach
 
-    def send_video(self, content, chat_id, text=None):
+    def send_video(self, content, chat_id, text=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки видео (нескольких видео) в указанный чат
@@ -1628,11 +1645,12 @@ class BotHandler:
                         иди список файлов ['movie.mp4', 'movie2.mkv']
         :param chat_id: чат куда будут загружены видео
         :param text: Сопровождающий текст к отправляемому(мым) видео
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return: update: результат работы POST запроса отправки видео
         """
         self.sending_video(chat_id)
         attach = self.attach_video(content)
-        update = self.send_message(text, chat_id, attachments=attach)
+        update = self.send_message(text, chat_id, attachments=attach, format=format)
         return update
 
     def attach_audio(self, content):
@@ -1647,7 +1665,7 @@ class BotHandler:
         attach = [{"type": "audio", "payload": token}]
         return attach
 
-    def send_audio(self, content, chat_id, text=None):
+    def send_audio(self, content, chat_id, text=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки аудио (только по одному) в указанный чат
@@ -1655,14 +1673,15 @@ class BotHandler:
                         файлы защищенные авторскими правами не загружаются
         :param chat_id: чат куда будет загружено аудио
         :param text: сопровождающий текст к отправляемому аудио
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return: update: результат работы POST запроса отправки аудио
         """
         self.sending_audio(chat_id)
         attach = self.attach_audio(content)
-        update = self.send_message(text, chat_id, attachments=attach)
+        update = self.send_message(text, chat_id, attachments=attach, format=format)
         return update
 
-    def send_forward_message(self, text, mid, chat_id, user_id=None):
+    def send_forward_message(self, text, mid, chat_id, user_id=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Send forward message specific chat_id by post request
@@ -1671,11 +1690,12 @@ class BotHandler:
         :param mid: message_id пересылаемого сообщения
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
         :param user_id: id пользователя, которому пересылается сообщение
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return update: response | ответ на POST message в соответствии с API
         """
         # self.typing_on(chat_id)
         link = self.link_forward(mid)
-        update = self.send_message(text, chat_id, user_id, link=link)
+        update = self.send_message(text, chat_id, user_id, link=link, format=format)
         return update
 
     def link_reply(self, mid):
@@ -1702,7 +1722,7 @@ class BotHandler:
                 }
         return link
 
-    def send_reply_message(self, text, mid, chat_id, dislinkprev=None):
+    def send_reply_message(self, text, mid, chat_id, dislinkprev=None, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Send reply message specific chat_id by post request
@@ -1710,11 +1730,13 @@ class BotHandler:
         :param text: текст ответа на сообщение (обязательный параметр)
         :param mid: message_id сообщения на которое формируется ответ
         :param chat_id: integer, chat id of user / чат куда отправится сообщение
+        :param dislinkprev: предпросмотр ссылки
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return update: response | ответ на POST запрос в соответствии с API
         """
         # self.typing_on(chat_id)
         link = self.link_reply(mid)
-        update = self.send_message(text, chat_id, link=link, dislinkprev=dislinkprev)
+        update = self.send_message(text, chat_id, link=link, dislinkprev=dislinkprev, format=format)
         return update
 
     def token_upload_content(self, type, content, content_name=None):
@@ -1742,7 +1764,7 @@ class BotHandler:
             logger.error("Error token_upload_content: %s.", e)
         return token
 
-    def send_message(self, text, chat_id, user_id=None, attachments=None, link=None, notify=True, dislinkprev=False):
+    def send_message(self, text, chat_id, user_id=None, attachments=None, link=None, notify=True, dislinkprev=False, format=None):
         """
         https://dev.tamtam.chat/#operation/sendMessage
         Метод отправки любого контента, сформированного в соответсвии с документацией, в указанный чат
@@ -1753,6 +1775,7 @@ class BotHandler:
         :param link: Пересылаемые (цитируемые) сообщения
         :param notify: Уведомление о событии, если значение false, участники чата не будут уведомлены
         :param dislinkprev: Параметр определяет генерировать предпросмотр для ссылки или нет
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return update: Возвращает результат POST запроса
         """
         self.typing_on(chat_id)
@@ -1768,7 +1791,8 @@ class BotHandler:
             "text": text,
             "attachments": attachments,
             "link": link,
-            "notify": notify
+            "notify": notify,
+            "format": format
         }
         flag = 'attachment.not.ready'
         while flag == 'attachment.not.ready':
@@ -1789,7 +1813,7 @@ class BotHandler:
                 logger.error("Error send_message: %s.", e)
         return update
 
-    def send_answer_callback(self, callback_id, notification, text=None, attachments=None, link=None, notify=True):
+    def send_answer_callback(self, callback_id, notification, text=None, attachments=None, link=None, notify=True, format=None):
         """
         https://dev.tamtam.chat/#operation/answerOnCallback
         Метод отправки ответа после того, как пользователь нажал кнопку. Ответом может
@@ -1800,6 +1824,7 @@ class BotHandler:
         :param attachments: измененный (новый) контент (изображения, видео, кнопки и т.д.)
         :param link: цитируемое сообщение
         :param notify: если false, то участники чата не получат уведомление (по умолчанию true)
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :return update: результат POST запроса
         """
         update = None
@@ -1811,7 +1836,8 @@ class BotHandler:
         message = {"text": text,
                    "attachments": attachments,
                    "link": link,
-                   "notify": notify
+                   "notify": notify,
+                   "format": format
                    }
         if text is None and attachments is None and link is None:
             message = None
@@ -1838,7 +1864,7 @@ class BotHandler:
                 logger.error("Error answer_callback: %s.", e)
         return update
 
-    def send_construct_message(self, session_id, hint, text=None, attachments=None, link=None, notify=None,
+    def send_construct_message(self, session_id, hint, text=None, attachments=None, markup=None, format=None,
                                allow_user_input=True, data=None, buttons=None, placeholder=None):
         """
         https://dev.tamtam.chat/#operation/construct
@@ -1848,8 +1874,8 @@ class BotHandler:
         :param hint: сообщение пользователю, вызвавшему конструктор
         :param text: текстовое сообщение, которое будет отправлено в результате в чат
         :param attachments: контент (изображения, видео, кнопки и т.д.), который будет отправлен в результате в чат
-        :param link: цитируемое сообщение
-        :param notify: если false, то участники чата не получат уведомление (по умолчанию true)
+        :param markup: формат сообщения в стиле "markdown", формируется методом markup
+        :param format: значение "markdown" или "html", текст будет отформатирован соответственно
         :param allow_user_input: если True, у пользователя будет возможность набирать текст, иначе только технические кнопки.
         :param data: любые данные в технических целях
         :param buttons: технические кнопки для произвольных действий
@@ -1864,8 +1890,8 @@ class BotHandler:
         )
         message = [{"text": text,
                     "attachments": attachments,
-                    "link": link,
-                    "notify": notify
+                    "markup": markup,
+                    "format": format
                     }]
         if text is None:
             message = []

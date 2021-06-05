@@ -110,21 +110,22 @@ if __name__ == '__main__':
 - [unpin_message](#unpin_messagechat_id) - открепляет сообщение в чате.  
 - [get_pinned_message](#get_pinned_messagechat_id) - получает закрепленное сообщение в чате.  
 - [send_answer_callback](#send_answer_callbackcallback_id-notification-textnone-attachmentsnone-linknone-notifynone) - отправляет уведомление (реакцию) после нажатия кнопки.
-- [send_audio](#send_audiocontent-chat_id-textnone) - отправляет аудиофайл с преобразованием в формат ТамТам.
-- [send_buttons](#send_buttonstext-buttons-chat_id) - отправляет текст с кнопками в чат.
-- [send_file](#send_filecontent-chat_id-textnone-content_namenone) - отправляет файл.
+- [send_audio](#send_audiocontent-chat_id-textnone-formatnone) - отправляет аудиофайл с преобразованием в формат ТамТам.
+- [send_buttons](#send_buttonstext-buttons-chat_id-formatnone) - отправляет текст с кнопками в чат.
+- [send_file](#send_filecontent-chat_id-textnone-content_namenone-formatnone) - отправляет файл.
 - [send_message](#send_messagetext-chat_id-user_idnone-attachmentsnone-linknone-notifytrue-dislinkprevfalse) - отправляет текстовое сообщение и любой контент по сформированному attachments.
   - [link_forward](#link_forwardmid) - формирует параметр `link` пересылаемого сообщения для отправки через `send_message`.
   - [link_reply](#link_replymid) - формирует параметр `link` цитируемого сообщения для отправки через `send_message`.
-- [send_image](#send_imagecontent-chat_id-textnone) - отправляет изображение (несколько изображений) из локального файла.  
-- [send_image_url](#send_image_urlurl-chat_id-textnone) - отправляет изображение из URL.  
-- [send_video](#send_videocontent-chat_id-textnone) - отправляет видео.  
-- [send_forward_message](#send_forward_messagetext-mid-chat_id) - пересылает сообщение по его идентификатору.  
-- [send_reply_message](#send_reply_messagetext-mid-chat_id) - формирует ответ на сообщение.  
+- [send_image](#send_imagecontent-chat_id-textnone-formatnone) - отправляет изображение (несколько изображений) из локального файла.  
+- [send_image_url](#send_image_urlurl-chat_id-textnone-formatnone) - отправляет изображение из URL.  
+- [send_video](#send_videocontent-chat_id-textnone-formatnone) - отправляет видео.  
+- [send_forward_message](#send_forward_messagetext-mid-chat_id-formatnone) - пересылает сообщение по его идентификатору.  
+- [send_reply_message](#send_reply_messagetext-mid-chat_id-formatnone) - формирует ответ на сообщение.  
 ### Методы работы с режимом конструктора
 - [get_session_id](#get_session_idupdate) - получает значение session_id в режиме конструктора.  
 - [get_start_payload](#get_start_payloadupdate) - получает данные для использования в чате, созданном ботом в режиме конструктора.  
-- [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-linknone-notifynone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
+- [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-markupnone-formatnone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone) - отправляет результат работы конструктора (сообщение, контент) в чат.    
+- [markup](#markuptype-from_posit-length) - подготавливает формат для фрагмента текста обрабатываемого методом [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-markupnone-formatnone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone)
 ### Методы обслуживания ботов и чатов
 - [edit_bot_info](#edit_bot_infoname-username-descriptionnone-commandsnone-photonone-photo_urlnone) - редактирует информацию о текущем боте.
 - [edit_chat_info](#edit_chat_infochat_id-iconnone-icon_urlnone-titlenone-pinnone-notifytrue) - редактирует информацию о чате.
@@ -431,6 +432,7 @@ https://dev.tamtam.chat/#operation/editMessage
 **:param text:** Обновленное текстовое сообщение  
 **:param link:** Обновленное пересылаемые (цитируемые) сообщение  
 **:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** Возвращает результат PUT запроса  
 
 ### pin_message(chat_id, message_id, notify=True):  
@@ -537,12 +539,13 @@ Delete message to specific chat_id by post request
 **:param uuid:** Уникальный идентификатор кнопки для всех кнопок чата на клавиатуре. Если uuid изменен, то новый чат будет создан при следующем щелчке мыши. Сервер сгенерирует его в тот момент, когда кнопка будет изначально размещена. Повторно используйте его при редактировании сообщения.    
 **:return:** возвращает подготовленную кнопку для последующего формирования массива    
 
-### send_buttons(text, buttons, chat_id):
+### send_buttons(text, buttons, chat_id, format=None):
 Send buttons to specific chat_id by post request  
 Отправляет кнопки (количество, рядность и функционал определяются параметром buttons) в соответствующий чат  
 **:param text:** Текст выводимый над блоком кнопок  
 **:param chat_id:** integer, chat id of user / чат где будут созданы кнопки  
-**:param buttons:** массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.    
+**:param buttons:** массив кнопок, сформированный методами button_callback, button_contact, button_link и т.п.   
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат POST запроса на отправку кнопок  
 
 ### upload_url(type):
@@ -558,13 +561,14 @@ https://dev.tamtam.chat/#operation/sendMessage
 **:param content_name:** имя с которым будет загружен файл  
 **:return attach:** подготовленный контент  
 
-### send_file(content, chat_id, text=None, content_name=None):
+### send_file(content, chat_id, text=None, content_name=None, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Метод отправки файла в указанный чат (файлы загружаются только по одному)  
 **:param content:** имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4'  
 **:param chat_id:** чат куда будет загружен файл  
 **:param text:** сопровождающий текст к отправляемому файлу  
 **:param content_name:** имя с которым будет загружен файл  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат работы POST запроса отправки файла  
 
 ### attach_image(content):
@@ -573,12 +577,13 @@ https://dev.tamtam.chat/#operation/sendMessage
 **:param content:** имя файла или список имен файлов с изображениями  
 **:return attach:** подготовленный контент  
 
-### send_image(content, chat_id, text=None):
+### send_image(content, chat_id, text=None, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Метод отправки фoто (нескольких фото) в указанный чат  
 **:param content:** имя файла или список имен файлов с изображениями  
 **:param chat_id:** чат куда будут загружены изображения  
 **:param text:** сопровождающий текст к отправляемому контенту  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат работы POST запроса отправки файла  
 
 ### attach_image_url(url):
@@ -587,12 +592,13 @@ https://dev.tamtam.chat/#operation/sendMessage
 **:param url:** http адрес или список адресов с изображениями  
 **:return attach:** подготовленный контент  
 
-### send_image_url(url, chat_id, text=None):
+### send_image_url(url, chat_id, text=None, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Метод отправки фото (нескольких фото) в указанный чат по url  
 **:param url:** http адрес или список адресов с изображениями  
 **:param chat_id:** чат куда будут загружены изображения  
 **:param text:** сопровождающий текст к отправляемому контенту  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат работы POST запроса отправки фото  
 
 ### attach_video(content):
@@ -602,12 +608,13 @@ https://dev.tamtam.chat/#operation/sendMessage
 или список файлов ['movie.mp4', 'movie2.mkv']  
 **:return attach:** подготовленный контент  
 
-### send_video(content, chat_id, text=None):
+### send_video(content, chat_id, text=None, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Метод отправки видео (нескольких видео) в указанный чат  
 **:param content:** имя файла или полный путь доступный боту на машине где он запущен, например 'movie.mp4' или список файлов ['movie.mp4', 'movie2.mkv']
 **:param chat_id:** чат куда будут загружены видео  
 **:param text:** Сопровождающий текст к отправляемому(мым) видео  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат работы POST запроса отправки видео  
 
 ### attach_audio(content):
@@ -617,22 +624,24 @@ https://dev.tamtam.chat/#operation/sendMessage
 файлы защищенные авторскими правами не загружаются  
 **:return attach:** подготовленный контент  
 
-### send_audio(content, chat_id, text=None):
+### send_audio(content, chat_id, text=None, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Метод отправки аудио (только по одному) в указанный чат  
 **:param content:** имя файла или полный путь доступный боту на машине где он запущен (например 'audio.mp3'),
 файлы защищенные авторскими правами не загружаются  
 **:param chat_id:** чат куда будет загружено аудио  
 **:param text:** сопровождающий текст к отправляемому аудио  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат работы POST запроса отправки аудио  
 
-### send_forward_message(text, mid, chat_id):
+### send_forward_message(text, mid, chat_id, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Send forward message specific chat_id by post request  
 Пересылает сообщение в указанный чат  
 **:param text:** текст к пересылаемому сообщению или None  
 **:param mid:** message_id пересылаемого сообщения  
 **:param chat_id:** integer, chat id of user / чат куда отправится сообщение  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** response | ответ на POST message в соответствии с API  
 
 ### link_reply(mid):
@@ -647,13 +656,14 @@ https://dev.tamtam.chat/#operation/sendMessage
 **:param mid:** идентификатор сообщения (get_message_id) на которое готовим link  
 **:return link:** сформированный параметр link  
 
-### send_reply_message(text, mid, chat_id):
+### send_reply_message(text, mid, chat_id, format=None):
 https://dev.tamtam.chat/#operation/sendMessage  
 Send reply message specific chat_id by post request  
 Формирует ответ на сообщение в указанный чат  
 **:param text:** текст ответа на сообщение (обязательный параметр)  
 **:param mid:** message_id сообщения на которое формируется ответ  
 **:param chat_id:** integer, chat id of user / чат куда отправится сообщение  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** response | ответ на POST запрос в соответствии с API  
 
 ### token_upload_content(type, content, content_name=None):
@@ -674,6 +684,7 @@ https://dev.tamtam.chat/#operation/sendMessage
 **:param link:** Пересылаемые (цитируемые) сообщения  
 **:param notify:** Уведомление о событии, если значение false, участники чата не будут уведомлены  
 **:param dislinkprev:** Параметр определяет генерировать предпросмотр для ссылки или нет  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** Возвращает результат POST запроса  
 
 
@@ -686,6 +697,7 @@ https://dev.tamtam.chat/#operation/answerOnCallback
 **:param attachments:** измененный (новый) контент (изображения, видео, кнопки и т.д.)  
 **:param link:** цитируемое сообщение  
 **:param notify:** если false, то участники чата не получат уведомление (по умолчанию true)  
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:return update:** результат POST запроса  
 
 ### get_attach_type(update):
@@ -734,18 +746,25 @@ https://dev.tamtam.chat/#operation/getUpdates
 **:param update:** результат работы метода get_updates()  
 **:return:** возвращает, если это возможно, значение поля 'start_payload'  
 
-### send_construct_message(session_id, hint, text=None, attachments=None, link=None, notify=None, allow_user_input=True, data=None, buttons=None, placeholder=None):
+### send_construct_message(session_id, hint, text=None, attachments=None, markup=None, format=None, allow_user_input=True, data=None, buttons=None, placeholder=None):
 https://dev.tamtam.chat/#operation/construct  
 Метод отправки результата работы конструктора в чат.  
 **:param session_id:** параметр, соответствующий вызванному конструктору  
 **:param hint:** сообщение пользователю, вызвавшему конструктор  
 **:param text:** текстовое сообщение, которое будет отправлено в результате в чат  
 **:param attachments:** контент (изображения, видео, кнопки и т.д.), который будет отправлен в результате в чат  
-**:param link:** цитируемое сообщение  
-**:param notify:** если false, то участники чата не получат уведомление (по умолчанию true)  
+**:param markup:** формат фрагмента текста, создается методом [markup](#markuptype-from_posit-length)   
+**:param format:** значение "markdown" или "html", текст будет отформатирован соответственно  
 **:param allow_user_input:** если True, у пользователя будет возможность набирать текст, иначе только технические кнопки  
 **:param data:** любые данные в технических целях  
 **:param buttons:** технические кнопки для произвольных действий  
 **:param placeholder:** текст над техническими кнопками  
 **:return:** результат POST запроса   
 
+### markup(type, from_posit, length):
+https://dev.tamtam.chat/#operation/construct
+Подготавливает формат для модификации фрагмента текста
+**:param type:** тип формата
+**:param from_posit:** позиция в тексте откуда нужно начать форматирование
+**:param length:** длина форматируемого фрагмента текста
+**:return:** возвращает подготовленный формат для применения в методе [send_construct_message](#send_construct_messagesession_id-hint-textnone-attachmentsnone-markupnone-formatnone-allow_user_inputtrue-datanone-buttonsnone-placeholdernone)
