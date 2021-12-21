@@ -1,4 +1,4 @@
-# Version 0.5.2.2
+# Version 0.5.2.3
 
 import json
 import logging
