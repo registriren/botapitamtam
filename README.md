@@ -5,6 +5,7 @@
 Примеры реализации ботов с использованем библиотеки:   
 
 <https://github.com/registriren/filelink>
+
 <https://github.com/registriren/translatebot>
 
 Чат для обсуждения вопросов, связанных с работой библиотеки <https://tt.me/botapitamtam>
@@ -61,7 +62,7 @@ if __name__ == '__main__':
   - [get_payload](#get_payloadupdate) - получает payload (текстовое значение, не путать с наименованием кнопки) нажатой кнопки.
   - [get_text](#get_textupdate) - получает значение поля text полученного сообщения (события).
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
-  - [get_messages](#get_messages) - возвращает список сообщений чата.
+  - [get_messages](#get_messageschat_id-message_ids-time_fromnone-time_tonone-count50) - возвращает список сообщений чата.
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
   - [get_username](#get_usernameupdate) - получает username пользователя, сформировавшего событие.  
   - [get_is_bot](#get_is_botupdate) - позволяет отличить пользователя от бота.  
