@@ -500,7 +500,9 @@ class BotHandler:
 
     def get_messages(self, chat_id, message_ids='', time_from=None, time_to=None, count=50):
         """
-        Возвращает пользователей, участвовавших в чате. Returns users participated in chat.
+        Возвращает сообщения в чате: страницу результатов и маркер, ссылающийся на следующую страницу.
+        Сообщения передаются в обратном направлении, поэтому последнее сообщение в чате будет первым в результирующем массиве.
+        Поэтому, если вы используете параметры time_from и time_to, то time_to должно быть меньше, чем time_from
         https://dev.tamtam.chat/#operation/getMessages
         API = messages
         :param chat_id: идентификатор чата
