@@ -498,6 +498,41 @@ class BotHandler:
             chat_info = None
         return chat_info
 
+    def get_messages(self, chat_id, message_ids='', time_from=None, time_to=None, count=50):
+        """
+        Возвращает пользователей, участвовавших в чате. Returns users participated in chat.
+        https://dev.tamtam.chat/#operation/getMessages
+        API = messages
+        :param chat_id: идентификатор чата
+        :param message_ids: разделенный запятыми список идентификаторов сообщений
+        :param time_from: начальное время получения сообщений
+        :param time_to: конечное время получения сообщений
+        :param count: количество (счетчик) сообщений которые получаем (максимум 100)
+        :return: возвращает список сообщений
+        """
+        method = 'messages'
+        params = {
+            "access_token": self.token,
+            'chat_id':chat_id,
+            'message_ids': [
+                message_ids
+            ],
+            'from': time_from,
+            'to': time_to,
+            'count': count
+        }
+        try:
+            response = requests.get(self.url + method, params=params)
+            if response.status_code == 200:
+                messages = response.json()
+            else:
+                logger.error("Error get messages: {}".format(response.status_code))
+                messages = None
+        except Exception as e:
+            logger.error("Error connect get messages: %s.", e)
+            messages = None
+        return messages
+
     def get_members(self, chat_id, user_ids, marker=None, count=20):
         """
         Возвращает пользователей, участвовавших в чате. Returns users participated in chat.
