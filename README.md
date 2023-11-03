@@ -1,17 +1,11 @@
 # botapitamtam   
-*(новая версия, часть синтаксиса изменена, старая версия: [botapitamtam v.0.1.10.1](https://github.com/registriren/botapitamtam/releases/tag/ver_0.1.10.1))*  
-
 
 Попытка создать набор простых инструментов для написания ботов на базе API мессенджера TamTam. Набор содержит базовый функционал взаимодействия бота с пользователями и предназначен для начинающих программистов. Синтаксис методов позволяет легко их модифицировать или создавать на их базе новые методы используя официальную документацию https://dev.tamtam.chat/ .
 
 Примеры реализации ботов с использованем библиотеки:   
 
 <https://github.com/registriren/filelink>
-
-<https://github.com/registriren/yatranslate>
-  
-
-Библиотека находится в стадии разработки, поэтому возможны изменения синтаксиса, которые приведут к неработоспособности вашего кода, проверяйте перед применением изменений на своей системе.
+<https://github.com/registriren/translatebot>
 
 Чат для обсуждения вопросов, связанных с работой библиотеки <https://tt.me/botapitamtam>
 
@@ -67,6 +61,7 @@ if __name__ == '__main__':
   - [get_payload](#get_payloadupdate) - получает payload (текстовое значение, не путать с наименованием кнопки) нажатой кнопки.
   - [get_text](#get_textupdate) - получает значение поля text полученного сообщения (события).
   - [get_message_id](#get_message_idupdate) - получает идентификатор сообщения (события).
+  - [get_messages](#get_messages) - возвращает список сообщений чата.
   - [get_name](#get_nameupdate) - получает имя пользователя, сформировавшего событие.
   - [get_username](#get_usernameupdate) - получает username пользователя, сформировавшего событие.  
   - [get_is_bot](#get_is_botupdate) - позволяет отличить пользователя от бота.  
@@ -422,7 +417,17 @@ https://botapi.tamtam.chat/updates
 https://botapi.tamtam.chat/updates  
 Получение message_id отправленного или пересланного боту  
 **:param update:**результат работы метода get_update  
-**:return:** возвращает, если это возможно, значение поля 'mid'  
+**:return:** возвращает, если это возможно, значение поля 'mid'
+
+### get_messages(chat_id, message_ids='', time_from=None, time_to=None, count=50):
+https://dev.tamtam.chat/#operation/getMessages
+Возвращает сообщения в чате: страницу результатов и маркер, ссылающийся на следующую страницу. Сообщения передаются в обратном направлении, поэтому последнее сообщение в чате будет первым в результирующем массиве. Поэтому, если вы используете параметры time_from и time_to, то time_to должно быть меньше, чем time_from
+**:param chat_id:** идентификатор чата
+**:param message_ids:** разделенный запятыми список идентификаторов сообщений
+**:param time_from:** начальное время получения сообщений
+**:param time_to:** конечное время получения сообщений
+**:param count:** количество (счетчик) сообщений которые получаем (максимум 100)
+**:return:** возвращает список сообщений
 
 ### edit_message(message_id, text, attachments=None, link=None, notify=True):
 https://dev.tamtam.chat/#operation/editMessage  
