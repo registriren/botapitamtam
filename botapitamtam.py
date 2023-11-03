@@ -517,8 +517,8 @@ class BotHandler:
             'message_ids': [
                 message_ids
             ],
-            'time_from': time_from,
-            'time_to': time_to,
+            'from': time_from,
+            'to': time_to,
             'count': count
         }
         try:
