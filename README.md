@@ -420,17 +420,17 @@ https://botapi.tamtam.chat/updates
 **:param update:**результат работы метода get_update  
 **:return:** возвращает, если это возможно, значение поля 'mid'
 
-### get_messages(chat_id, message_ids='', time_from=None, time_to=None, count=50):
-https://dev.tamtam.chat/#operation/getMessages
-Возвращает сообщения в чате: страницу результатов и маркер, ссылающийся на следующую страницу. Сообщения передаются в обратном направлении, поэтому последнее сообщение в чате будет первым в результирующем массиве. Поэтому, если вы используете параметры time_from и time_to, то time_to должно быть меньше, чем time_from
-**:param chat_id:** идентификатор чата
-**:param message_ids:** разделенный запятыми список идентификаторов сообщений
-**:param time_from:** начальное время получения сообщений
-**:param time_to:** конечное время получения сообщений
-**:param count:** количество (счетчик) сообщений которые получаем (максимум 100)
-**:return:** возвращает список сообщений
+### get_messages(chat_id, message_ids='', time_from=None, time_to=None, count=50):  
+https://dev.tamtam.chat/#operation/getMessages  
+Возвращает сообщения в чате: страницу результатов и маркер, ссылающийся на следующую страницу. Сообщения передаются в обратном направлении, поэтому последнее сообщение в чате будет первым в результирующем массиве. Поэтому, если вы используете параметры time_from и time_to, то time_to должно быть меньше, чем time_from  
+**:param chat_id:** идентификатор чата  
+**:param message_ids:** разделенный запятыми список идентификаторов сообщений  
+**:param time_from:** начальное время получения сообщений  
+**:param time_to:** конечное время получения сообщений  
+**:param count:** количество (счетчик) сообщений которые получаем (максимум 100)  
+**:return:** возвращает список сообщений  
 
-### edit_message(message_id, text, attachments=None, link=None, notify=True):
+### edit_message(message_id, text, attachments=None, link=None, notify=True):  
 https://dev.tamtam.chat/#operation/editMessage  
 Метод  изменения (обновления) любого контента по его идентификатору  
 **:param message_id:** Идентификатор редактируемого контента  
